@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
@@ -32,6 +33,8 @@ public class LogReader {
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
+
+        //First Stop
         while(rowindex < rows.length){
             if (rows[rowindex].contains("Application time")){
                 TimePeriod warmup = new TimePeriod();
@@ -42,9 +45,32 @@ public class LogReader {
                 initial.phase = warmup;
                 HeapRecord.add(initial);
             }
-            else{
-                rowindex ++;
-                continue;
+            rowindex ++;
+        }
+
+        //Parse Later
+        while(rowindex < rows.length){
+            if(rows[rowindex].contains("Heap before GC")){
+                //TODO:
+                String[] HeapPrint = new String[9];
+                HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
+                HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
+                SentenceReader.parsePrintHeapBefore(lastone,HeapPrint);
+            }
+            else if(rows[rowindex].contains("Heap after GC")){
+                //TODO:
+            }
+            else if(rows[rowindex].contains("GC (")){
+                //TODO:
+            }
+            else if(rows[rowindex].contains("[SoftReference")){
+                //TODO:
+            }
+            else if(rows[rowindex].contains("AdaptiveSizeStart:")){
+                //TODO:
+            }
+            else if(rows[rowindex].contains("AdaptiveSizeStart:")){
+                //TODO:
             }
         }
     }
