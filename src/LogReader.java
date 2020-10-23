@@ -1,6 +1,7 @@
 import java.io.*;
 
 public class LogReader {
+
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
         FileInputStream fileInputStream = null;
@@ -29,5 +30,7 @@ public class LogReader {
         //String logPath = args[0];
         String logPath = "C:\\Users\\DELL\\Desktop\\gc.log";
         String[] rows = LoadLog(logPath);
+        HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
+
     }
 }
