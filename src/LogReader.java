@@ -1,7 +1,8 @@
 import java.io.*;
+import java.util.ArrayList;
 
 public class LogReader {
-
+    static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
         FileInputStream fileInputStream = null;
@@ -22,8 +23,7 @@ public class LogReader {
         byte[] data = outputStream.toByteArray();
         fileInputStream.close();
         String content = new String(data);
-        String[] rows = content.split("\r\n");
-        return rows;
+        return content.split("\r\n");
     }
 
     public static void main(String[] args) throws IOException {
@@ -31,6 +31,21 @@ public class LogReader {
         String logPath = "C:\\Users\\DELL\\Desktop\\gc.log";
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
-
+        int rowindex = 3;
+        while(rowindex < rows.length){
+            if (rows[rowindex].contains("Application time")){
+                TimePeriod warmup = new TimePeriod();
+                Utility.Number systemtime = Utility.Number.parseNumber("",rows[rowindex]);
+                Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
+                warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
+                warmup.type = TimePeriod.usageType.Warmup;
+                initial.phase = warmup;
+                HeapRecord.add(initial);
+            }
+            else{
+                rowindex ++;
+                continue;
+            }
+        }
     }
 }
