@@ -1,9 +1,13 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
+    static ArrayList<YoungGC> youngRecord = new ArrayList<>();
+    static Stack<Double> timeLine = new Stack<>();
+
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
         FileInputStream fileInputStream = null;
@@ -15,7 +19,7 @@ public class LogReader {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-        int len = 0;
+        int len;
 
         while ((len = fileInputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, len);
@@ -39,6 +43,7 @@ public class LogReader {
             if (rows[rowindex].contains("Application time")){
                 TimePeriod warmup = new TimePeriod();
                 Utility.Number systemtime = Utility.Number.parseNumber("",rows[rowindex]);
+                LogReader.timeLine.push(systemtime.valueDouble);
                 Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
                 warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
                 warmup.type = TimePeriod.usageType.Warmup;
@@ -55,32 +60,45 @@ public class LogReader {
         //Parse Later
         while(rowindex < rows.length){
             if(rows[rowindex].contains("Heap before GC")){
-                //TODO:
-                String[] HeapPrint = new String[9];
+                String[] HeapPrint;
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
                 HeapSnapshot beforeGC = SentenceReader.parsePrintHeap(HeapPrint);
                 beforeGC.phase = Application;
                 beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
                 if(!lastone.complete){
-
+                    System.arraycopy(beforeGC.HeapPartition, 0, lastone.HeapPartition, 0, 5);
+                    lastone.complete = true;
                 }
+                HeapRecord.add(lastone);
+                HeapRecord.add(beforeGC);
+                rowindex += 9;
             }
             else if(rows[rowindex].contains("Heap after GC")){
                 //TODO:
+
             }
             else if(rows[rowindex].contains("GC (")){
                 //TODO:
+                String[] GCPrint;
+                GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
+                YoungGC newGC = SentenceReader.ParseYoungGCcause(GCPrint);
+                youngRecord.add(newGC);
+                rowindex += 2;
             }
-            else if(rows[rowindex].contains("[SoftReference")){
+            else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
                 //TODO:
+                String[] survivePrint;
+                survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+8);
+                YoungGC lastGC = youngRecord.remove(youngRecord.size()-1);
+                SentenceReader.ParseAdaptivePolicy(lastGC,survivePrint);
+                youngRecord.add(lastGC);
+                rowindex +=7;
             }
             else if(rows[rowindex].contains("AdaptiveSizeStart:")){
                 //TODO:
             }
-            else if(rows[rowindex].contains("AdaptiveSizeStart:")){
-                //TODO:
-            }
+
         }
     }
 }

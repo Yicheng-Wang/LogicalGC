@@ -15,7 +15,7 @@ public class Utility {
             Number result = new Number();
             String size = "";
             char num;
-            while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ','){
+            while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ',' && num != '-' ){
                 size += num;
                 i++;
             }
