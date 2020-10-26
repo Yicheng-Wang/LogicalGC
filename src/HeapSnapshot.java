@@ -1,9 +1,9 @@
 public class HeapSnapshot {
-    public Utility.Number totalSize;
-    public static Utility.Number maxSize;
-    Generation[] HeapPartition ;
-
-    TimePeriod phase;
+    Utility.Number totalSize = new Utility.Number();
+    static Utility.Number maxSize = new Utility.Number();
+    Generation[] HeapPartition = new Generation[5];
+    boolean complete = false;
+    TimePeriod phase = new TimePeriod();
     public HeapSnapshot initial(String initialRow){
         HeapSnapshot init = new HeapSnapshot();
         init.totalSize = Utility.Number.parseNumber("-XX:InitialHeapSize=",initialRow);
@@ -12,14 +12,10 @@ public class HeapSnapshot {
     }
 
     public HeapSnapshot(){
-        this.HeapPartition = new Generation[5];
-        this.HeapPartition[0].type = Generation.generationType.Eden;
-        this.HeapPartition[1].type = Generation.generationType.Eden;
-        this.HeapPartition[2].type = Generation.generationType.Eden;
-        this.HeapPartition[3].type = Generation.generationType.Eden;
-        this.HeapPartition[4].type = Generation.generationType.Eden;
+        this.HeapPartition[0] = new Generation(Generation.generationType.Eden);
+        this.HeapPartition[1] = new Generation(Generation.generationType.From);
+        this.HeapPartition[2] = new Generation(Generation.generationType.To);
+        this.HeapPartition[3] = new Generation(Generation.generationType.Old);
+        this.HeapPartition[4] = new Generation(Generation.generationType.Meta);
     }
-
-
-
 }

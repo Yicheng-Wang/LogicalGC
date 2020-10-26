@@ -33,7 +33,7 @@ public class LogReader {
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
-
+        TimePeriod Application = new TimePeriod();
         //First Stop
         while(rowindex < rows.length){
             if (rows[rowindex].contains("Application time")){
@@ -42,8 +42,12 @@ public class LogReader {
                 Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
                 warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
                 warmup.type = TimePeriod.usageType.Warmup;
+                Application.type = TimePeriod.usageType.Application;
+                Application.length = applicationtime.valueDouble;
                 initial.phase = warmup;
                 HeapRecord.add(initial);
+                rowindex++;
+                break;
             }
             rowindex ++;
         }
@@ -54,8 +58,13 @@ public class LogReader {
                 //TODO:
                 String[] HeapPrint = new String[9];
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
+                HeapSnapshot beforeGC = SentenceReader.parsePrintHeap(HeapPrint);
+                beforeGC.phase = Application;
+                beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
-                SentenceReader.parsePrintHeapBefore(lastone,HeapPrint);
+                if(!lastone.complete){
+
+                }
             }
             else if(rows[rowindex].contains("Heap after GC")){
                 //TODO:

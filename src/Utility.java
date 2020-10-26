@@ -2,8 +2,9 @@ public class Utility {
     public static class Number{
         boolean endWithK = false;
         boolean isFloat = false;
+        boolean isPercentage = false;
         String size = "";
-        int valueForm = 0;
+        long valueForm = 0;
         double valueDouble = 0.0;
         double valueFormK = 0;
         double ValueFormM = 0;
@@ -14,13 +15,14 @@ public class Utility {
             Number result = new Number();
             String size = "";
             char num;
-            while(((num = rows.charAt(i)) != ' ' )&& num != ':'){
+            while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ','){
                 size += num;
                 i++;
             }
             result.size = size;
             result.endWithK = Number.judgeEnd(size);
             result.isFloat = Number.judgeFloat(size);
+            result.isPercentage = Number.judgePercentage(size);
             result.completeAllForm();
             return result;
         }
@@ -33,21 +35,37 @@ public class Utility {
             return input.contains(".");
         }
 
+        public static boolean judgePercentage(String input){
+            return input.contains("%");
+        }
+
+        public static Number dealingPercentage(Number per,Number value){
+            per.size = per.size.substring(0,per.size.length()-1);
+            per.valueForm = value.valueForm * Integer.parseInt(per.size) / 100;
+            per.size = Long.toString(per.valueForm);
+            per.isPercentage = false;
+            per.completeAllForm();
+            return per;
+        }
+
         public void completeAllForm(){
+            if(this.isPercentage){
+                return;
+            }
             if(this.isFloat){
                 this.valueDouble = Double.parseDouble(this.size);
             }
             else{
-                int number;
+                long number;
                 if(this.endWithK){
-                    number= Integer.parseInt(this.size.substring(0,this.size.length()-2));
+                    number= Long.parseLong(this.size.substring(0,this.size.length()-1));
                     this.valueFormK = number;
                     this.valueForm = number << 10;
                     this.ValueFormM = (double)number / 1024;
                     this.valueFormG = this.ValueFormM / 1024;
                 }
                 else{
-                    number= Integer.parseInt(this.size.substring(0,this.size.length()-1));
+                    number= Long.parseLong(this.size);
                     this.valueForm = number;
                     this.valueFormK = (double)number / 1024;
                     this.ValueFormM = this.valueFormK / 1024;
