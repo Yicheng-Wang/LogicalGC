@@ -9,6 +9,7 @@ public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
     static ArrayList<YoungGC> youngRecord = new ArrayList<>();
     static Stack<Double> timeLine = new Stack<>();
+    static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
 
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
@@ -108,6 +109,37 @@ public class LogReader {
                 String stoppedMessage = rows[rowindex];
                 HeapSnapshot afterGC = HeapRecord.remove(HeapRecord.size()-1);
                 SentenceReader.ParseStopped(afterGC,stoppedMessage);
+                rowindex ++;
+            }
+
+
+            //Full GC
+            else if(rows[rowindex].contains("Class Histogram (before full gc)")) {
+                rowindex += 3;
+                InstanceDistribution beforeDistribution = new InstanceDistribution();
+                while(!rows[rowindex].contains("Total      ")){
+                    Integer cursor = rows[rowindex].indexOf(':') + 1;
+                    String instances = Utility.skipSpace(rows[rowindex],cursor);
+                    String bytes = Utility.skipSpace(rows[rowindex],cursor);
+                    String className = Utility.skipSpace(rows[rowindex],cursor);
+                    beforeDistribution.instances.add(Long.parseLong(instances));
+                    beforeDistribution.bytes.add(Long.parseLong(bytes));
+                    beforeDistribution.className.add(className);
+                    rowindex++;
+                }
+                Integer index = 5;
+                String totalInstance = Utility.skipSpace(rows[rowindex],index);
+                String totalbytes = Utility.skipSpace(rows[rowindex],index);
+                beforeDistribution.totalInstance = Long.parseLong(totalInstance);
+                beforeDistribution.totalBytes = Long.parseLong(totalbytes);
+                distributions.add(beforeDistribution);
+                rowindex += 2;
+            }
+
+            else if(rows[rowindex].contains("[Full GC ")){
+
+            }
+            else{
                 rowindex ++;
             }
         }

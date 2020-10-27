@@ -11,6 +11,19 @@ public class Utility {
         }
         return result;
     }
+
+    public static String skipSpace(String row, Integer cursor){
+        String content = "";
+        while(row.charAt(cursor) == ' ')
+            cursor++;
+        char num;
+        while((num = row.charAt(cursor) )!= ' '){
+            content += num;
+            cursor++;
+        }
+        return content;
+    }
+
     public static class Number{
         boolean endWithK = false;
         boolean isFloat = false;
