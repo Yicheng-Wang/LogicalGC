@@ -20,8 +20,7 @@ public class SentenceReader {
 
     public static YoungGC ParseYoungGCcause(String[] rows){
         YoungGC newGC = new YoungGC();
-        String casue = Utility.Number.parseNumber("[GC (",rows[0]).size;
-        newGC.Cause = casue.substring(0,casue.length()-1);
+        newGC.Cause = Utility.parseString("[GC (",rows[0]);
         newGC.threadNum = Integer.parseInt(Utility.Number.parseNumber("ParallelGCThreads ",rows[0]).size);
         return newGC;
     }
@@ -30,8 +29,8 @@ public class SentenceReader {
         lastGC.survivedSize = Utility.Number.parseNumber("survived: ",rows[0]);
         lastGC.promotionSize = Utility.Number.parseNumber("promoted: ",rows[0]);
         lastGC.overflow = rows[0].contains("true");
-        Utility.Number policyStart = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]);
-        LogReader.timeLine.push(policyStart.valueDouble);
+        //Utility.Number policyStart = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]);
+        //LogReader.timeLine.push(policyStart.valueDouble);
         lastGC.order = Integer.parseInt(Utility.Number.parseNumber("collection: ",rows[1]).size);
         lastGC.newThreshold = Integer.parseInt(Utility.Number.parseNumber("threshold ",rows[3]).size);
         lastGC.processSize = Utility.Number.parseNumber("[PSYoungGen: ",rows[7]);
@@ -39,7 +38,19 @@ public class SentenceReader {
         lastGC.cleanSize.size = Long.toString(lastGC.cleanSize.valueForm);
         lastGC.cleanSize.completeAllForm();
         lastGC.timeCost = Utility.Number.parseNumber("), ",rows[7]).valueDouble;
-        lastGC.CPUpercentage = Utility.Number.parseNumber("Times: user",rows[7]).valueDouble / lastGC.timeCost / lastGC.threadNum;
+        lastGC.CPUpercentage = Utility.Number.parseNumber("Times: user=",rows[7]).valueDouble / lastGC.timeCost / lastGC.threadNum;
         lastGC.complete = true;
+    }
+
+    public static void ParseStopped(HeapSnapshot afterGC, String stoppedMessage) {
+        Double systemTime = Utility.Number.parseNumber("",stoppedMessage).valueDouble;
+        Double startStop = LogReader.timeLine.pop();
+        TimePeriod FinishedGC = new TimePeriod();
+        FinishedGC.type = TimePeriod.usageType.YoungGC;
+        FinishedGC.length = systemTime - startStop;
+        afterGC.phase = FinishedGC;
+        afterGC.complete = true;
+        LogReader.timeLine.push(startStop);
+        LogReader.timeLine.push(systemTime);
     }
 }

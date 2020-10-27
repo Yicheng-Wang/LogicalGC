@@ -1,4 +1,16 @@
 public class Utility {
+
+    public static String parseString(String Symbol, String rows){
+        int sizeStartIndex = rows.indexOf(Symbol);
+        int i = sizeStartIndex + Symbol.length();
+        String result = "";
+        char word;
+        while((word = rows.charAt(i)) != ')' ){
+            result += word;
+            i++;
+        }
+        return result;
+    }
     public static class Number{
         boolean endWithK = false;
         boolean isFloat = false;

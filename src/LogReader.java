@@ -1,3 +1,5 @@
+import sun.rmi.runtime.Log;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,26 +40,8 @@ public class LogReader {
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
         TimePeriod Application = new TimePeriod();
-        //First Stop
-        while(rowindex < rows.length){
-            if (rows[rowindex].contains("Application time")){
-                TimePeriod warmup = new TimePeriod();
-                Utility.Number systemtime = Utility.Number.parseNumber("",rows[rowindex]);
-                LogReader.timeLine.push(systemtime.valueDouble);
-                Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
-                warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
-                warmup.type = TimePeriod.usageType.Warmup;
-                Application.type = TimePeriod.usageType.Application;
-                Application.length = applicationtime.valueDouble;
-                initial.phase = warmup;
-                HeapRecord.add(initial);
-                rowindex++;
-                break;
-            }
-            rowindex ++;
-        }
 
-        //Parse Later
+        //Parse
         while(rowindex < rows.length){
             if(rows[rowindex].contains("Heap before GC")){
                 String[] HeapPrint;
@@ -74,10 +58,32 @@ public class LogReader {
                 HeapRecord.add(beforeGC);
                 rowindex += 9;
             }
-            else if(rows[rowindex].contains("Heap after GC")){
-                //TODO:
 
+            else if(rows[rowindex].contains("Heap after GC")){
+                String[] HeapPrint;
+                HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
+                HeapSnapshot afterGC = SentenceReader.parsePrintHeap(HeapPrint);
+                HeapRecord.add(afterGC);
+                rowindex += 10;
             }
+
+            else if(rows[rowindex].contains("Application time")){
+                //TODO:
+                Utility.Number systemtime = Utility.Number.parseNumber("",rows[rowindex]);
+                Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
+                if(LogReader.timeLine.empty()){
+                    TimePeriod warmup = new TimePeriod();
+                    warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
+                    warmup.type = TimePeriod.usageType.Warmup;
+                    initial.phase = warmup;
+                    HeapRecord.add(initial);
+                }
+                LogReader.timeLine.push(systemtime.valueDouble);
+                Application.type = TimePeriod.usageType.Application;
+                Application.length = applicationtime.valueDouble;
+                rowindex++;
+            }
+
             else if(rows[rowindex].contains("GC (")){
                 //TODO:
                 String[] GCPrint;
@@ -86,6 +92,7 @@ public class LogReader {
                 youngRecord.add(newGC);
                 rowindex += 2;
             }
+
             else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
                 //TODO:
                 String[] survivePrint;
@@ -93,12 +100,16 @@ public class LogReader {
                 YoungGC lastGC = youngRecord.remove(youngRecord.size()-1);
                 SentenceReader.ParseAdaptivePolicy(lastGC,survivePrint);
                 youngRecord.add(lastGC);
-                rowindex +=7;
-            }
-            else if(rows[rowindex].contains("AdaptiveSizeStart:")){
-                //TODO:
+                rowindex +=8;
             }
 
+            else if(rows[rowindex].contains("threads were stopped: ")){
+                //TODO:
+                String stoppedMessage = rows[rowindex];
+                HeapSnapshot afterGC = HeapRecord.remove(HeapRecord.size()-1);
+                SentenceReader.ParseStopped(afterGC,stoppedMessage);
+                rowindex ++;
+            }
         }
     }
 }
