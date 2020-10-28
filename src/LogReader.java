@@ -1,5 +1,3 @@
-import sun.rmi.runtime.Log;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +5,7 @@ import java.util.Stack;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
-    static ArrayList<YoungGC> youngRecord = new ArrayList<>();
+    static ArrayList<GC> GCRecord = new ArrayList<>();
     static Stack<Double> timeLine = new Stack<>();
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
 
@@ -48,6 +46,15 @@ public class LogReader {
                 String[] HeapPrint;
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
                 HeapSnapshot beforeGC = SentenceReader.parsePrintHeap(HeapPrint);
+                if(rows[rowindex].contains("pre compact")){
+                    TimePeriod addition = new TimePeriod();
+                    double system = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                    double applicationStop = timeLine.peek();
+                    addition.length = system - applicationStop;
+                    addition.type = TimePeriod.usageType.CollectInfo;
+                    beforeGC.additionalPhase = addition;
+                    timeLine.push(system);
+                }
                 beforeGC.phase = Application;
                 beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
@@ -90,7 +97,7 @@ public class LogReader {
                 String[] GCPrint;
                 GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
                 YoungGC newGC = SentenceReader.ParseYoungGCcause(GCPrint);
-                youngRecord.add(newGC);
+                GCRecord.add(newGC);
                 rowindex += 2;
             }
 
@@ -98,9 +105,9 @@ public class LogReader {
                 //TODO:
                 String[] survivePrint;
                 survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+8);
-                YoungGC lastGC = youngRecord.remove(youngRecord.size()-1);
+                YoungGC lastGC = (YoungGC) GCRecord.remove(GCRecord.size()-1);
                 SentenceReader.ParseAdaptivePolicy(lastGC,survivePrint);
-                youngRecord.add(lastGC);
+                GCRecord.add(lastGC);
                 rowindex +=8;
             }
 
@@ -115,6 +122,14 @@ public class LogReader {
 
             //Full GC
             else if(rows[rowindex].contains("Class Histogram (before full gc)")) {
+                double systime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                double laststart = timeLine.peek();
+                double gccost = GCRecord.get(GCRecord.size()-1).timeCost;
+                double gcend = laststart + gccost;
+                timeLine.push(gcend);
+                timeLine.push(systime);
+                Application.length = systime - gcend;
+
                 rowindex += 3;
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
                 while(!rows[rowindex].contains("Total      ")){
@@ -137,7 +152,20 @@ public class LogReader {
             }
 
             else if(rows[rowindex].contains("[Full GC ")){
+                String[] Fullcontent;
+                Fullcontent = Arrays.copyOfRange(rows,rowindex,rowindex+6);
+                FullGC newFull = new FullGC();
+                SentenceReader.ParseFullGC(newFull,Fullcontent);
+                GCRecord.add(newFull);
+                rowindex += 6;
+            }
 
+            else if(rows[rowindex].contains("compaction phase")){
+                FullGC unFinished = (FullGC) GCRecord.get(GCRecord.size()-1);
+                double systemtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                while (!rows[rowindex].contains("deferred updates")){
+                    rowindex ++;
+                }
             }
             else{
                 rowindex ++;

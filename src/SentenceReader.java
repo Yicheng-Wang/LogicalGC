@@ -53,4 +53,14 @@ public class SentenceReader {
         LogReader.timeLine.push(startStop);
         LogReader.timeLine.push(systemTime);
     }
+
+    public static void ParseFullGC(FullGC newFull, String[] rows) {
+        double systemTime = Utility.Number.parseNumber("",rows[0]).valueDouble;
+        double GCstart = LogReader.timeLine.peek();
+        newFull.PreCompact = systemTime - GCstart;
+        newFull.Cause = Utility.parseString("[Full GC (",rows[0]);
+        newFull.Markingphase = Utility.Number.parseNumber(", ",rows[3]).valueDouble;
+        newFull.Summaryphase = Utility.Number.parseNumber(", ",rows[4]).valueDouble;
+        newFull.AdjustRoots = Utility.Number.parseNumber(", ",rows[5]).valueDouble;
+    }
 }
