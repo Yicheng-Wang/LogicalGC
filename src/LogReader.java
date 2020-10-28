@@ -47,12 +47,10 @@ public class LogReader {
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
                 HeapSnapshot beforeGC = SentenceReader.parsePrintHeap(HeapPrint);
                 if(rows[rowindex].contains("pre compact")){
-                    TimePeriod addition = new TimePeriod();
                     double system = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                     double applicationStop = timeLine.peek();
-                    addition.length = system - applicationStop;
-                    addition.type = TimePeriod.usageType.CollectInfo;
-                    beforeGC.additionalPhase = addition;
+                    Application.length = system - applicationStop;
+                    Application.type = TimePeriod.usageType.CollectInfo;
                     timeLine.push(system);
                 }
                 beforeGC.phase = Application;
@@ -122,14 +120,6 @@ public class LogReader {
 
             //Full GC
             else if(rows[rowindex].contains("Class Histogram (before full gc)")) {
-                double systime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
-                double laststart = timeLine.peek();
-                double gccost = GCRecord.get(GCRecord.size()-1).timeCost;
-                double gcend = laststart + gccost;
-                timeLine.push(gcend);
-                timeLine.push(systime);
-                Application.length = systime - gcend;
-
                 rowindex += 3;
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
                 while(!rows[rowindex].contains("Total      ")){
