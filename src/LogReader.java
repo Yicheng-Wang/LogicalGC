@@ -114,12 +114,21 @@ public class LogReader {
                 String stoppedMessage = rows[rowindex];
                 HeapSnapshot afterGC = HeapRecord.remove(HeapRecord.size()-1);
                 SentenceReader.ParseStopped(afterGC,stoppedMessage);
+                HeapRecord.add(afterGC);
                 rowindex ++;
             }
 
 
             //Full GC
             else if(rows[rowindex].contains("Class Histogram (before full gc)")) {
+                if(rows[rowindex].contains("(before full gc)")){
+                    double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                    HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
+                    TimePeriod youngGCTime = new TimePeriod();
+                    youngGCTime.length = systemTime - timeLine.peek();
+                    youngGCTime.type = TimePeriod.usageType.YoungGC;
+                    afterGC.phase = youngGCTime;
+                }
                 rowindex += 3;
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
                 while(!rows[rowindex].contains("Total      ")){
@@ -153,13 +162,35 @@ public class LogReader {
             else if(rows[rowindex].contains("compaction phase")){
                 FullGC unFinished = (FullGC) GCRecord.get(GCRecord.size()-1);
                 double systemtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
-                while (!rows[rowindex].contains("deferred updates")){
+                while (!rows[rowindex].contains("deferred updates"))
                     rowindex ++;
-                }
+                double endtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                unFinished.Compactionphase = endtime - systemtime;
+                while (!rows[rowindex].contains("post compact"))
+                    rowindex ++;
+                systemtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                unFinished.PostCompact = systemtime - endtime;
+                rowindex ++;
+            }
+
+            else if(rows[rowindex].contains("[ParOldGen: ")){
+                FullGC unFinished = (FullGC) GCRecord.get(GCRecord.size()-1);
+                SentenceReader.ParseFullStop(unFinished,rows[rowindex]);
+                rowindex++;
+            }
+
+            else if(rows[rowindex].contains("Heap") && rows[rowindex].length()<=5){
+                String[] HeapPrint;
+                HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
+                HeapSnapshot finalShot = SentenceReader.parsePrintHeap(HeapPrint);
+                HeapRecord.add(finalShot);
             }
             else{
                 rowindex ++;
             }
         }
+        HeapSnapshot last = HeapRecord.get(HeapRecord.size()-1);
+        last.phase = Application;
+        last.complete = true;
     }
 }

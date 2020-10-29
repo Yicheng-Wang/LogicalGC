@@ -63,4 +63,15 @@ public class SentenceReader {
         newFull.Summaryphase = Utility.Number.parseNumber(", ",rows[4]).valueDouble;
         newFull.AdjustRoots = Utility.Number.parseNumber(", ",rows[5]).valueDouble;
     }
+
+    public static void ParseFullStop(FullGC unFinished, String row) {
+        row = row.substring(row.indexOf('[',row.indexOf('[')+1));
+        unFinished.processSize = Utility.Number.parseNumber("] ",row);
+        Utility.Number afterSize = Utility.Number.parseNumber("->",row);
+        unFinished.cleanSize.size = String.valueOf(unFinished.processSize.valueForm - afterSize.valueForm);
+        unFinished.cleanSize.completeAllForm();
+        unFinished.timeCost = Utility.Number.parseNumber(")], ",row).valueDouble;
+        unFinished.CPUpercentage = Utility.Number.parseNumber("Times: user=",row).valueDouble / unFinished.timeCost / unFinished.threadNum;
+        unFinished.complete = true;
+    }
 }
