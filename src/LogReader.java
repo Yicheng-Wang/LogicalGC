@@ -53,7 +53,8 @@ public class LogReader {
                     Application.type = TimePeriod.usageType.CollectInfo;
                     timeLine.push(system);
                 }
-                beforeGC.phase = Application;
+                beforeGC.phase.type = Application.type;
+                beforeGC.phase.length = Application.length;
                 beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
                 if(!lastone.complete){
@@ -90,7 +91,7 @@ public class LogReader {
                 rowindex++;
             }
 
-            else if(rows[rowindex].contains("GC (")){
+            else if(rows[rowindex].contains("[GC (")){
                 //TODO:
                 String[] GCPrint;
                 GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
@@ -184,6 +185,7 @@ public class LogReader {
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
                 HeapSnapshot finalShot = SentenceReader.parsePrintHeap(HeapPrint);
                 HeapRecord.add(finalShot);
+                rowindex +=9;
             }
             else{
                 rowindex ++;

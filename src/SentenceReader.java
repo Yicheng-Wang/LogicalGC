@@ -46,7 +46,10 @@ public class SentenceReader {
         Double systemTime = Utility.Number.parseNumber("",stoppedMessage).valueDouble;
         Double startStop = LogReader.timeLine.pop();
         TimePeriod FinishedGC = new TimePeriod();
-        FinishedGC.type = TimePeriod.usageType.YoungGC;
+        if(LogReader.GCRecord.get(LogReader.GCRecord.size()-1) instanceof FullGC)
+            FinishedGC.type = TimePeriod.usageType.OldGC;
+        else
+            FinishedGC.type = TimePeriod.usageType.YoungGC;
         FinishedGC.length = systemTime - startStop;
         afterGC.phase = FinishedGC;
         afterGC.complete = true;
@@ -65,7 +68,7 @@ public class SentenceReader {
     }
 
     public static void ParseFullStop(FullGC unFinished, String row) {
-        row = row.substring(row.indexOf('[',row.indexOf('[')+1));
+        row = row.substring(row.indexOf(']',row.indexOf(']')+1));
         unFinished.processSize = Utility.Number.parseNumber("] ",row);
         Utility.Number afterSize = Utility.Number.parseNumber("->",row);
         unFinished.cleanSize.size = String.valueOf(unFinished.processSize.valueForm - afterSize.valueForm);
