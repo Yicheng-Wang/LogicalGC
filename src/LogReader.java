@@ -121,9 +121,10 @@ public class LogReader {
 
 
             //Full GC
-            else if(rows[rowindex].contains("Class Histogram (before full gc)")) {
+            else if(rows[rowindex].contains("Class Histogram")) {
                 if(rows[rowindex].contains("(before full gc)")){
                     double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
+                    timeLine.push(systemTime);
                     HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
                     TimePeriod youngGCTime = new TimePeriod();
                     youngGCTime.length = systemTime - timeLine.peek();
@@ -155,6 +156,7 @@ public class LogReader {
                 String[] Fullcontent;
                 Fullcontent = Arrays.copyOfRange(rows,rowindex,rowindex+6);
                 FullGC newFull = new FullGC();
+                newFull.threadNum = (int) Utility.Number.parseNumber("ParallelGCThreads ",rows[rowindex-2]).valueForm;
                 SentenceReader.ParseFullGC(newFull,Fullcontent);
                 GCRecord.add(newFull);
                 rowindex += 6;
