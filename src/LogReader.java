@@ -135,21 +135,32 @@ public class LogReader {
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
                 while(!rows[rowindex].contains("Total      ")){
                     Integer cursor = rows[rowindex].indexOf(':') + 1;
-                    String instances = Utility.skipSpace(rows[rowindex],cursor);
-                    String bytes = Utility.skipSpace(rows[rowindex],cursor);
-                    String className = Utility.skipSpace(rows[rowindex],cursor);
+                    Object[] giveBack = Utility.skipSpace(rows[rowindex],cursor);
+                    String instances = (String) giveBack[0];
+                    cursor = (Integer) giveBack[1];
+                    giveBack = Utility.skipSpace(rows[rowindex],cursor);
+                    String bytes = (String) giveBack[0];
+                    cursor = (Integer) giveBack[1];
+                    giveBack = Utility.skipSpace(rows[rowindex],cursor);
+                    String className = (String) giveBack[0];
                     beforeDistribution.instances.add(Long.parseLong(instances));
                     beforeDistribution.bytes.add(Long.parseLong(bytes));
                     beforeDistribution.className.add(className);
                     rowindex++;
                 }
                 Integer index = 5;
-                String totalInstance = Utility.skipSpace(rows[rowindex],index);
-                String totalbytes = Utility.skipSpace(rows[rowindex],index);
+                Object[] giveBack = Utility.skipSpace(rows[rowindex],index);
+                String totalInstance = (String) giveBack[0];
+                index = (Integer) giveBack[1];
+                giveBack = Utility.skipSpace(rows[rowindex],index);
+                String totalbytes = (String) giveBack[0];
                 beforeDistribution.totalInstance = Long.parseLong(totalInstance);
                 beforeDistribution.totalBytes = Long.parseLong(totalbytes);
+                rowindex++;
+
+                beforeDistribution.timecost = Utility.Number.parseNumber(", ",rows[rowindex]).valueDouble;
                 distributions.add(beforeDistribution);
-                rowindex += 2;
+                rowindex ++;
             }
 
             else if(rows[rowindex].contains("[Full GC ")){
@@ -165,14 +176,11 @@ public class LogReader {
             else if(rows[rowindex].contains("compaction phase")){
                 FullGC unFinished = (FullGC) GCRecord.get(GCRecord.size()-1);
                 double systemtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
-                while (!rows[rowindex].contains("deferred updates"))
+                while (!rows[rowindex].contains("post compact"))
                     rowindex ++;
                 double endtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                 unFinished.Compactionphase = endtime - systemtime;
-                while (!rows[rowindex].contains("post compact"))
-                    rowindex ++;
-                systemtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
-                unFinished.PostCompact = systemtime - endtime;
+                unFinished.PostCompact = Utility.Number.parseNumber("compact, ",rows[rowindex]).valueDouble;
                 rowindex ++;
             }
 

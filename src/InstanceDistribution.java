@@ -6,4 +6,5 @@ public class InstanceDistribution {
     ArrayList<String> className = new ArrayList<>();
     long totalInstance = 0;
     long totalBytes = 0;
+    double timecost = 0.0;
 }

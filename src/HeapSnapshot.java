@@ -4,6 +4,8 @@ public class HeapSnapshot {
     Generation[] HeapPartition = new Generation[5];
     boolean complete = false;
     TimePeriod phase = new TimePeriod();
+    TimePeriod additionPhase = new TimePeriod();
+
     public HeapSnapshot initial(String initialRow){
         HeapSnapshot init = new HeapSnapshot();
         init.totalSize = Utility.Number.parseNumber("-XX:InitialHeapSize=",initialRow);

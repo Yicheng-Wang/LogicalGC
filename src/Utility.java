@@ -1,3 +1,5 @@
+import java.lang.reflect.Field;
+
 public class Utility {
 
     public static String parseString(String Symbol, String rows){
@@ -12,16 +14,26 @@ public class Utility {
         return result;
     }
 
-    public static String skipSpace(String row, Integer cursor){
+    public static Object[] skipSpace(String row, Integer cursor){
         String content = "";
         while(row.charAt(cursor) == ' ')
             cursor++;
         char num;
-        while((num = row.charAt(cursor) )!= ' '){
+        while(cursor < row.length() && (num = row.charAt(cursor) )!= ' ' ){
             content += num;
             cursor++;
         }
-        return content;
+        int cursorvalue = cursor;
+
+        try{
+            Field field = Integer.class.getDeclaredField("value");
+            field.setAccessible(true);
+            field.set(cursor, cursorvalue);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Object[] back = new Object[]{content,cursor};
+        return back;
     }
 
     public static class Number{
