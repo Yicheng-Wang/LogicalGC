@@ -4,7 +4,7 @@ public class HeapSnapshot {
     Generation[] HeapPartition = new Generation[5];
     boolean complete = false;
     TimePeriod phase = new TimePeriod();
-    TimePeriod additionPhase = new TimePeriod();
+    TimePeriod additionPhase = null;
 
     public HeapSnapshot initial(String initialRow){
         HeapSnapshot init = new HeapSnapshot();

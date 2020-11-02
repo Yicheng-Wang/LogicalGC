@@ -29,6 +29,7 @@ public class SentenceReader {
         lastGC.survivedSize = Utility.Number.parseNumber("survived: ",rows[0]);
         lastGC.promotionSize = Utility.Number.parseNumber("promoted: ",rows[0]);
         lastGC.overflow = rows[0].contains("true");
+        lastGC.AdaptiveTime = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]).valueDouble;
         //Utility.Number policyStart = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]);
         //LogReader.timeLine.push(policyStart.valueDouble);
         lastGC.order = Integer.parseInt(Utility.Number.parseNumber("collection: ",rows[1]).size);
