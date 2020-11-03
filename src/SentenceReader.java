@@ -85,8 +85,8 @@ public class SentenceReader {
         Utility.Number afterSize = Utility.Number.parseNumber("->",row);
         unFinished.cleanSize.size = String.valueOf(unFinished.processSize.valueForm - afterSize.valueForm);
         unFinished.cleanSize.completeAllForm();
-        unFinished.timeCost = Utility.Number.parseNumber(")], ",row).valueDouble;
-        unFinished.CPUpercentage = Utility.Number.parseNumber("Times: user=",row).valueDouble / unFinished.timeCost / unFinished.threadNum;
+        unFinished.reportStopTime = Utility.Number.parseNumber(")], ",row).valueDouble;
+        unFinished.CPUpercentage = Utility.Number.parseNumber("Times: user=",row).valueDouble;
         unFinished.complete = true;
     }
 }

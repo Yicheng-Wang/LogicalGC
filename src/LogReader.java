@@ -5,6 +5,7 @@ import java.util.Stack;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
+    static ArrayList<TimePeriod> ApplicationRecord = new ArrayList<>();
     static ArrayList<GC> GCRecord = new ArrayList<>();
     static Stack<Double> timeLine = new Stack<>();
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
@@ -38,7 +39,7 @@ public class LogReader {
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
-        TimePeriod Application = new TimePeriod();
+
 
         //Parse
         while(rowindex < rows.length){
@@ -49,12 +50,15 @@ public class LogReader {
                 if(rows[rowindex].contains("pre compact")){
                     double system = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                     double applicationStop = timeLine.peek();
-                    Application.length = system - applicationStop;
-                    Application.type = TimePeriod.usageType.CollectInfo;
+                    beforeGC.phase.length = system - applicationStop;
+                    beforeGC.phase.type = TimePeriod.usageType.CollectInfo;
                     timeLine.push(system);
                 }
-                beforeGC.phase.type = Application.type;
-                beforeGC.phase.length = Application.length;
+                else{
+                    TimePeriod Application =  ApplicationRecord.get(ApplicationRecord.size()-1);
+                    beforeGC.phase.type = Application.type;
+                    beforeGC.phase.length = Application.length;
+                }
                 beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
                 if(!lastone.complete){
@@ -86,8 +90,10 @@ public class LogReader {
                     HeapRecord.add(initial);
                 }
                 LogReader.timeLine.push(systemtime.valueDouble);
+                TimePeriod Application = new TimePeriod();
                 Application.type = TimePeriod.usageType.Application;
                 Application.length = applicationtime.valueDouble;
+                ApplicationRecord.add(Application);
                 rowindex++;
             }
 
@@ -124,16 +130,21 @@ public class LogReader {
             else if(rows[rowindex].contains("Class Histogram")) {
                 double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                 if(rows[rowindex].contains("(before full gc)")){
-                    timeLine.push(systemTime);
                     HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
                     TimePeriod youngGCTime = new TimePeriod();
                     youngGCTime.length = systemTime - timeLine.peek();
+                    timeLine.push(systemTime);
                     youngGCTime.type = TimePeriod.usageType.YoungGC;
                     afterGC.phase = youngGCTime;
                 }
 
                 GC Last = GCRecord.get(LogReader.GCRecord.size()-1);
                 Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                if(Last instanceof FullGC){
+                    Last.timeCost = ((FullGC)Last).PreCompact + ((FullGC)Last).Markingphase + ((FullGC)Last).Summaryphase
+                            + ((FullGC)Last).AdjustRoots + ((FullGC)Last).Compactionphase + ((FullGC)Last).PostCompact;
+                    Last.CPUpercentage = Last.CPUpercentage / Last.timeCost / Last.threadNum;
+                }
 
                 rowindex += 3;
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
@@ -208,7 +219,10 @@ public class LogReader {
             }
         }
         HeapSnapshot last = HeapRecord.get(HeapRecord.size()-1);
-        last.phase = Application;
+        last.phase.length = ApplicationRecord.get(ApplicationRecord.size()-1).length;
+        last.phase.type = ApplicationRecord.get(ApplicationRecord.size()-1).type;
         last.complete = true;
+
+        Showing.shows();
     }
 }

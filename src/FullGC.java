@@ -5,4 +5,5 @@ public class FullGC extends GC{
     double AdjustRoots;
     double Compactionphase;
     double PostCompact;
+    double reportStopTime;
 }
