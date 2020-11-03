@@ -60,7 +60,7 @@ public class SentenceReader {
         else{
             FinishedGC.type = TimePeriod.usageType.YoungGC;
             FinishedGC.length = systemTime - startStop;
-            ((YoungGC)Temp).AdaptiveTime = systemTime - ((YoungGC)Temp).AdaptiveTime;
+            Temp.AdaptiveTime = systemTime - Temp.AdaptiveTime;
         }
 
         afterGC.phase = FinishedGC;

@@ -9,6 +9,7 @@ public class LogReader {
     static ArrayList<GC> GCRecord = new ArrayList<>();
     static Stack<Double> timeLine = new Stack<>();
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
+    static long lastcreate = 0;
 
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
@@ -211,6 +212,8 @@ public class LogReader {
                 String[] HeapPrint;
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
                 HeapSnapshot finalShot = SentenceReader.parsePrintHeap(HeapPrint);
+                lastcreate = finalShot.HeapPartition[0].usedSize.valueForm + finalShot.HeapPartition[1].usedSize.valueForm
+                        + finalShot.HeapPartition[2].usedSize.valueForm + finalShot.HeapPartition[3].usedSize.valueForm;
                 HeapRecord.add(finalShot);
                 rowindex +=9;
             }
