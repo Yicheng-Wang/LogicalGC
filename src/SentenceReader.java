@@ -47,7 +47,8 @@ public class SentenceReader {
         Double systemTime = Utility.Number.parseNumber("",stoppedMessage).valueDouble;
         Double startStop = LogReader.timeLine.pop();
         TimePeriod FinishedGC = new TimePeriod();
-        if(LogReader.GCRecord.get(LogReader.GCRecord.size()-1) instanceof FullGC){
+        GC Temp;
+        if((Temp = LogReader.GCRecord.get(LogReader.GCRecord.size()-1)) instanceof FullGC){
             FinishedGC.type = TimePeriod.usageType.OldGC;
             InstanceDistribution last = LogReader.distributions.get(LogReader.distributions.size() - 1);
             FinishedGC.length = systemTime - startStop - last.timecost;
@@ -56,10 +57,10 @@ public class SentenceReader {
             collectInfo.length = last.timecost;
             afterGC.additionPhase = collectInfo;
         }
-
         else{
             FinishedGC.type = TimePeriod.usageType.YoungGC;
             FinishedGC.length = systemTime - startStop;
+            ((YoungGC)Temp).AdaptiveTime = systemTime - ((YoungGC)Temp).AdaptiveTime;
         }
 
         afterGC.phase = FinishedGC;

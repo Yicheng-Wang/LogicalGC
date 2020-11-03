@@ -122,8 +122,8 @@ public class LogReader {
 
             //Full GC
             else if(rows[rowindex].contains("Class Histogram")) {
+                double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                 if(rows[rowindex].contains("(before full gc)")){
-                    double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                     timeLine.push(systemTime);
                     HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
                     TimePeriod youngGCTime = new TimePeriod();
@@ -131,6 +131,10 @@ public class LogReader {
                     youngGCTime.type = TimePeriod.usageType.YoungGC;
                     afterGC.phase = youngGCTime;
                 }
+
+                GC Last = GCRecord.get(LogReader.GCRecord.size()-1);
+                Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+
                 rowindex += 3;
                 InstanceDistribution beforeDistribution = new InstanceDistribution();
                 while(!rows[rowindex].contains("Total      ")){
@@ -181,6 +185,8 @@ public class LogReader {
                 double endtime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
                 unFinished.Compactionphase = endtime - systemtime;
                 unFinished.PostCompact = Utility.Number.parseNumber("compact, ",rows[rowindex]).valueDouble;
+                rowindex ++;
+                unFinished.AdaptiveTime = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[rowindex]).valueDouble;
                 rowindex ++;
             }
 
