@@ -34,6 +34,13 @@ public class Showing {
 
     static long survivedTotal = 0;
     static long promotionTotal = 0;
+
+    static double MarkingTimeTotal = 0;
+    static double CompactTimeTotal = 0;
+    static double PreCompactTotal = 0;
+    static double AdjustRootsTotal= 0 ;
+    static double PostCompactTotal = 0;
+
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
 
@@ -48,28 +55,36 @@ public class Showing {
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,1800, 1000);
-        MainPanel.setPreferredSize(new Dimension(1000, 800));
+        MainPanel.setBounds(0,0,2100, 1000);
+        MainPanel.setPreferredSize(new Dimension(2100, 800));
         MainPanel.setBackground(Color.WHITE);
         JLabel TitleFirst = new JLabel("整体情况",JLabel.CENTER);
 
         TitleFirst.setFont(TitleStyle);
-        TitleFirst.setBounds(20,10,550,50);
+        TitleFirst.setBounds(20,10,500,50);
         MainPanel.add(TitleFirst);
         JPanel TotalGCStats = Showing.TotalGCStats();
-        TotalGCStats.setBounds(20,60,550,210);
+        TotalGCStats.setBounds(20,60,500,210);
         MainPanel.add(TotalGCStats);
 
         JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
         TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(590,10,550,50);
+        TitleSecond.setBounds(540,10,500,50);
         MainPanel.add(TitleSecond);
         JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(590,60,550,240);
+        MinorGCStats.setBounds(540,60,500,240);
         MainPanel.add(MinorGCStats);
-        
+
+        JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
+        TitleThird.setFont(TitleStyle);
+        TitleThird.setBounds(1060,10,500,50);
+        MainPanel.add(TitleThird);
+        JPanel FullGCStats = Showing.FullGCStats();
+        FullGCStats.setBounds(1060,60,500,210);
+        MainPanel.add(FullGCStats);
+
         JScrollPane jsp = new JScrollPane(MainPanel);
-        jsp.setBounds(20,10,1600, 800);
+        jsp.setBounds(20,10,1750, 900);
         jsp.setBackground(Color.WHITE);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -91,6 +106,49 @@ public class Showing {
 
     }
 
+    private static JPanel FullGCStats() {
+        GridLayout layout = new GridLayout(7, 2);
+        JPanel FullGC = new JPanel(layout);
+        FullGC.setBackground(Color.WHITE);
+
+        FullGC.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        JLabel[] TextLable = new JLabel[14];
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        for(int i=0;i<14;i++){
+            TextLable[i] = new JLabel("",JLabel.CENTER);
+            TextLable[i].setPreferredSize(new Dimension(50,30));
+            TextLable[i].setBorder(border);
+            Font set = new Font("Dialog", 0, 18);
+            TextLable[i].setFont(set);
+        }
+
+        TextLable[0].setText("Full GC总数");
+        TextLable[1].setText(String.valueOf(FullGCcount));
+
+        TextLable[2].setText("平均Full GC时间");
+        TextLable[3].setText(df.format(FullGCtimeSum / FullGCcount) + " sec");
+
+        TextLable[4].setText("平均标记阶段时间");
+        TextLable[5].setText(df.format(MarkingTimeTotal / FullGCcount) + " sec");
+
+        TextLable[6].setText("平均整理阶段时间");
+        TextLable[7].setText(df.format(CompactTimeTotal / FullGCcount) + " sec");
+
+        TextLable[8].setText("平均处理对象大小");
+        TextLable[9].setText(FullTotalProcess / FullGCcount + " bytes");
+
+        TextLable[10].setText("平均清理对象大小");
+        TextLable[11].setText(FullTotalClean / FullGCcount + " bytes");
+
+        TextLable[12].setText("平均CPU利用率");
+        TextLable[13].setText((df.format(FullCPUPercentage / MinorGCcount * 100)) + "%");
+
+        for(int i=0;i<14;i++)
+            FullGC.add(TextLable[i]);
+
+        return FullGC;
+    }
+
     private static JPanel MinorGCStats() {
         GridLayout layout = new GridLayout(8, 2);
         JPanel MinorGC = new JPanel(layout);
@@ -107,10 +165,10 @@ public class Showing {
             TextLable[i].setFont(set);
         }
 
-        TextLable[0].setText("Minor GC总数");
+        TextLable[0].setText("Minor GC 总数");
         TextLable[1].setText(String.valueOf(MinorGCcount));
 
-        TextLable[2].setText("平均GC时间");
+        TextLable[2].setText("平均Minor GC时间");
         TextLable[3].setText(df.format(MinorGCtimeSum / MinorGCcount) + " sec");
 
         TextLable[4].setText("溢出次数");
@@ -166,6 +224,11 @@ public class Showing {
                 FullTotalProcess += Judge.processSize.valueForm;
                 FullTotalClean += Judge.cleanSize.valueForm;
                 FullCPUPercentage += Judge.CPUpercentage;
+                MarkingTimeTotal += ((FullGC)Judge).Markingphase;
+                CompactTimeTotal += ((FullGC)Judge).Compactionphase;
+                PreCompactTotal += ((FullGC)Judge).PreCompact;
+                AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
+                PostCompactTotal += ((FullGC)Judge).PostCompact;
             }
 
             else{
