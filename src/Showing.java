@@ -89,7 +89,9 @@ public class Showing {
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        ArrayList<Segment> values = new ArrayList<Segment>();
+        PieChart pieChart = Showing.createPieChart();
+
+        ArrayList<Segment> values = new ArrayList<>();
         values.add(new Segment(46, "Full GC", Color.RED));
         values.add(new Segment(32, "Minor GC", Color.ORANGE));
         values.add(new Segment(22, "Application", Color.GREEN));
@@ -103,6 +105,10 @@ public class Showing {
 
         Mainframe.add(jsp);
         Mainframe.setVisible(true);
+
+    }
+
+    private static PieChart createPieChart() {
 
     }
 
