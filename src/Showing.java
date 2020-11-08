@@ -22,6 +22,11 @@ public class Showing {
     static double MinorGCtimeSum = 0;
     static double FullGCtimeSum = 0;
 
+    static double MinorAdaptiveTime = 0;
+
+    static double MinorRunTime = 0;
+    static double FullRunTime = 0;
+
     static long totalReclaimed = 0;
     static long MinorTotalProcess = 0;
     static long FullTotalProcess = 0;
@@ -40,6 +45,13 @@ public class Showing {
     static double PreCompactTotal = 0;
     static double AdjustRootsTotal= 0 ;
     static double PostCompactTotal = 0;
+    static double FullAdaptive = 0;
+
+    static double totalExecutionTime = 0;
+    static double WarmupTime = 0;
+    static double AdaptiveTime = 0;
+    static double CollectInfoTime = 0;
+    static double PrintInforTime = 0;
 
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
@@ -90,18 +102,7 @@ public class Showing {
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         PieChart pieChart = Showing.createPieChart();
-
-        ArrayList<Segment> values = new ArrayList<>();
-        values.add(new Segment(46, "Full GC", Color.RED));
-        values.add(new Segment(32, "Minor GC", Color.ORANGE));
-        values.add(new Segment(22, "Application", Color.GREEN));
-
-        PieChart pieChart = new PieChart(values, "Time Period");
-        pieChart.setSize(700, 600);
-        pieChart.setBounds(50,280,600,600);
-        pieChart.setVisible(true);
         MainPanel.add(pieChart);
-
 
         Mainframe.add(jsp);
         Mainframe.setVisible(true);
@@ -109,7 +110,30 @@ public class Showing {
     }
 
     private static PieChart createPieChart() {
+        ArrayList<Segment> values = new ArrayList<>();
+        totalExecutionTime = LogReader.timeLine.peek();
+        WarmupTime = LogReader.HeapRecord.get(0).phase.length;
+        MinorRunTime = MinorGCtimeSum - MinorAdaptiveTime;
+        FullRunTime = FullGCtimeSum - AdaptiveTime +MinorAdaptiveTime;
 
+        for(int i=0;i<LogReader.distributions.size();i++)
+            CollectInfoTime += LogReader.distributions.get(i).timecost;
+
+        PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime;
+
+        values.add(new Segment(FullRunTime / totalExecutionTime * 100, "Full GC", Color.RED));
+        values.add(new Segment(MinorRunTime / totalExecutionTime * 100, "Minor GC", Color.ORANGE));
+        values.add(new Segment(AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy", Color.MAGENTA));
+        values.add(new Segment(CollectInfoTime / totalExecutionTime * 100, "Collect Information", Color.PINK));
+        values.add(new Segment(PrintInforTime / totalExecutionTime * 100, "Print Information", Color.YELLOW));
+        values.add(new Segment(WarmupTime/ totalExecutionTime * 100, "Warm Up", Color.BLUE));
+        values.add(new Segment(Apptime/ totalExecutionTime * 100, "Application", Color.GREEN));
+
+        PieChart pieChart = new PieChart(values, "Stop Time Distribution");
+        pieChart.setSize(700, 600);
+        pieChart.setBounds(10,320,700,600);
+        pieChart.setVisible(true);
+        return pieChart;
     }
 
     private static JPanel FullGCStats() {
@@ -235,6 +259,7 @@ public class Showing {
                 PreCompactTotal += ((FullGC)Judge).PreCompact;
                 AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
                 PostCompactTotal += ((FullGC)Judge).PostCompact;
+                FullAdaptive += Judge.AdaptiveTime;
             }
 
             else{
@@ -245,9 +270,11 @@ public class Showing {
                 survivedTotal += ((YoungGC)Judge).survivedSize.valueForm;
                 promotionTotal += ((YoungGC)Judge).promotionSize.valueForm;
                 MinorCPUPercentage += Judge.CPUpercentage;
+                MinorAdaptiveTime += Judge.AdaptiveTime;
                 if(((YoungGC)Judge).overflow)
                     overFlowTime ++;
             }
+            AdaptiveTime += Judge.AdaptiveTime;
             GCtimesum += Judge.timeCost;
             totalReclaimed += Judge.cleanSize.valueForm;
         }
@@ -258,6 +285,7 @@ public class Showing {
 
         for(int i=0;i<LogReader.ApplicationRecord.size();i++)
             Apptime += LogReader.ApplicationRecord.get(i).length;
+
         TextLable[6].setText("应用线程执行用时");
         TextLable[7].setText(df.format(Apptime) + " sec");
 
