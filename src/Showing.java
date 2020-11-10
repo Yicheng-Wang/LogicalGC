@@ -81,18 +81,18 @@ public class Showing {
 
         JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
         TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(540,10,500,50);
+        TitleSecond.setBounds(600,10,500,50);
         MainPanel.add(TitleSecond);
         JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(540,60,500,240);
+        MinorGCStats.setBounds(600,60,500,240);
         MainPanel.add(MinorGCStats);
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1060,10,500,50);
+        TitleThird.setBounds(1180,10,500,50);
         MainPanel.add(TitleThird);
         JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1060,60,500,210);
+        FullGCStats.setBounds(1180,60,500,210);
         MainPanel.add(FullGCStats);
 
         JScrollPane jsp = new JScrollPane(MainPanel);
@@ -101,15 +101,33 @@ public class Showing {
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        PieChart pieChart = Showing.createPieChart();
-        MainPanel.add(pieChart);
+        PieChart TimepieChart = Showing.createTimePieChart();
+        MainPanel.add(TimepieChart);
+
+        PieChart FullpieChart = Showing.createFullPieChart();
+        MainPanel.add(FullpieChart);
 
         Mainframe.add(jsp);
         Mainframe.setVisible(true);
 
     }
 
-    private static PieChart createPieChart() {
+    private static PieChart createFullPieChart() {
+
+        ArrayList<Segment> values = new ArrayList<>();
+
+        double time = 100;
+        values.add(new Segment(100, "Full GC -" + df.format(time) + "%", Color.RED));
+
+        PieChart pieChart = new PieChart(values, "Stop Time Distribution");
+        pieChart.setSize(700, 600);
+        pieChart.setBounds(720,320,700,600);
+        pieChart.setVisible(true);
+        return pieChart;
+
+    }
+
+    private static PieChart createTimePieChart() {
         ArrayList<Segment> values = new ArrayList<>();
         totalExecutionTime = LogReader.timeLine.peek();
         WarmupTime = LogReader.HeapRecord.get(0).phase.length;
@@ -121,17 +139,18 @@ public class Showing {
 
         PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime;
 
-        values.add(new Segment(FullRunTime / totalExecutionTime * 100, "Full GC", Color.RED));
-        values.add(new Segment(MinorRunTime / totalExecutionTime * 100, "Minor GC", Color.ORANGE));
-        values.add(new Segment(AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy", Color.MAGENTA));
-        values.add(new Segment(CollectInfoTime / totalExecutionTime * 100, "Collect Information", Color.PINK));
-        values.add(new Segment(PrintInforTime / totalExecutionTime * 100, "Print Information", Color.YELLOW));
-        values.add(new Segment(WarmupTime/ totalExecutionTime * 100, "Warm Up", Color.BLUE));
-        values.add(new Segment(Apptime/ totalExecutionTime * 100, "Application", Color.GREEN));
+        double time;
+        values.add(new Segment(time = FullRunTime / totalExecutionTime * 100, "Full GC -" + df.format(time) + "%", Color.RED));
+        values.add(new Segment(time = MinorRunTime / totalExecutionTime * 100, "Minor GC -" + df.format(time) + "%", Color.MAGENTA));
+        values.add(new Segment(time = AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy -" + df.format(time) + "%", Color.ORANGE));
+        values.add(new Segment(time = CollectInfoTime / totalExecutionTime * 100, "Collect Infor -" + df.format(time) + "%", Color.PINK));
+        values.add(new Segment(time = PrintInforTime / totalExecutionTime * 100, "Print Infor -" + df.format(time) + "%", Color.YELLOW));
+        values.add(new Segment(time = WarmupTime/ totalExecutionTime * 100, "Warm Up -" + df.format(time) + "%", Color.BLUE));
+        values.add(new Segment(time = Apptime/ totalExecutionTime * 100, "Application -" + df.format(time) + "%", Color.GREEN));
 
         PieChart pieChart = new PieChart(values, "Stop Time Distribution");
-        pieChart.setSize(700, 600);
-        pieChart.setBounds(10,320,700,600);
+        pieChart.setSize(600, 700);
+        pieChart.setBounds(0,320,600,700);
         pieChart.setVisible(true);
         return pieChart;
     }
