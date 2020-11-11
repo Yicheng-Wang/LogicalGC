@@ -115,7 +115,7 @@ public class PieChart extends AbstractPieChart implements Legendable {
         
 		LegendVertical legend = new LegendVertical(this.legendFont, this, new Point(100,100));
 		
-		this.rightOffset = 200;
+		this.rightOffset = 180;
 		
 		legend.drawLegend(g, this, categories);
     }

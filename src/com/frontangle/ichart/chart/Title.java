@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
  */
 public class Title {
 	
-	public Font titleFont = new Font("Arial", Font.PLAIN, 24);
+	public Font titleFont = new Font("Arial", 1, 24);
 	
 	public Color titleColor = Color.BLACK;
 	private String title = "No Title Defined";

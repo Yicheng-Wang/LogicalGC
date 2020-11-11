@@ -31,12 +31,12 @@ public class LogReader {
         byte[] data = outputStream.toByteArray();
         fileInputStream.close();
         String content = new String(data);
-        return content.split("\r\n");
+        return content.split("\n");
     }
 
     public static void main(String[] args) throws IOException {
         //String logPath = args[0];
-        String logPath = "C:\\Users\\DELL\\Desktop\\gc.log";
+        String logPath = "C:\\Users\\DELL\\Desktop\\gc1.log";
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;

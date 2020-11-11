@@ -30,7 +30,7 @@ public class LegendVertical extends AbstractLegend implements Serializable{
 
 	
     //padding between the chart and the legend
-    int paddingLegendLeft = 10;
+    int paddingLegendLeft = 0;
     //padding between the chart and the legend
     int paddingLegendRight = 10;
     //padding square and text
@@ -51,8 +51,8 @@ public class LegendVertical extends AbstractLegend implements Serializable{
     
 	public void drawLegend(Graphics2D g, Chart chart, ArrayList<Category> categories) {
 
-        int legendX = (chart.getWidth() - chart.rightOffset) + paddingLegendLeft;
-        int legendY = chart.topOffset; // + paddingBetweenChartAndLegend;
+        int legendX = (chart.getWidth() - chart.rightOffset) + 5;
+        int legendY = chart.topOffset + 15; // + paddingBetweenChartAndLegend;
 
         int legendHeight = (categories.size() * squareWidth); // - (2 * paddingBetweenChartAndLegend);
         int legendWidth = chart.rightOffset - (paddingLegendLeft);

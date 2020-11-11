@@ -1,5 +1,11 @@
+import com.frontangle.ichart.chart.XYChart;
+import com.frontangle.ichart.chart.XYDataSeries;
+import com.frontangle.ichart.chart.axis.YAxis;
+import com.frontangle.ichart.chart.datapoint.DataPoint;
+import com.frontangle.ichart.chart.draw.Area;
 import com.frontangle.ichart.pie.PieChart;
 import com.frontangle.ichart.pie.Segment;
+import com.frontangle.ichart.scaling.LinearNumericalAxisScaling;
 import sun.rmi.runtime.Log;
 
 import java.awt.*;
@@ -45,6 +51,7 @@ public class Showing {
     static double PreCompactTotal = 0;
     static double AdjustRootsTotal= 0 ;
     static double PostCompactTotal = 0;
+    static double SummaryTimeTotal = 0;
     static double FullAdaptive = 0;
 
     static double totalExecutionTime = 0;
@@ -63,12 +70,12 @@ public class Showing {
 
         JFrame Mainframe = new JFrame();
         Mainframe.setLayout(null);
-        Mainframe.setSize(1800,1000);
+        Mainframe.setSize(1900,1000);
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,2100, 1000);
-        MainPanel.setPreferredSize(new Dimension(2100, 800));
+        MainPanel.setBounds(0,0,2100, 1800);
+        MainPanel.setPreferredSize(new Dimension(2100, 1800));
         MainPanel.setBackground(Color.WHITE);
         JLabel TitleFirst = new JLabel("整体情况",JLabel.CENTER);
 
@@ -81,47 +88,90 @@ public class Showing {
 
         JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
         TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(600,10,500,50);
+        TitleSecond.setBounds(620,10,500,50);
         MainPanel.add(TitleSecond);
         JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(600,60,500,240);
+        MinorGCStats.setBounds(620,60,500,240);
         MainPanel.add(MinorGCStats);
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1180,10,500,50);
+        TitleThird.setBounds(1220,10,500,50);
         MainPanel.add(TitleThird);
         JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1180,60,500,210);
+        FullGCStats.setBounds(1220,60,500,210);
         MainPanel.add(FullGCStats);
 
         JScrollPane jsp = new JScrollPane(MainPanel);
-        jsp.setBounds(20,10,1750, 900);
+        jsp.setBounds(20,10,1850, 900);
         jsp.setBackground(Color.WHITE);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        PieChart TimepieChart = Showing.createTimePieChart();
-        MainPanel.add(TimepieChart);
+        PieChart TimePieChart = Showing.createTimePieChart();
+        MainPanel.add(TimePieChart);
 
-        PieChart FullpieChart = Showing.createFullPieChart();
-        MainPanel.add(FullpieChart);
+        PieChart FullPieChart = Showing.createFullPieChart();
+        MainPanel.add(FullPieChart);
+
+        PieChart ObjectPieChart = Showing.createObjectPieChart();
+        MainPanel.add(ObjectPieChart);
+
+        XYChart chart = ShowHeap.createHeapXYChart();
+        chart.setBounds(10,1000,1500,800);
+        MainPanel.add(chart);
 
         Mainframe.add(jsp);
         Mainframe.setVisible(true);
 
     }
 
+    private static PieChart createObjectPieChart() {
+        ArrayList<Segment> values = new ArrayList<>();
+
+        double time = 0;
+        InstanceDistribution last = LogReader.distributions.get(LogReader.distributions.size()-1);
+        long[] topFive = new long[5];
+        long totalFive = 0;
+
+        for(int i=0;i<5;i++){
+            topFive[i] = last.bytes.get(i);
+            totalFive += topFive[i];
+        }
+
+        long others = last.totalBytes - totalFive;
+
+        values.add(new Segment(time = (double)topFive[0] / last.totalBytes * 100, "1- Integer -" + df.format(time) + "%", new Color(255, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[1] / last.totalBytes * 100, "2- Object[ ] -" + df.format(time) + "%", new Color(128, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[2] / last.totalBytes * 100, "3- int[ ] -" + df.format(time) + "%", new Color(255, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[3] / last.totalBytes * 100, "4- ArrayList -" + df.format(time) + "%", new Color(128, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[4] / last.totalBytes * 100, "5- char[ ] -" + df.format(time) + "%", new Color(0, 0, 255,160)));
+        values.add(new Segment(time = (double)others / last.totalBytes * 100, "Others -" + df.format(time) + "%", new Color(255, 0, 0,160)));
+
+        PieChart pieChart = new PieChart(values, "Object Type Distribution");
+        pieChart.setSize(600, 700);
+        pieChart.setBounds(1200,320,600,700);
+        pieChart.setVisible(true);
+        return pieChart;
+    }
+
     private static PieChart createFullPieChart() {
 
         ArrayList<Segment> values = new ArrayList<>();
 
-        double time = 100;
-        values.add(new Segment(100, "Full GC -" + df.format(time) + "%", Color.RED));
+        double time = 0;
 
-        PieChart pieChart = new PieChart(values, "Stop Time Distribution");
-        pieChart.setSize(700, 600);
-        pieChart.setBounds(720,320,700,600);
+        values.add(new Segment(time = PreCompactTotal / FullGCtimeSum * 100, "Pre Compact -" + df.format(time) + "%", new Color(0, 0, 255,160)));
+        values.add(new Segment(time = MarkingTimeTotal / FullGCtimeSum * 100 , "Marking -" + df.format(time) + "%", new Color(0, 128, 255,160)));
+        values.add(new Segment(time = SummaryTimeTotal / FullGCtimeSum * 100, "Summary -" + df.format(time) + "%", new Color(0, 255, 255,160)));
+        values.add(new Segment(time = AdjustRootsTotal / FullGCtimeSum * 100, "Adjust Roots -" + df.format(time) + "%", new Color(0, 255, 0,160)));
+        values.add(new Segment(time = CompactTimeTotal / FullGCtimeSum * 100, "Compact -" + df.format(time) + "%", new Color(0, 255, 128,80)));
+        values.add(new Segment(time = PostCompactTotal / FullGCtimeSum * 100, "Post Compact -" + df.format(time) + "%", new Color(0, 128, 0,80)));
+        values.add(new Segment(time = FullAdaptive / FullGCtimeSum * 100, "Adaptive Policy -" + df.format(time) + "%", new Color(0, 64, 0,80)));
+
+        PieChart pieChart = new PieChart(values, "Full GC Time Distribution");
+        pieChart.setSize(600, 700);
+        pieChart.setBounds(600,320,600,700);
         pieChart.setVisible(true);
         return pieChart;
 
@@ -140,13 +190,13 @@ public class Showing {
         PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime;
 
         double time;
-        values.add(new Segment(time = FullRunTime / totalExecutionTime * 100, "Full GC -" + df.format(time) + "%", Color.RED));
-        values.add(new Segment(time = MinorRunTime / totalExecutionTime * 100, "Minor GC -" + df.format(time) + "%", Color.MAGENTA));
-        values.add(new Segment(time = AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy -" + df.format(time) + "%", Color.ORANGE));
-        values.add(new Segment(time = CollectInfoTime / totalExecutionTime * 100, "Collect Infor -" + df.format(time) + "%", Color.PINK));
-        values.add(new Segment(time = PrintInforTime / totalExecutionTime * 100, "Print Infor -" + df.format(time) + "%", Color.YELLOW));
-        values.add(new Segment(time = WarmupTime/ totalExecutionTime * 100, "Warm Up -" + df.format(time) + "%", Color.BLUE));
-        values.add(new Segment(time = Apptime/ totalExecutionTime * 100, "Application -" + df.format(time) + "%", Color.GREEN));
+        values.add(new Segment(time = FullRunTime / totalExecutionTime * 100, "Full GC -" + df.format(time) + "%", new Color(255, 0, 0,160)));
+        values.add(new Segment(time = MinorRunTime / totalExecutionTime * 100, "Minor GC -" + df.format(time) + "%", new Color(255, 128, 0,160)));
+        values.add(new Segment(time = AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy -" + df.format(time) + "%", new Color(255, 128, 128,160)));
+        values.add(new Segment(time = CollectInfoTime / totalExecutionTime * 100, "Collect Infor -" + df.format(time) + "%", new Color(255, 128, 128,80)));
+        values.add(new Segment(time = PrintInforTime / totalExecutionTime * 100, "Print Infor -" + df.format(time) + "%", new Color(255, 255, 0,160)));
+        values.add(new Segment(time = WarmupTime/ totalExecutionTime * 100, "Warm Up -" + df.format(time) + "%", new Color(150, 255, 0,100)));
+        values.add(new Segment(time = Apptime/ totalExecutionTime * 100, "Application -" + df.format(time) + "%", new Color(0, 255, 0,160)));
 
         PieChart pieChart = new PieChart(values, "Stop Time Distribution");
         pieChart.setSize(600, 700);
@@ -274,6 +324,7 @@ public class Showing {
                 FullTotalClean += Judge.cleanSize.valueForm;
                 FullCPUPercentage += Judge.CPUpercentage;
                 MarkingTimeTotal += ((FullGC)Judge).Markingphase;
+                SummaryTimeTotal += ((FullGC)Judge).Summaryphase;
                 CompactTimeTotal += ((FullGC)Judge).Compactionphase;
                 PreCompactTotal += ((FullGC)Judge).PreCompact;
                 AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
