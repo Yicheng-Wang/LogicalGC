@@ -141,11 +141,16 @@ public class Showing {
 
         long others = last.totalBytes - totalFive;
 
-        values.add(new Segment(time = (double)topFive[0] / last.totalBytes * 100, "1- Integer -" + df.format(time) + "%", new Color(255, 0, 255,160)));
-        values.add(new Segment(time = (double)topFive[1] / last.totalBytes * 100, "2- Object[ ] -" + df.format(time) + "%", new Color(128, 0, 255,160)));
-        values.add(new Segment(time = (double)topFive[2] / last.totalBytes * 100, "3- int[ ] -" + df.format(time) + "%", new Color(255, 0, 128,160)));
-        values.add(new Segment(time = (double)topFive[3] / last.totalBytes * 100, "4- ArrayList -" + df.format(time) + "%", new Color(128, 0, 128,160)));
-        values.add(new Segment(time = (double)topFive[4] / last.totalBytes * 100, "5- char[ ] -" + df.format(time) + "%", new Color(0, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[0] / last.totalBytes * 100,
+                "1- " + InstanceDistribution.DealingName(last.className.get(0)) + " -" + df.format(time) + "%", new Color(255, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[1] / last.totalBytes * 100,
+                "2- " + InstanceDistribution.DealingName(last.className.get(1)) + " -"  + df.format(time) + "%", new Color(128, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[2] / last.totalBytes * 100,
+                "3- " + InstanceDistribution.DealingName(last.className.get(2)) + " -"  + df.format(time) + "%", new Color(255, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[3] / last.totalBytes * 100,
+                "4- " + InstanceDistribution.DealingName(last.className.get(3)) + " -"  + df.format(time) + "%", new Color(128, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[4] / last.totalBytes * 100,
+                "5- " + InstanceDistribution.DealingName(last.className.get(4)) + " -"  + df.format(time) + "%", new Color(0, 0, 255,160)));
         values.add(new Segment(time = (double)others / last.totalBytes * 100, "Others -" + df.format(time) + "%", new Color(255, 0, 0,160)));
 
         PieChart pieChart = new PieChart(values, "Object Type Distribution");
