@@ -7,6 +7,9 @@ public class SentenceReader {
         }
         SentenceReader.parseHeapLine(beforeGC.HeapPartition[3], "total ", "used ", rows[5]);
         SentenceReader.parseHeapLine(beforeGC.HeapPartition[4], "capacity ", "used ", rows[7]);
+        beforeGC.totalSize.size = String.valueOf(beforeGC.HeapPartition[0].totalSize.valueForm + beforeGC.HeapPartition[1].totalSize.valueForm
+         + beforeGC.HeapPartition[2].totalSize.valueForm + beforeGC.HeapPartition[3].totalSize.valueForm + beforeGC.HeapPartition[4].totalSize.valueForm);
+        beforeGC.totalSize.completeAllForm();
         return  beforeGC;
     }
 

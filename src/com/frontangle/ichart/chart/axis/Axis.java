@@ -26,7 +26,7 @@ public abstract class Axis implements Serializable {
 	public AxisScaling axisScaling;
 
 
-	public Font font = new Font("Arial", Font.PLAIN, 12);
+	public Font font = new Font("Arial", Font.BOLD, 24);
 	public String labelText = "";
 
 	public Color axisColor = Color.BLACK;

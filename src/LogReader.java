@@ -63,7 +63,11 @@ public class LogReader {
                 beforeGC.complete = true;
                 HeapSnapshot lastone = HeapRecord.remove(HeapRecord.size() - 1);
                 if(!lastone.complete){
-                    System.arraycopy(beforeGC.HeapPartition, 0, lastone.HeapPartition, 0, 5);
+                    for(int i=0;i<5;i++){
+                        lastone.HeapPartition[i].totalSize = beforeGC.HeapPartition[i].totalSize;
+                        lastone.HeapPartition[i].usedSize.size = "0";
+                        lastone.HeapPartition[i].usedSize.completeAllForm();
+                    }
                     lastone.complete = true;
                 }
                 HeapRecord.add(lastone);
@@ -137,6 +141,7 @@ public class LogReader {
                     timeLine.push(systemTime);
                     youngGCTime.type = TimePeriod.usageType.YoungGC;
                     afterGC.phase = youngGCTime;
+                    afterGC.complete = true;
                 }
 
                 GC Last = GCRecord.get(LogReader.GCRecord.size()-1);

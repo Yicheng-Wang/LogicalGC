@@ -111,11 +111,13 @@ public class Showing {
         PieChart TimePieChart = Showing.createTimePieChart();
         MainPanel.add(TimePieChart);
 
-        PieChart FullPieChart = Showing.createFullPieChart();
-        MainPanel.add(FullPieChart);
+        if(FullGCcount > 0 ){
+            PieChart FullPieChart = Showing.createFullPieChart();
+            MainPanel.add(FullPieChart);
 
-        PieChart ObjectPieChart = Showing.createObjectPieChart();
-        MainPanel.add(ObjectPieChart);
+            PieChart ObjectPieChart = Showing.createObjectPieChart();
+            MainPanel.add(ObjectPieChart);
+        }
 
         XYChart chart = ShowHeap.createHeapXYChart();
         chart.setBounds(10,1000,1500,800);
@@ -226,26 +228,28 @@ public class Showing {
             TextLable[i].setFont(set);
         }
 
+        double backup = 0;
+
         TextLable[0].setText("Full GC总数");
         TextLable[1].setText(String.valueOf(FullGCcount));
 
         TextLable[2].setText("平均Full GC时间");
-        TextLable[3].setText(df.format(FullGCtimeSum / FullGCcount) + " sec");
+        TextLable[3].setText(df.format (backup = (FullGCcount != 0) ? (FullGCtimeSum / FullGCcount) : 0) + " sec");
 
         TextLable[4].setText("平均标记阶段时间");
-        TextLable[5].setText(df.format(MarkingTimeTotal / FullGCcount) + " sec");
+        TextLable[5].setText(df.format( backup = (FullGCcount != 0) ? (MarkingTimeTotal / FullGCcount) : 0) + " sec");
 
         TextLable[6].setText("平均整理阶段时间");
-        TextLable[7].setText(df.format(CompactTimeTotal / FullGCcount) + " sec");
+        TextLable[7].setText(df.format( backup = (FullGCcount != 0) ? (CompactTimeTotal / FullGCcount)  : 0)+ " sec");
 
         TextLable[8].setText("平均处理对象大小");
-        TextLable[9].setText(FullTotalProcess / FullGCcount + " bytes");
+        TextLable[9].setText( (backup = (FullGCcount != 0) ? (FullTotalProcess / FullGCcount) : 0) + " bytes");
 
         TextLable[10].setText("平均清理对象大小");
-        TextLable[11].setText(FullTotalClean / FullGCcount + " bytes");
+        TextLable[11].setText( (backup = (FullGCcount != 0) ? (FullTotalClean / FullGCcount) : 0) + " bytes");
 
         TextLable[12].setText("平均CPU利用率");
-        TextLable[13].setText((df.format(FullCPUPercentage / MinorGCcount * 100)) + "%");
+        TextLable[13].setText(df.format( backup = (FullGCcount != 0) ? (FullCPUPercentage / FullGCcount * 100) : 0) + "%");
 
         for(int i=0;i<14;i++)
             FullGC.add(TextLable[i]);

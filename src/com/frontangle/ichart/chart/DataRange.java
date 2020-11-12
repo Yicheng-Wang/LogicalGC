@@ -12,5 +12,5 @@ public class DataRange {
 		return "DataRange [min=" + min + ", max=" + max + "]";
 	}
 
-	double min, max;
+	public double min, max;
 }
