@@ -9,6 +9,7 @@ public class LogReader {
     static ArrayList<GC> GCRecord = new ArrayList<>();
     static Stack<Double> timeLine = new Stack<>();
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
+    static ArrayList<TimePeriod> SafePoints = new ArrayList<>();
     static long lastcreate = 0;
 
     public static String[] LoadLog(String logPath) throws  IOException{
@@ -87,18 +88,25 @@ public class LogReader {
                 //TODO:
                 Utility.Number systemtime = Utility.Number.parseNumber("",rows[rowindex]);
                 Utility.Number applicationtime = Utility.Number.parseNumber("Application time: ",rows[rowindex]);
-                if(LogReader.timeLine.empty()){
+                if(ApplicationRecord.isEmpty()){
                     TimePeriod warmup = new TimePeriod();
                     warmup.length = systemtime.valueDouble - applicationtime.valueDouble;
                     warmup.type = TimePeriod.usageType.Warmup;
                     initial.phase = warmup;
                     HeapRecord.add(initial);
                 }
-                LogReader.timeLine.push(systemtime.valueDouble);
-                TimePeriod Application = new TimePeriod();
-                Application.type = TimePeriod.usageType.Application;
-                Application.length = applicationtime.valueDouble;
-                ApplicationRecord.add(Application);
+                if(! rows[rowindex-2].contains("Application time")){
+                    TimePeriod Application = new TimePeriod();
+                    Application.type = TimePeriod.usageType.Application;
+                    Application.length = applicationtime.valueDouble;
+                    ApplicationRecord.add(Application);
+                }
+                else{
+                    TimePeriod Application = ApplicationRecord.get(ApplicationRecord.size() -1 );
+                    Application.length += applicationtime.valueDouble;
+                }
+                if((rowindex == rows.length-1) || ! rows[rowindex+1].contains("threads were stopped"))
+                    LogReader.timeLine.push(systemtime.valueDouble);
                 rowindex++;
             }
 
@@ -114,22 +122,31 @@ public class LogReader {
             else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
                 //TODO:
                 String[] survivePrint;
-                survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+8);
+                int rowLength = (rows[rowindex+5].contains("PSYoungGen"))? 6 : 8;
+
+                survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+rowLength);
                 YoungGC lastGC = (YoungGC) GCRecord.remove(GCRecord.size()-1);
                 SentenceReader.ParseAdaptivePolicy(lastGC,survivePrint);
                 GCRecord.add(lastGC);
-                rowindex +=8;
+                rowindex += rowLength;
             }
 
             else if(rows[rowindex].contains("threads were stopped: ")){
                 //TODO:
                 String stoppedMessage = rows[rowindex];
-                HeapSnapshot afterGC = HeapRecord.remove(HeapRecord.size()-1);
-                SentenceReader.ParseStopped(afterGC,stoppedMessage);
-                HeapRecord.add(afterGC);
+                if(rows[rowindex-1].contains("Application time")){
+                    TimePeriod Safepoint = new TimePeriod();
+                    Safepoint.type = TimePeriod.usageType.SafePoint;
+                    Safepoint.length = Utility.Number.parseNumber("threads were stopped: ",stoppedMessage).valueDouble;
+                    SafePoints.add(Safepoint);
+                }
+                else{
+                    HeapSnapshot afterGC = HeapRecord.remove(HeapRecord.size()-1);
+                    SentenceReader.ParseStopped(afterGC,stoppedMessage);
+                    HeapRecord.add(afterGC);
+                }
                 rowindex ++;
             }
-
 
             //Full GC
             else if(rows[rowindex].contains("Class Histogram")) {
@@ -148,7 +165,8 @@ public class LogReader {
                 Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
                 if(Last instanceof FullGC){
                     Last.timeCost = ((FullGC)Last).PreCompact + ((FullGC)Last).Markingphase + ((FullGC)Last).Summaryphase
-                            + ((FullGC)Last).AdjustRoots + ((FullGC)Last).Compactionphase + ((FullGC)Last).PostCompact;
+                            + ((FullGC)Last).AdjustRoots + ((FullGC)Last).Compactionphase + ((FullGC)Last).PostCompact
+                            + Last.AdaptiveTime;
                     Last.CPUpercentage = Last.CPUpercentage / Last.timeCost / Last.threadNum;
                 }
 

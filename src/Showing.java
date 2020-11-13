@@ -20,10 +20,11 @@ public class Showing {
     static Font TitleStyle = new Font("Dialog", 1, 20);
     static Font TableStyle = new Font("Dialog", 0, 18);
 
-    static int GCcount = 0;
-    static int MinorGCcount = 0;
-    static int FullGCcount = 0;
+    static long GCcount = 0;
+    static long MinorGCcount = 0;
+    static long FullGCcount = 0;
 
+    static double SafePointTotal = 0;
     static double GCtimesum = 0;
     static double MinorGCtimeSum = 0;
     static double FullGCtimeSum = 0;
@@ -189,16 +190,20 @@ public class Showing {
         totalExecutionTime = LogReader.timeLine.peek();
         WarmupTime = LogReader.HeapRecord.get(0).phase.length;
         MinorRunTime = MinorGCtimeSum - MinorAdaptiveTime;
-        FullRunTime = FullGCtimeSum - AdaptiveTime +MinorAdaptiveTime;
+        FullRunTime = FullGCtimeSum - AdaptiveTime + MinorAdaptiveTime;
+
+        for(int i=0;i<LogReader.SafePoints.size();i++)
+            SafePointTotal += LogReader.SafePoints.get(i).length;
 
         for(int i=0;i<LogReader.distributions.size();i++)
             CollectInfoTime += LogReader.distributions.get(i).timecost;
 
-        PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime;
+        PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime - SafePointTotal;
 
         double time;
         values.add(new Segment(time = FullRunTime / totalExecutionTime * 100, "Full GC -" + df.format(time) + "%", new Color(255, 0, 0,160)));
         values.add(new Segment(time = MinorRunTime / totalExecutionTime * 100, "Minor GC -" + df.format(time) + "%", new Color(255, 128, 0,160)));
+        values.add(new Segment(time = SafePointTotal / totalExecutionTime * 100, "Safe Point -" + df.format(time) + "%", new Color(255, 0, 255,120)));
         values.add(new Segment(time = AdaptiveTime / totalExecutionTime * 100, "Adaptive Policy -" + df.format(time) + "%", new Color(255, 128, 128,160)));
         values.add(new Segment(time = CollectInfoTime / totalExecutionTime * 100, "Collect Infor -" + df.format(time) + "%", new Color(255, 128, 128,80)));
         values.add(new Segment(time = PrintInforTime / totalExecutionTime * 100, "Print Infor -" + df.format(time) + "%", new Color(255, 255, 0,160)));
@@ -229,7 +234,7 @@ public class Showing {
         }
 
         double backup = 0;
-
+        long numberbackup = 0;
         TextLable[0].setText("Full GC总数");
         TextLable[1].setText(String.valueOf(FullGCcount));
 
@@ -243,10 +248,10 @@ public class Showing {
         TextLable[7].setText(df.format( backup = (FullGCcount != 0) ? (CompactTimeTotal / FullGCcount)  : 0)+ " sec");
 
         TextLable[8].setText("平均处理对象大小");
-        TextLable[9].setText( (backup = (FullGCcount != 0) ? (FullTotalProcess / FullGCcount) : 0) + " bytes");
+        TextLable[9].setText( (numberbackup = (FullGCcount != 0) ? (FullTotalProcess / FullGCcount) : 0) + " bytes");
 
         TextLable[10].setText("平均清理对象大小");
-        TextLable[11].setText( (backup = (FullGCcount != 0) ? (FullTotalClean / FullGCcount) : 0) + " bytes");
+        TextLable[11].setText( (numberbackup = (FullGCcount != 0) ? (FullTotalClean / FullGCcount) : 0) + " bytes");
 
         TextLable[12].setText("平均CPU利用率");
         TextLable[13].setText(df.format( backup = (FullGCcount != 0) ? (FullCPUPercentage / FullGCcount * 100) : 0) + "%");

@@ -23,11 +23,11 @@ public class ShowHeap {
         XYDataSeries x2 = new XYDataSeries<DataPoint>("Eden Left");
         x2.setArea(new Area(new Color(0, 255, 0, 160), Area.AreaType.STACKED));
         XYDataSeries x3 = new XYDataSeries<DataPoint>("From Space Used");
-        x3.setArea(new Area(new Color(255, 255, 0, 40), Area.AreaType.STACKED));
+        x3.setArea(new Area(new Color(255, 0, 0, 100), Area.AreaType.STACKED));
         XYDataSeries x4 = new XYDataSeries<DataPoint>("From Space Left");
-        x4.setArea(new Area(new Color(255, 255, 0, 100), Area.AreaType.STACKED));
+        x4.setArea(new Area(new Color(255, 255, 0, 255), Area.AreaType.STACKED));
         XYDataSeries x5 = new XYDataSeries<DataPoint>("To Space");
-        x5.setArea(new Area(new Color(255, 255, 9, 160), Area.AreaType.STACKED));
+        x5.setArea(new Area(new Color(255, 128, 0, 160), Area.AreaType.STACKED));
         XYDataSeries x6 = new XYDataSeries<DataPoint>("Old Used");
         x6.setArea(new Area(new Color(0, 0, 255, 80), Area.AreaType.STACKED));
         XYDataSeries x7 = new XYDataSeries<DataPoint>("Old Left");
@@ -56,9 +56,9 @@ public class ShowHeap {
         for(int i=1;i<LogReader.HeapRecord.size();i++){
             TimeStamps[i] = Showing.df.format(LogReader.timeLine.get(i-1));
             if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.OldGC)
-                TimeStamps[i] += " Full GC";
+                TimeStamps[i] += " (Full)";
             if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.YoungGC)
-                TimeStamps[i] += " Minor GC";
+                TimeStamps[i] += " (Minor)";
         }
 
         double min = 0;
