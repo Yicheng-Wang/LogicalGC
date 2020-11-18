@@ -122,7 +122,15 @@ public class LogReader {
             else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
                 //TODO:
                 String[] survivePrint;
-                int rowLength = (rows[rowindex+5].contains("PSYoungGen"))? 6 : 8;
+                int rowLength;
+                if(rows[rowindex+5].contains("PSYoungGen"))
+                    rowLength = 6;
+                else if(rows[rowindex+6].contains("PSYoungGen"))
+                    rowLength = 7;
+                else if(rows[rowindex+7].contains("PSYoungGen"))
+                    rowLength = 8;
+                else
+                    rowLength = 9;
 
                 survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+rowLength);
                 YoungGC lastGC = (YoungGC) GCRecord.remove(GCRecord.size()-1);

@@ -29,7 +29,7 @@ public class SentenceReader {
     }
 
     public static void ParseAdaptivePolicy(YoungGC lastGC, String[] rows){
-        int strange = (rows.length == 6) ? 5 : 7 ;
+        int offset = (rows[3].contains("threshold "))? 3 : 4;
         lastGC.survivedSize = Utility.Number.parseNumber("survived: ",rows[0]);
         lastGC.promotionSize = Utility.Number.parseNumber("promoted: ",rows[0]);
         lastGC.overflow = rows[0].contains("true");
@@ -37,14 +37,14 @@ public class SentenceReader {
         //Utility.Number policyStart = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]);
         //LogReader.timeLine.push(policyStart.valueDouble);
         lastGC.order = Integer.parseInt(Utility.Number.parseNumber("collection: ",rows[1]).size);
-        lastGC.newThreshold = Integer.parseInt(Utility.Number.parseNumber("threshold ",rows[3]).size);
+        lastGC.newThreshold = Integer.parseInt(Utility.Number.parseNumber("threshold ",rows[offset]).size);
 
-        lastGC.processSize = Utility.Number.parseNumber("[PSYoungGen: ",rows[strange]);
+        lastGC.processSize = Utility.Number.parseNumber("[PSYoungGen: ",rows[ rows.length -1]);
         lastGC.cleanSize.valueForm = lastGC.processSize.valueForm - lastGC.survivedSize.valueForm - lastGC.promotionSize.valueForm;
         lastGC.cleanSize.size = Long.toString(lastGC.cleanSize.valueForm);
         lastGC.cleanSize.completeAllForm();
-        lastGC.timeCost = Utility.Number.parseNumber("), ",rows[strange]).valueDouble;
-        lastGC.CPUpercentage = Utility.Number.parseNumber("Times: user=",rows[strange]).valueDouble / lastGC.timeCost / lastGC.threadNum;
+        lastGC.timeCost = Utility.Number.parseNumber("), ",rows[rows.length -1]).valueDouble;
+        lastGC.CPUpercentage = Utility.Number.parseNumber("Times: user=",rows[rows.length -1]).valueDouble / lastGC.timeCost / lastGC.threadNum;
         lastGC.complete = true;
     }
 

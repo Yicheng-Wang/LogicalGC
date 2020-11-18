@@ -121,7 +121,7 @@ public class Showing {
         }
 
         XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(10,1000,1500,800);
+        chart.setBounds(10,1000,1800,800);
         MainPanel.add(chart);
 
         Mainframe.add(jsp);
