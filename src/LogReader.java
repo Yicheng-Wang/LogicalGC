@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.HashMap;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
@@ -11,6 +12,7 @@ public class LogReader {
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
     static ArrayList<TimePeriod> SafePoints = new ArrayList<>();
     static long lastcreate = 0;
+    static HashMap<Integer, TLAB> ThreadLocal = new HashMap<Integer, TLAB>();
 
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
@@ -76,6 +78,10 @@ public class LogReader {
                 rowindex += 9;
             }
 
+            else if(rows[rowindex].contains("TLAB: gc thread:")){
+
+            }
+
             else if(rows[rowindex].contains("Heap after GC")){
                 String[] HeapPrint;
                 HeapPrint = Arrays.copyOfRange(rows,rowindex,rowindex+9);
@@ -122,21 +128,14 @@ public class LogReader {
             else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
                 //TODO:
                 String[] survivePrint;
-                int rowLength;
-                if(rows[rowindex+5].contains("PSYoungGen"))
-                    rowLength = 6;
-                else if(rows[rowindex+6].contains("PSYoungGen"))
-                    rowLength = 7;
-                else if(rows[rowindex+7].contains("PSYoungGen"))
-                    rowLength = 8;
-                else
-                    rowLength = 9;
-
-                survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+rowLength);
+                int rowLength = 1;
+                while(!rows[rowindex+rowLength].contains("PSYoungGen"))
+                    rowLength++;
+                survivePrint = Arrays.copyOfRange(rows,rowindex,rowindex+rowLength+1);
                 YoungGC lastGC = (YoungGC) GCRecord.remove(GCRecord.size()-1);
                 SentenceReader.ParseAdaptivePolicy(lastGC,survivePrint);
                 GCRecord.add(lastGC);
-                rowindex += rowLength;
+                rowindex += rowLength+1;
             }
 
             else if(rows[rowindex].contains("threads were stopped: ")){

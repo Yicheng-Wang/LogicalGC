@@ -29,7 +29,7 @@ public class SentenceReader {
     }
 
     public static void ParseAdaptivePolicy(YoungGC lastGC, String[] rows){
-        int offset = (rows[3].contains("threshold "))? 3 : 4;
+
         lastGC.survivedSize = Utility.Number.parseNumber("survived: ",rows[0]);
         lastGC.promotionSize = Utility.Number.parseNumber("promoted: ",rows[0]);
         lastGC.overflow = rows[0].contains("true");
@@ -37,6 +37,9 @@ public class SentenceReader {
         //Utility.Number policyStart = Utility.Number.parseNumber("AdaptiveSizeStart: ",rows[1]);
         //LogReader.timeLine.push(policyStart.valueDouble);
         lastGC.order = Integer.parseInt(Utility.Number.parseNumber("collection: ",rows[1]).size);
+        int offset = 2;
+        while(!rows[offset].contains("threshold "))
+            offset++;
         lastGC.newThreshold = Integer.parseInt(Utility.Number.parseNumber("threshold ",rows[offset]).size);
 
         lastGC.processSize = Utility.Number.parseNumber("[PSYoungGen: ",rows[ rows.length -1]);
