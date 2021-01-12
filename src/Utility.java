@@ -38,6 +38,7 @@ public class Utility {
 
     public static class Number{
         boolean endWithK = false;
+        boolean endWithB = false;
         boolean isFloat = false;
         boolean isPercentage = false;
         String size = "";
@@ -58,6 +59,7 @@ public class Utility {
             }
             result.size = size;
             result.endWithK = Number.judgeEnd(size);
+            result.endWithB = Number.judgeEndB(size);
             result.isFloat = Number.judgeFloat(size);
             result.isPercentage = Number.judgePercentage(size);
             result.completeAllForm();
@@ -65,7 +67,17 @@ public class Utility {
         }
 
         public static boolean judgeEnd(String input){
-            return input.charAt(input.length() - 1) == 'K';
+            int length = input.length();
+            if(input.charAt(length - 1) == 'K')
+                return true;
+            if(length>=2)
+                if(input.charAt(length - 2) == 'K')
+                    return true;
+            return false;
+        }
+
+        public static boolean judgeEndB(String input){
+            return input.charAt(input.length() - 1) == 'B';
         }
 
         public static boolean judgeFloat(String input){
@@ -94,15 +106,18 @@ public class Utility {
             }
             else{
                 long number;
+                int offset = 1;
+                if(this.endWithB)
+                    offset++;
                 if(this.endWithK){
-                    number= Long.parseLong(this.size.substring(0,this.size.length()-1));
+                    number= Long.parseLong(this.size.substring(0,this.size.length()-offset));
                     this.valueFormK = number;
                     this.valueForm = number << 10;
                     this.ValueFormM = (double)number / 1024;
                     this.valueFormG = this.ValueFormM / 1024;
                 }
                 else{
-                    number= Long.parseLong(this.size);
+                    number= Long.parseLong(this.size.substring(0,this.size.length()-offset+1));
                     this.valueForm = number;
                     this.valueFormK = (double)number / 1024;
                     this.ValueFormM = this.valueFormK / 1024;

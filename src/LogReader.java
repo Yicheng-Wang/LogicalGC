@@ -12,7 +12,7 @@ public class LogReader {
     static ArrayList<InstanceDistribution> distributions = new ArrayList<>();
     static ArrayList<TimePeriod> SafePoints = new ArrayList<>();
     static long lastcreate = 0;
-    static HashMap<Integer, TLAB> ThreadLocal = new HashMap<Integer, TLAB>();
+    static TLAB LastTLAB = new TLAB();
 
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
@@ -79,7 +79,12 @@ public class LogReader {
             }
 
             else if(rows[rowindex].contains("TLAB: gc thread:")){
-
+                while(rows[rowindex].contains("TLAB: gc thread:")){
+                    LastTLAB.desired_size_set.add(Utility.Number.parseNumber("desired_size: ", rows[rowindex]).valueFormK);
+                    LastTLAB.refill_waste_set.add(Utility.Number.parseNumber("refill waste: ", rows[rowindex]).valueFormK);
+                    rowindex++;
+                }
+                LastTLAB.ParseTLABsummary(rows[rowindex]);
             }
 
             else if(rows[rowindex].contains("Heap after GC")){
@@ -121,6 +126,7 @@ public class LogReader {
                 String[] GCPrint;
                 GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
                 YoungGC newGC = SentenceReader.ParseYoungGCcause(GCPrint);
+                newGC.allocation = LastTLAB;
                 GCRecord.add(newGC);
                 rowindex += 2;
             }
