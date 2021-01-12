@@ -21,11 +21,9 @@ public class SentenceReader {
         }
     }
 
-    public static YoungGC ParseYoungGCcause(String[] rows){
-        YoungGC newGC = new YoungGC();
+    public static void ParseYoungGCcause(YoungGC newGC, String[] rows){
         newGC.Cause = Utility.parseString("[GC (",rows[0]);
         newGC.threadNum = Integer.parseInt(Utility.Number.parseNumber("ParallelGCThreads ",rows[0]).size);
-        return newGC;
     }
 
     public static void ParseAdaptivePolicy(YoungGC lastGC, String[] rows){

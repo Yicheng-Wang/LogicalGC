@@ -53,6 +53,8 @@ public class Utility {
             Number result = new Number();
             String size = "";
             char num;
+            while((num = rows.charAt(i)) <'0' || num > '9')
+                i++;
             while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ',' && num != '-' && num != '('){
                 size += num;
                 i++;

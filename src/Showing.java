@@ -78,8 +78,8 @@ public class Showing {
         MainPanel.setBounds(0,0,2100, 1800);
         MainPanel.setPreferredSize(new Dimension(2100, 1800));
         MainPanel.setBackground(Color.WHITE);
-        JLabel TitleFirst = new JLabel("整体情况",JLabel.CENTER);
 
+        JLabel TitleFirst = new JLabel("整体情况",JLabel.CENTER);
         TitleFirst.setFont(TitleStyle);
         TitleFirst.setBounds(20,10,500,50);
         MainPanel.add(TitleFirst);
@@ -325,10 +325,10 @@ public class Showing {
 
         GCcount = LogReader.GCRecord.size();
 
-        TextLable[0].setText("GC总数");
-        TextLable[1].setText(String.valueOf(GCcount));
+        TextLable[0].setText("运行总时长");
+        TextLable[1].setText(LogReader.timeLine.get(LogReader.timeLine.size()-1) + " sec");
 
-        TextLable[2].setText("GC总用时");
+        TextLable[2].setText("GC暂停总时长");
         for(int i=0;i<GCcount;i++){
             GC Judge =  LogReader.GCRecord.get(i);
             if(Judge instanceof FullGC){

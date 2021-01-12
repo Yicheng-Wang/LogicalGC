@@ -79,12 +79,14 @@ public class LogReader {
             }
 
             else if(rows[rowindex].contains("TLAB: gc thread:")){
+                YoungGC newGC = new YoungGC();
                 while(rows[rowindex].contains("TLAB: gc thread:")){
-                    LastTLAB.desired_size_set.add(Utility.Number.parseNumber("desired_size: ", rows[rowindex]).valueFormK);
-                    LastTLAB.refill_waste_set.add(Utility.Number.parseNumber("refill waste: ", rows[rowindex]).valueFormK);
+                    newGC.allocation.desired_size_set.add(Utility.Number.parseNumber("desired_size: ", rows[rowindex]).valueFormK);
+                    newGC.allocation.refill_waste_set.add(Utility.Number.parseNumber("refill waste: ", rows[rowindex]).valueFormK);
                     rowindex++;
                 }
-                LastTLAB.ParseTLABsummary(rows[rowindex]);
+                newGC.allocation.ParseTLABsummary(rows[rowindex]);
+                GCRecord.add(newGC);
             }
 
             else if(rows[rowindex].contains("Heap after GC")){
@@ -125,9 +127,7 @@ public class LogReader {
                 //TODO:
                 String[] GCPrint;
                 GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
-                YoungGC newGC = SentenceReader.ParseYoungGCcause(GCPrint);
-                newGC.allocation = LastTLAB;
-                GCRecord.add(newGC);
+                SentenceReader.ParseYoungGCcause(((YoungGC)GCRecord.get(GCRecord.size()-1)),GCPrint);
                 rowindex += 2;
             }
 
