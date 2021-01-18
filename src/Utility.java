@@ -55,7 +55,7 @@ public class Utility {
             char num;
             while((num = rows.charAt(i)) <'0' || num > '9')
                 i++;
-            while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ',' && num != '-' && num != '('){
+            while(((num = rows.charAt(i)) != ' ' )&& num != ':' && num != ',' && num != '-' && num != '(' && num != ']'){
                 size += num;
                 i++;
             }

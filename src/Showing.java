@@ -11,6 +11,7 @@ import sun.rmi.runtime.Log;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -61,6 +62,10 @@ public class Showing {
     static double CollectInfoTime = 0;
     static double PrintInforTime = 0;
 
+    static HashMap<String,Integer> GCCauseTotal = new HashMap<>();
+    static HashMap<String,Integer> GCCauseYoung = new HashMap<>();
+    static HashMap<String,Integer> GCCauseOld = new HashMap<>();
+
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
 
@@ -75,32 +80,32 @@ public class Showing {
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,2100, 1800);
-        MainPanel.setPreferredSize(new Dimension(2100, 1800));
+        MainPanel.setBounds(0,0,2100, 2600);
+        MainPanel.setPreferredSize(new Dimension(2100, 2600));
         MainPanel.setBackground(Color.WHITE);
 
         JLabel TitleFirst = new JLabel("整体情况",JLabel.CENTER);
         TitleFirst.setFont(TitleStyle);
-        TitleFirst.setBounds(20,10,500,50);
+        TitleFirst.setBounds(80,40,600,50);
         MainPanel.add(TitleFirst);
         JPanel TotalGCStats = Showing.TotalGCStats();
-        TotalGCStats.setBounds(20,60,500,210);
+        TotalGCStats.setBounds(80,100,600,270);
         MainPanel.add(TotalGCStats);
 
         JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
         TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(620,10,500,50);
+        TitleSecond.setBounds(620,810,500,50);
         MainPanel.add(TitleSecond);
         JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(620,60,500,240);
+        MinorGCStats.setBounds(620,860,500,240);
         MainPanel.add(MinorGCStats);
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1220,10,500,50);
+        TitleThird.setBounds(1220,810,500,50);
         MainPanel.add(TitleThird);
         JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1220,60,500,210);
+        FullGCStats.setBounds(1220,860,500,210);
         MainPanel.add(FullGCStats);
 
         JScrollPane jsp = new JScrollPane(MainPanel);
@@ -121,7 +126,7 @@ public class Showing {
         }
 
         XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(10,1000,1800,800);
+        chart.setBounds(10,1800,1800,800);
         MainPanel.add(chart);
 
         Mainframe.add(jsp);
@@ -158,7 +163,7 @@ public class Showing {
 
         PieChart pieChart = new PieChart(values, "Object Type Distribution");
         pieChart.setSize(600, 700);
-        pieChart.setBounds(1200,320,600,700);
+        pieChart.setBounds(1200,1120,600,700);
         pieChart.setVisible(true);
         return pieChart;
     }
@@ -179,7 +184,7 @@ public class Showing {
 
         PieChart pieChart = new PieChart(values, "Full GC Time Distribution");
         pieChart.setSize(600, 700);
-        pieChart.setBounds(600,320,600,700);
+        pieChart.setBounds(600,1120,600,700);
         pieChart.setVisible(true);
         return pieChart;
 
@@ -187,19 +192,6 @@ public class Showing {
 
     private static PieChart createTimePieChart() {
         ArrayList<Segment> values = new ArrayList<>();
-        totalExecutionTime = LogReader.timeLine.peek();
-        WarmupTime = LogReader.HeapRecord.get(0).phase.length;
-        MinorRunTime = MinorGCtimeSum - MinorAdaptiveTime;
-        FullRunTime = FullGCtimeSum - AdaptiveTime + MinorAdaptiveTime;
-
-        for(int i=0;i<LogReader.SafePoints.size();i++)
-            SafePointTotal += LogReader.SafePoints.get(i).length;
-
-        for(int i=0;i<LogReader.distributions.size();i++)
-            CollectInfoTime += LogReader.distributions.get(i).timecost;
-
-        PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime - SafePointTotal;
-
         double time;
         values.add(new Segment(time = FullRunTime / totalExecutionTime * 100, "Full GC -" + df.format(time) + "%", new Color(255, 0, 0,160)));
         values.add(new Segment(time = MinorRunTime / totalExecutionTime * 100, "Minor GC -" + df.format(time) + "%", new Color(255, 128, 0,160)));
@@ -210,9 +202,9 @@ public class Showing {
         values.add(new Segment(time = WarmupTime/ totalExecutionTime * 100, "Warm Up -" + df.format(time) + "%", new Color(150, 255, 0,100)));
         values.add(new Segment(time = Apptime/ totalExecutionTime * 100, "Application -" + df.format(time) + "%", new Color(0, 255, 0,160)));
 
-        PieChart pieChart = new PieChart(values, "Stop Time Distribution");
+        PieChart pieChart = new PieChart(values, "Time Distribution");
         pieChart.setSize(600, 700);
-        pieChart.setBounds(0,320,600,700);
+        pieChart.setBounds(900,10,600,700);
         pieChart.setVisible(true);
         return pieChart;
     }
@@ -309,14 +301,14 @@ public class Showing {
     }
 
     private static JPanel TotalGCStats() {
-        GridLayout layout = new GridLayout(7, 2);
+        GridLayout layout = new GridLayout(9, 2);
         JPanel TotalGC = new JPanel(layout);
         TotalGC.setBackground(Color.WHITE);
 
         TotalGC.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        JLabel[] TextLable = new JLabel[14];
+        JLabel[] TextLable = new JLabel[18];
         Border border = BorderFactory.createLineBorder(Color.BLACK);
-        for(int i=0;i<14;i++){
+        for(int i=0;i<18;i++){
             TextLable[i] = new JLabel("",JLabel.CENTER);
             TextLable[i].setPreferredSize(new Dimension(50,30));
             TextLable[i].setBorder(border);
@@ -325,10 +317,15 @@ public class Showing {
 
         GCcount = LogReader.GCRecord.size();
 
-        TextLable[0].setText("运行总时长");
-        TextLable[1].setText(LogReader.timeLine.get(LogReader.timeLine.size()-1) + " sec");
+        for(int i=0;i<LogReader.SafePoints.size();i++)
+            SafePointTotal += LogReader.SafePoints.get(i).length;
 
-        TextLable[2].setText("GC暂停总时长");
+        for(int i=0;i<LogReader.distributions.size();i++)
+            CollectInfoTime += LogReader.distributions.get(i).timecost;
+
+        for(int i=0;i<LogReader.ApplicationRecord.size();i++)
+            Apptime += LogReader.ApplicationRecord.get(i).length;
+
         for(int i=0;i<GCcount;i++){
             GC Judge =  LogReader.GCRecord.get(i);
             if(Judge instanceof FullGC){
@@ -344,6 +341,16 @@ public class Showing {
                 AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
                 PostCompactTotal += ((FullGC)Judge).PostCompact;
                 FullAdaptive += Judge.AdaptiveTime;
+                Integer old;
+                if(GCCauseOld.containsKey(Judge.Cause)){
+                    old = GCCauseOld.get(Judge.Cause);
+                    old += 1;
+                    GCCauseOld.put(Judge.Cause,old);
+                }
+                else{
+                    old = 1;
+                    GCCauseOld.put(Judge.Cause,old);
+                }
             }
 
             else{
@@ -357,21 +364,69 @@ public class Showing {
                 MinorAdaptiveTime += Judge.AdaptiveTime;
                 if(((YoungGC)Judge).overflow)
                     overFlowTime ++;
+                Integer young;
+                if(GCCauseYoung.containsKey(Judge.Cause)){
+                    young = GCCauseYoung.get(Judge.Cause);
+                    young += 1;
+                    GCCauseYoung.put(Judge.Cause,young);
+                }
+                else{
+                    young = 1;
+                    GCCauseYoung.put(Judge.Cause,young);
+                }
             }
+            Integer all;
+            if(GCCauseTotal.containsKey(Judge.Cause)){
+                all = GCCauseTotal.get(Judge.Cause);
+                all += 1;
+                GCCauseTotal.put(Judge.Cause,all);
+            }
+            else{
+                all = 1;
+                GCCauseTotal.put(Judge.Cause,all);
+            }
+
             AdaptiveTime += Judge.AdaptiveTime;
             GCtimesum += Judge.timeCost;
             totalReclaimed += Judge.cleanSize.valueForm;
         }
-        TextLable[3].setText(df.format(GCtimesum) + " sec");
 
-        TextLable[4].setText("GC平均用时");
+        totalExecutionTime = LogReader.timeLine.peek();
+        WarmupTime = LogReader.HeapRecord.get(0).phase.length;
+        MinorRunTime = MinorGCtimeSum - MinorAdaptiveTime;
+        FullRunTime = FullGCtimeSum - AdaptiveTime + MinorAdaptiveTime;
+
+        PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime - SafePointTotal;
+
+        TextLable[0].setText("应用执行总时长");
+        TextLable[1].setText(LogReader.timeLine.get(LogReader.timeLine.size()-1) + " sec");
+
+        TextLable[2].setText("应用线程用时");
+        TextLable[3].setText(df.format(Apptime) + " sec");
+
+        TextLable[4].setText("GC暂停用时");
+        TextLable[5].setText(df.format(GCtimesum) + " sec");
+
+        TextLable[6].setText("Young GC用时");
+        TextLable[7].setText(df.format(GCtimesum) + " sec");
+
+        TextLable[8].setText("Full GC用时");
+        TextLable[9].setText(df.format(GCtimesum) + " sec");
+
+        TextLable[10].setText("安全点用时");
+        TextLable[11].setText(df.format(SafePointTotal) + " sec");
+
+        TextLable[12].setText("虚拟机启动用时");
+        TextLable[13].setText(df.format(WarmupTime) + " sec");
+
+        TextLable[14].setText("信息输出用时");
+        TextLable[15].setText(df.format(CollectInfoTime) + " sec");
+
+        TextLable[16].setText("其他用时");
+        TextLable[17].setText(df.format(PrintInforTime + AdaptiveTime) + " sec");
+
+        /*TextLable[4].setText("GC平均用时");
         TextLable[5].setText(df.format(GCtimesum / GCcount)  + " sec" );
-
-        for(int i=0;i<LogReader.ApplicationRecord.size();i++)
-            Apptime += LogReader.ApplicationRecord.get(i).length;
-
-        TextLable[6].setText("应用线程执行用时");
-        TextLable[7].setText(df.format(Apptime) + " sec");
 
         TextLable[8].setText("GC平均触发间隔");
         TextLable[9].setText(df.format(Apptime / LogReader.ApplicationRecord.size()) + " sec");
@@ -380,9 +435,9 @@ public class Showing {
         TextLable[11].setText(String.valueOf(totalReclaimed) + " bytes");
 
         TextLable[12].setText(" 应用创建对象总大小 ");
-        TextLable[13].setText(String.valueOf(totalReclaimed + LogReader.lastcreate) + " bytes");
+        TextLable[13].setText(String.valueOf(totalReclaimed + LogReader.lastcreate) + " bytes");*/
 
-        for(int i=0;i<14;i++)
+        for(int i=0;i<18;i++)
             TotalGC.add(TextLable[i]);
 
         return TotalGC;

@@ -13,6 +13,7 @@ public class LogReader {
     static ArrayList<TimePeriod> SafePoints = new ArrayList<>();
     static long lastcreate = 0;
     static TLAB LastTLAB = new TLAB();
+    static HashMap<String,Thread> AllThread = new HashMap<>();
 
     public static String[] LoadLog(String logPath) throws  IOException{
         File logFile = new File(logPath);
@@ -81,6 +82,29 @@ public class LogReader {
             else if(rows[rowindex].contains("TLAB: gc thread:")){
                 YoungGC newGC = new YoungGC();
                 while(rows[rowindex].contains("TLAB: gc thread:")){
+                    String ThreadID = Utility.Number.parseNumber("id: ", rows[rowindex]).size;
+                    Thread thisRowThread;
+                    if(!AllThread.containsKey(ThreadID)){
+                        thisRowThread = new Thread(ThreadID);
+                        AllThread.put(ThreadID,thisRowThread);
+                    }
+                    else
+                        thisRowThread = AllThread.get(ThreadID);
+                    Utility.Number SingleBufferSize = Utility.Number.parseNumber("desired_size: ", rows[rowindex]);
+                    Utility.Number WasteLimit = Utility.Number.parseNumber("refill waste: ", rows[rowindex]);
+                    long BufferNum = Utility.Number.parseNumber("refills: ", rows[rowindex]).valueForm;
+                    String WasteString = Utility.Number.parseNumber("waste ", rows[rowindex]).size;
+                    double WastePer = Double.parseDouble(WasteString.substring(0,WasteString.length()-1));
+                    double UsedSize = (100-WastePer) * SingleBufferSize.valueFormK * BufferNum / 100;
+                    double CreateSize = SingleBufferSize.valueFormK * BufferNum;
+                    thisRowThread.FinalBufferSize = SingleBufferSize.valueFormK;
+                    thisRowThread.FinalWasteLimit = WasteLimit.valueFormK;
+                    thisRowThread.TotalCreateSize += CreateSize;
+                    thisRowThread.TotalUsedSize += UsedSize;
+                    thisRowThread.CreateSizeList.add(CreateSize);
+                    thisRowThread.UsedSizeList.add(UsedSize);
+
+                    newGC.allocation.thread_alive.add(ThreadID);
                     newGC.allocation.desired_size_set.add(Utility.Number.parseNumber("desired_size: ", rows[rowindex]).valueFormK);
                     newGC.allocation.refill_waste_set.add(Utility.Number.parseNumber("refill waste: ", rows[rowindex]).valueFormK);
                     rowindex++;

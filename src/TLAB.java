@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class TLAB {
     ArrayList<Double> desired_size_set = new ArrayList<>();
     ArrayList<Double> refill_waste_set = new ArrayList<>();
+    ArrayList<String> thread_alive = new ArrayList<>();
     long threadNum = 0;
     long refillTotal = 0;
     long slowAlloc = 0;
