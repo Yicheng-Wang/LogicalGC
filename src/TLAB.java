@@ -7,7 +7,7 @@ public class TLAB {
     long threadNum = 0;
     long refillTotal = 0;
     long slowAlloc = 0;
-    String wastePercent = "";
+    double wastePercent = 0;
     double gc_waste = 0;
     double slow_waste = 0;
     double fast_waste = 0;
@@ -18,7 +18,8 @@ public class TLAB {
         this.threadNum = Utility.Number.parseNumber("thrds: ", row).valueForm;
         this.refillTotal = Utility.Number.parseNumber("refills: ", row).valueForm;
         this.slowAlloc = Utility.Number.parseNumber("slow allocs: ", row).valueForm;
-        this.wastePercent = Utility.Number.parseNumber("waste: ", row).size;
+        String wasteper =  Utility.Number.parseNumber("waste: ", row).size;
+        this.wastePercent = Double.parseDouble(wasteper.substring(0,wasteper.length()-1));
         this.gc_waste = Utility.Number.parseNumber("gc: ", row).valueForm;
         this.slow_waste = Utility.Number.parseNumber("slow: ", row).valueForm;
         this.fast_waste = Utility.Number.parseNumber("fast: ", row).valueForm;

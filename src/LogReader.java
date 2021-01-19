@@ -103,10 +103,12 @@ public class LogReader {
                     thisRowThread.TotalUsedSize += UsedSize;
                     thisRowThread.CreateSizeList.add(CreateSize);
                     thisRowThread.UsedSizeList.add(UsedSize);
+                    thisRowThread.TLABSizeList.add(SingleBufferSize.valueFormK);
+                    thisRowThread.WasteSizeList.add(WasteLimit.valueFormK);
 
                     newGC.allocation.thread_alive.add(ThreadID);
-                    newGC.allocation.desired_size_set.add(Utility.Number.parseNumber("desired_size: ", rows[rowindex]).valueFormK);
-                    newGC.allocation.refill_waste_set.add(Utility.Number.parseNumber("refill waste: ", rows[rowindex]).valueFormK);
+                    newGC.allocation.desired_size_set.add(SingleBufferSize.valueFormK);
+                    newGC.allocation.refill_waste_set.add(WasteLimit.valueFormK);
                     rowindex++;
                 }
                 newGC.allocation.ParseTLABsummary(rows[rowindex]);
