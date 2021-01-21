@@ -45,18 +45,6 @@ public class Table {
         TextLable[18].setText("其他用时");
         TextLable[19].setText(df.format(Showing.PrintInforTime + Showing.AdaptiveTime) + " sec");
 
-        /*TextLable[4].setText("GC平均用时");
-        TextLable[5].setText(df.format(GCtimesum / GCcount)  + " sec" );
-
-        TextLable[8].setText("GC平均触发间隔");
-        TextLable[9].setText(df.format(Apptime / LogReader.ApplicationRecord.size()) + " sec");
-
-        TextLable[10].setText(" GC清理对象总大小 ");
-        TextLable[11].setText(String.valueOf(totalReclaimed) + " bytes");
-
-        TextLable[12].setText(" 应用创建对象总大小 ");
-        TextLable[13].setText(String.valueOf(totalReclaimed + LogReader.lastcreate) + " bytes");*/
-
         for(int i=0;i<20;i++)
             TotalGC.add(TextLable[i]);
 
@@ -142,8 +130,59 @@ public class Table {
         return TitleFirst;
     }
 
-    public static void MinorGCStats(JPanel mainPanel, String name, int x, int y, int width, int height) {
 
+    /*TextLable[10].setText(" GC清理对象总大小 ");
+    TextLable[11].setText(String.valueOf(totalReclaimed) + " bytes");
+
+    TextLable[12].setText(" 应用创建对象总大小 ");
+    TextLable[13].setText(String.valueOf(totalReclaimed + LogReader.lastcreate) + " bytes");*/
+
+    public static void MinorGCStats(JPanel mainPanel, String name, int x, int y, int width, int height) {
+        JPanel MinorGC = initialTable(10,2);
+        JLabel[] TextLable = initialBorde(10 * 2);
+
+        TextLable[0].setText("Minor GC次数");
+        TextLable[1].setText(String.valueOf(Showing.MinorGCcount));
+
+        TextLable[2].setText("平均Minor GC时间");
+        TextLable[3].setText(df.format(Showing.MinorGCtimeSum / Showing.MinorGCcount) + " sec");
+
+        TextLable[4].setText("最大Minor GC时间");
+        TextLable[5].setText(df.format(Showing.MaxMinorGCTime) + " sec");
+
+        TextLable[6].setText("溢出次数");
+        TextLable[7].setText(String.valueOf(Showing.overFlowTime));
+
+        TextLable[8].setText("平均幸存比例");
+        TextLable[9].setText((df.format((double) Showing.survivedTotal / (double)Showing.MinorTotalProcess * 100)) + "%");
+
+        TextLable[10].setText("平均晋升比例");
+        TextLable[11].setText((df.format((double)Showing.promotionTotal / (double)Showing.MinorTotalProcess * 100)) + "%");
+
+        TextLable[12].setText("平均清理比例");
+        TextLable[13].setText((df.format((double)Showing.MinorTotalClean / (double)Showing.MinorTotalProcess * 100)) + "%");
+
+        TextLable[14].setText("平均CPU利用率");
+        TextLable[15].setText((df.format(Showing.MinorCPUPercentage / Showing.MinorGCcount * 100)) + "%");
+
+        TextLable[16].setText("最终晋升阈值");
+        TextLable[17].setText(df2.format(Showing.FinalThreshold));
+
+        double EdenSize = LogReader.HeapRecord.get(LogReader.HeapRecord.size()-1).HeapPartition[0].totalSize.ValueFormM;
+        double FromSize = LogReader.HeapRecord.get(LogReader.HeapRecord.size()-1).HeapPartition[1].totalSize.ValueFormM;
+        double ToSize = LogReader.HeapRecord.get(LogReader.HeapRecord.size()-1).HeapPartition[2].totalSize.ValueFormM;
+
+        TextLable[18].setText("最终幸存者比例");
+        TextLable[19].setText((df.format((FromSize+ToSize) / (FromSize+ToSize+EdenSize) * 100)) + "%");
+
+        for(int i=0;i<20;i++)
+            MinorGC.add(TextLable[i]);
+
+        JLabel Title = SetTitle(name,x,y-60,width,50);
+        mainPanel.add(Title);
+
+        MinorGC.setBounds(x,y,width,height);
+        mainPanel.add(MinorGC);
     }
 
     public static void TotalGCStats(JPanel mainPanel, String name, int x, int y, int width, int height) {
@@ -153,28 +192,30 @@ public class Table {
         JLabel[] TextLable = initialBorde(rowCount * 2);
 
         TextLable[0].setText("GC总次数");
-        TextLable[1].setText(String.valueOf(Showing.ThreadTotalNum));
+        TextLable[1].setText(String.valueOf(Showing.MinorGCcount));
 
         TextLable[2].setText("GC平均用时");
-        TextLable[3].setText(String.valueOf(Showing.MaxThreadAtTime));
+        TextLable[3].setText(df.format(Showing.GCtimesum / Showing.GCcount) + " sec");
 
         TextLable[4].setText("单次GC最大用时");
-        TextLable[5].setText(String.valueOf(Showing.MeanThreadNum));
+        TextLable[5].setText(df.format(Showing.MaxGCTime) + " sec");
 
         TextLable[6].setText("GC平均触发间隔");
-        TextLable[7].setText(df.format(Showing.MaxWastePer) + "%");
+        TextLable[7].setText(df.format(Showing.Apptime / LogReader.ApplicationRecord.size()) + " sec");
 
         Iterator map1it=Showing.GCCauseTotal.entrySet().iterator();
         int index = 0;
+
         while(map1it.hasNext())
         {
             Map.Entry<String, Double[]> entry=(Map.Entry<String, Double[]>) map1it.next();
-            TextLable[8 + 4 * index].setText("GC触发原因 " + index);
+            TextLable[8 + 4 * index].setText("GC触发原因 " + (index+1));
             TextLable[8 + 4 * index + 1].setText(entry.getKey());
-            TextLable[8 + 4 * index + 2].setText("触发次数（时间）");
-            TextLable[8 + 4 * index + 3].setText((entry.getValue()[0]) + "次" + (entry.getValue()[0]) + " sec");
+            TextLable[8 + 4 * index + 2].setText("触发次数(平均时间)");
+            TextLable[8 + 4 * index + 3].setText(df2.format(entry.getValue()[0]) + "次  (平均" + df.format((entry.getValue()[1] / entry.getValue()[0])) + " sec)");
             index ++;
         }
+
         for(int i=0;i<rowCount * 2;i++)
             Application.add(TextLable[i]);
 

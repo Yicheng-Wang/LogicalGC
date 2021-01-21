@@ -74,6 +74,11 @@ public class Showing {
     static double SummaryTimeTotal = 0;
     static double FullAdaptive = 0;
 
+    static double MaxGCTime = 0;
+    static double MaxMinorGCTime = 0;
+    static double MaxMajorGCTime = 0;
+    static double FinalThreshold = 0;
+
     static double totalExecutionTime = 0;
     static double WarmupTime = 0;
     static double AdaptiveTime = 0;
@@ -98,39 +103,32 @@ public class Showing {
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,2100, 2600);
-        MainPanel.setPreferredSize(new Dimension(2100, 2600));
+        MainPanel.setBounds(0,0,2100, 3200);
+        MainPanel.setPreferredSize(new Dimension(2100, 3200));
         MainPanel.setBackground(Color.WHITE);
 
         SettleInformation();
 
         Table.OverallStats(MainPanel,"用时情况",150,110,600,340);
 
-        Drawing.createTimePieChart(MainPanel,950,10,740,520);
+        Drawing.createTimePieChart(MainPanel,950,20,740,520);
 
-        Table.ApplicationStats(MainPanel,"应用线程",150,640,600,374);
+        Table.ApplicationStats(MainPanel,"应用线程",150,620,600,374);
 
-        Drawing.createThreadChart(MainPanel,950,540,740,520);
+        Drawing.createThreadChart(MainPanel,950,550,740,520);
 
-        Table.TotalGCStats(MainPanel,"GC情况",150,1170,600,374);
+        Table.TotalGCStats(MainPanel,"GC情况",150,1200,600,34 * (4 + 2 * GCCauseTotal.size()));
 
+        Drawing.createCauseChart(MainPanel,950,1080,740,520);
 
-
-
-        JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
-        TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(620,1210,500,50);
-        MainPanel.add(TitleSecond);
-        JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(620,1260,500,240);
-        MainPanel.add(MinorGCStats);
+        Table.MinorGCStats(MainPanel,"Minor GC",150,1740,600,340);
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1220,1210,500,50);
+        TitleThird.setBounds(1220,1810,500,50);
         MainPanel.add(TitleThird);
         JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1220,1260,500,210);
+        FullGCStats.setBounds(1220,1860,500,210);
         MainPanel.add(FullGCStats);
 
         JScrollPane jsp = new JScrollPane(MainPanel);
@@ -148,7 +146,7 @@ public class Showing {
         }
 
         XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(10,2200,1800,800);
+        chart.setBounds(10,2800,1800,800);
         MainPanel.add(chart);
 
         Mainframe.add(jsp);
@@ -183,6 +181,8 @@ public class Showing {
                 AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
                 PostCompactTotal += ((FullGC)Judge).PostCompact;
                 FullAdaptive += Judge.AdaptiveTime;
+                MaxMajorGCTime = (Judge.timeCost > MaxMajorGCTime)?Judge.timeCost:MaxMajorGCTime;
+
                 Double old[];
                 if(GCCauseOld.containsKey(Judge.Cause)){
                     old = GCCauseOld.get(Judge.Cause);
@@ -207,6 +207,7 @@ public class Showing {
                 promotionTotal += ((YoungGC)Judge).promotionSize.valueForm;
                 MinorCPUPercentage += Judge.CPUpercentage;
                 MinorAdaptiveTime += Judge.AdaptiveTime;
+                FinalThreshold = ((YoungGC)Judge).newThreshold;
                 if(((YoungGC)Judge).overflow)
                     overFlowTime ++;
                 Double[] young;
@@ -240,8 +241,11 @@ public class Showing {
                 SlowWasteTotal += ((YoungGC)Judge).allocation.slow_waste;
                 FastWasteTotal += ((YoungGC)Judge).allocation.fast_waste;
 
+                MaxMinorGCTime = (Judge.timeCost > MaxMinorGCTime)?Judge.timeCost:MaxMinorGCTime;
+
             }
 
+            MaxGCTime = (Judge.timeCost > MaxGCTime)?Judge.timeCost:MaxGCTime;
             Double[] all;
             if(GCCauseTotal.containsKey(Judge.Cause)){
                 all = GCCauseTotal.get(Judge.Cause);
@@ -319,7 +323,7 @@ public class Showing {
 
         PieChart pieChart = new PieChart(values, "Object Type Distribution");
         pieChart.setSize(600, 700);
-        pieChart.setBounds(1200,1120,600,700);
+        pieChart.setBounds(1200,1820,600,700);
         pieChart.setVisible(true);
         return pieChart;
     }
@@ -340,7 +344,7 @@ public class Showing {
 
         PieChart pieChart = new PieChart(values, "Full GC Time Distribution");
         pieChart.setSize(600, 700);
-        pieChart.setBounds(600,1120,600,700);
+        pieChart.setBounds(600,1820,600,700);
         pieChart.setVisible(true);
         return pieChart;
 
@@ -391,50 +395,5 @@ public class Showing {
         return FullGC;
     }
 
-    private static JPanel MinorGCStats() {
-        GridLayout layout = new GridLayout(8, 2);
-        JPanel MinorGC = new JPanel(layout);
-        MinorGC.setBackground(Color.WHITE);
-
-        MinorGC.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        JLabel[] TextLable = new JLabel[16];
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        for(int i=0;i<16;i++){
-            TextLable[i] = new JLabel("",JLabel.CENTER);
-            TextLable[i].setPreferredSize(new Dimension(50,30));
-            TextLable[i].setBorder(border);
-            Font set = new Font("Dialog", 0, 18);
-            TextLable[i].setFont(set);
-        }
-
-        TextLable[0].setText("Minor GC 总数");
-        TextLable[1].setText(String.valueOf(MinorGCcount));
-
-        TextLable[2].setText("平均Minor GC时间");
-        TextLable[3].setText(df.format(MinorGCtimeSum / MinorGCcount) + " sec");
-
-        TextLable[4].setText("溢出次数");
-        TextLable[5].setText(String.valueOf(overFlowTime));
-
-        TextLable[6].setText("平均处理对象大小");
-        TextLable[7].setText(MinorTotalProcess / MinorGCcount + " bytes");
-
-        TextLable[8].setText("平均清理对象大小");
-        TextLable[9].setText(MinorTotalClean / MinorGCcount + " bytes");
-
-        TextLable[10].setText("平均幸存对象大小");
-        TextLable[11].setText(survivedTotal / MinorGCcount + " bytes");
-
-        TextLable[12].setText("平均晋升对象大小");
-        TextLable[13].setText(promotionTotal / MinorGCcount + " bytes");
-
-        TextLable[14].setText("平均CPU利用率");
-        TextLable[15].setText((df.format(MinorCPUPercentage / MinorGCcount * 100)) + "%");
-
-        for(int i=0;i<16;i++)
-            MinorGC.add(TextLable[i]);
-
-        return MinorGC;
-    }
 
 }
