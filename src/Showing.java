@@ -80,9 +80,9 @@ public class Showing {
     static double CollectInfoTime = 0;
     static double PrintInforTime = 0;
 
-    static HashMap<String,Integer> GCCauseTotal = new HashMap<>();
-    static HashMap<String,Integer> GCCauseYoung = new HashMap<>();
-    static HashMap<String,Integer> GCCauseOld = new HashMap<>();
+    static HashMap<String,Double[]> GCCauseTotal = new HashMap<>();
+    static HashMap<String,Double[]> GCCauseYoung = new HashMap<>();
+    static HashMap<String,Double[]> GCCauseOld = new HashMap<>();
 
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
@@ -104,7 +104,7 @@ public class Showing {
 
         SettleInformation();
 
-        Table.TotalGCStats(MainPanel,"用时情况",150,110,600,306);
+        Table.OverallStats(MainPanel,"用时情况",150,110,600,340);
 
         Drawing.createTimePieChart(MainPanel,950,10,740,520);
 
@@ -112,21 +112,25 @@ public class Showing {
 
         Drawing.createThreadChart(MainPanel,950,540,740,520);
 
+        Table.TotalGCStats(MainPanel,"GC情况",150,1170,600,374);
+
+
+
 
         JLabel TitleSecond = new JLabel("Minor GC",JLabel.CENTER);
         TitleSecond.setFont(TitleStyle);
-        TitleSecond.setBounds(620,810,500,50);
+        TitleSecond.setBounds(620,1210,500,50);
         MainPanel.add(TitleSecond);
         JPanel MinorGCStats = Showing.MinorGCStats();
-        MinorGCStats.setBounds(620,860,500,240);
+        MinorGCStats.setBounds(620,1260,500,240);
         MainPanel.add(MinorGCStats);
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1220,810,500,50);
+        TitleThird.setBounds(1220,1210,500,50);
         MainPanel.add(TitleThird);
         JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1220,860,500,210);
+        FullGCStats.setBounds(1220,1260,500,210);
         MainPanel.add(FullGCStats);
 
         JScrollPane jsp = new JScrollPane(MainPanel);
@@ -144,7 +148,7 @@ public class Showing {
         }
 
         XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(10,1800,1800,800);
+        chart.setBounds(10,2200,1800,800);
         MainPanel.add(chart);
 
         Mainframe.add(jsp);
@@ -179,14 +183,17 @@ public class Showing {
                 AdjustRootsTotal += ((FullGC)Judge).AdjustRoots;
                 PostCompactTotal += ((FullGC)Judge).PostCompact;
                 FullAdaptive += Judge.AdaptiveTime;
-                Integer old;
+                Double old[];
                 if(GCCauseOld.containsKey(Judge.Cause)){
                     old = GCCauseOld.get(Judge.Cause);
-                    old += 1;
+                    old[0] += 1;
+                    old[1] += Judge.timeCost;
                     GCCauseOld.put(Judge.Cause,old);
                 }
                 else{
-                    old = 1;
+                    old = new Double[2];
+                    old[0] = 1.0;
+                    old[1] = Judge.timeCost;
                     GCCauseOld.put(Judge.Cause,old);
                 }
             }
@@ -202,14 +209,17 @@ public class Showing {
                 MinorAdaptiveTime += Judge.AdaptiveTime;
                 if(((YoungGC)Judge).overflow)
                     overFlowTime ++;
-                Integer young;
+                Double[] young;
                 if(GCCauseYoung.containsKey(Judge.Cause)){
                     young = GCCauseYoung.get(Judge.Cause);
-                    young += 1;
+                    young[0] += 1;
+                    young[1] += Judge.timeCost;
                     GCCauseYoung.put(Judge.Cause,young);
                 }
                 else{
-                    young = 1;
+                    young = new Double[2];
+                    young[0] = 1.0;
+                    young[1] = Judge.timeCost;
                     GCCauseYoung.put(Judge.Cause,young);
                 }
 
@@ -225,24 +235,24 @@ public class Showing {
 
                 MeanSlowAlloc += ((YoungGC)Judge).allocation.slowAlloc;
                 MeanRefillTimes += ((YoungGC)Judge).allocation.refillTotal;
-                //static long GCWasteTotal = 0;
-                //static long SlowWasteTotal = 0;
-                //static long FastWasteTotal = 0;
-                //static long TotalWaste = 0;
+
                 GCWasteTotal += ((YoungGC)Judge).allocation.gc_waste;
                 SlowWasteTotal += ((YoungGC)Judge).allocation.slow_waste;
                 FastWasteTotal += ((YoungGC)Judge).allocation.fast_waste;
 
             }
 
-            Integer all;
+            Double[] all;
             if(GCCauseTotal.containsKey(Judge.Cause)){
                 all = GCCauseTotal.get(Judge.Cause);
-                all += 1;
+                all[0] += 1;
+                all[1] += Judge.timeCost;
                 GCCauseTotal.put(Judge.Cause,all);
             }
             else{
-                all = 1;
+                all = new Double[2];
+                all[0] = 1.0;
+                all[1] = Judge.timeCost;
                 GCCauseTotal.put(Judge.Cause,all);
             }
 
