@@ -123,6 +123,8 @@ public class Showing {
 
         Table.MinorGCStats(MainPanel,"Minor GC",150,1740,600,340);
 
+        ShowHeap.YoungGenStats(MainPanel,900,1620,1000,600);
+
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
         TitleThird.setBounds(1220,1810,500,50);

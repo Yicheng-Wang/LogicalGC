@@ -172,7 +172,7 @@ public class Table {
         double FromSize = LogReader.HeapRecord.get(LogReader.HeapRecord.size()-1).HeapPartition[1].totalSize.ValueFormM;
         double ToSize = LogReader.HeapRecord.get(LogReader.HeapRecord.size()-1).HeapPartition[2].totalSize.ValueFormM;
 
-        TextLable[18].setText("最终幸存者比例");
+        TextLable[18].setText("最终幸存者区占比");
         TextLable[19].setText((df.format((FromSize+ToSize) / (FromSize+ToSize+EdenSize) * 100)) + "%");
 
         for(int i=0;i<20;i++)
