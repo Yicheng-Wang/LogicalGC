@@ -4,4 +4,5 @@ public class YoungGC extends GC{
     int newThreshold = 7;
     Utility.Number survivedSize = new Utility.Number();
     Utility.Number promotionSize = new Utility.Number();
+    Utility.Number desiredSize = new Utility.Number();
 }

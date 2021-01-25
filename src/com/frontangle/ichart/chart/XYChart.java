@@ -265,6 +265,7 @@ public class XYChart extends Chart implements Legendable, MouseMotionListener {
 
 		this.xAxis.labelText = xLabel;
 		this.yAxis.labelText = yLabel;
+		this.yAxis2.labelText = y2Label;
 
 		this.addMouseMotionListener(this);
 

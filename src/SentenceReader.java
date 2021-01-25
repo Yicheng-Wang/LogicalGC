@@ -38,6 +38,7 @@ public class SentenceReader {
         int offset = 2;
         while(!rows[offset].contains("threshold "))
             offset++;
+        lastGC.desiredSize = Utility.Number.parseNumber("Desired survivor size ",rows[offset]);
         lastGC.newThreshold = Integer.parseInt(Utility.Number.parseNumber("threshold ",rows[offset]).size);
 
         lastGC.processSize = Utility.Number.parseNumber("[PSYoungGen: ",rows[ rows.length -1]);

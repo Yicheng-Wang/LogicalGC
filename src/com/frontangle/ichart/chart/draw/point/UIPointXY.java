@@ -18,7 +18,7 @@ import com.frontangle.ichart.chart.datapoint.DataPoint;
  */
 public abstract class UIPointXY implements Serializable, Cloneable {
 
-    public int radiusOrWidthOfPointShape = 10; //default
+    public int radiusOrWidthOfPointShape = 5; //default
     public Color color; //default color
     public double transparancyFraction = 0.7;
 

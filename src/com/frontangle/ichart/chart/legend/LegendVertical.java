@@ -19,6 +19,7 @@ import com.frontangle.ichart.chart.XYChart;
 import com.frontangle.ichart.chart.draw.Line;
 import com.frontangle.ichart.chart.draw.point.UIPointSimpleXY;
 import com.frontangle.ichart.chart.draw.point.UIPointXY;
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 
 /**
@@ -51,14 +52,18 @@ public class LegendVertical extends AbstractLegend implements Serializable{
     
 	public void drawLegend(Graphics2D g, Chart chart, ArrayList<Category> categories) {
 
-        int legendX = (chart.getWidth() - chart.rightOffset) + 5;
+        int legendX = (chart.getWidth() - chart.rightOffset) - 5;
         int legendY = chart.topOffset + 15; // + paddingBetweenChartAndLegend;
 
         int legendHeight = (categories.size() * squareWidth); // - (2 * paddingBetweenChartAndLegend);
-        int legendWidth = chart.rightOffset - (paddingLegendLeft);
+        int legendWidth = chart.rightOffset - (paddingLegendLeft) + 10;
 
         FontMetrics fmT = chart.getFontMetrics(legendFont);
-
+        if(chart instanceof XYChart)
+            if (((XYChart)chart).isYAxis2){
+                legendX += 50;
+                legendWidth += 30;
+            }
         //draw outside rectangle
         g.setColor(legendBackgroundColor);
 

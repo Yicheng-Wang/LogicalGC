@@ -89,6 +89,8 @@ public class Showing {
     static HashMap<String,Double[]> GCCauseYoung = new HashMap<>();
     static HashMap<String,Double[]> GCCauseOld = new HashMap<>();
 
+    static HashMap<String,Double> SurvivedObjects = new HashMap<>();
+
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
 
@@ -123,7 +125,14 @@ public class Showing {
 
         Table.MinorGCStats(MainPanel,"Minor GC",150,1740,600,340);
 
-        ShowHeap.YoungGenStats(MainPanel,900,1620,1000,600);
+        ShowHeap.YoungGenStats(MainPanel,850,1620,1000,600);
+
+        if(FullGCcount > 0){
+            Table.MajorGCStats(MainPanel,"Major GC",150,2280,600,340);
+
+
+        }
+
 
         JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
         TitleThird.setFont(TitleStyle);
