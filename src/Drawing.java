@@ -4,12 +4,13 @@ import com.frontangle.ichart.pie.Segment;
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Drawing {
     static DecimalFormat df = new DecimalFormat("#0.000");
+    static double[] topFive = new double[5];
+    static String[] topFiveName = new String[5];
+
     public static void createTimePieChart(JPanel mainPanel, int x, int y, int width, int height) {
         ArrayList<Segment> values = new ArrayList<>();
         double TotalStopTime = Showing.FullRunTime + Showing.MinorRunTime + Showing.SafePointTotal + Showing.AdaptiveTime
@@ -66,5 +67,46 @@ public class Drawing {
         pieChart.setBounds(x,y,width,height);
         pieChart.setVisible(true);
         mainPanel.add(pieChart);
+    }
+
+    public static void ObjectDistributionChart(JPanel mainPanel, int x, int y, int width, int height) {
+        ArrayList<Segment> values = new ArrayList<>();
+        ArrayList<Map.Entry<String, Double[]>> list = new ArrayList<>(Showing.SurvivedObjects.entrySet());
+        list.sort(new Comparator<Map.Entry<String, Double[]>>() {
+            @Override
+            public int compare(Map.Entry<String, Double[]> o1, Map.Entry<String, Double[]> o2) {
+                return o2.getValue()[0].compareTo(o1.getValue()[0]);
+            }
+        });
+
+        double time = 0;
+        double totalFive = 0;
+
+        for(int i=0;i<5;i++){
+            topFive[i] = list.get(i).getValue()[0];
+            topFiveName[i] = list.get(i).getKey();
+            totalFive += topFive[i];
+        }
+
+        double others = Showing.Totalbytes - totalFive;
+
+        values.add(new Segment(time = (double)topFive[0] / Showing.Totalbytes * 100,
+                "1- " + InstanceDistribution.DealingName(topFiveName[0]) + " -" + df.format(time) + "%", new Color(255, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[1] / Showing.Totalbytes * 100,
+                "2- " + InstanceDistribution.DealingName(topFiveName[1]) + " -"  + df.format(time) + "%", new Color(128, 0, 255,160)));
+        values.add(new Segment(time = (double)topFive[2] / Showing.Totalbytes * 100,
+                "3- " + InstanceDistribution.DealingName(topFiveName[2]) + " -"  + df.format(time) + "%", new Color(255, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[3] / Showing.Totalbytes * 100,
+                "4- " + InstanceDistribution.DealingName(topFiveName[3]) + " -"  + df.format(time) + "%", new Color(128, 0, 128,160)));
+        values.add(new Segment(time = (double)topFive[4] / Showing.Totalbytes * 100,
+                "5- " + InstanceDistribution.DealingName(topFiveName[4]) + " -"  + df.format(time) + "%", new Color(0, 0, 255,160)));
+        values.add(new Segment(time = (double)others / Showing.Totalbytes * 100, "Others -" + df.format(time) + "%", new Color(255, 0, 0,160)));
+
+        PieChart pieChart = new PieChart(values, "Object Type Distribution");
+        pieChart.setSize(width, height);
+        pieChart.setBounds(x,y,width,height);
+        pieChart.setVisible(true);
+        mainPanel.add(pieChart);
+
     }
 }

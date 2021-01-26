@@ -89,8 +89,8 @@ public class Showing {
     static HashMap<String,Double[]> GCCauseYoung = new HashMap<>();
     static HashMap<String,Double[]> GCCauseOld = new HashMap<>();
 
-    static HashMap<String,Double> SurvivedObjects = new HashMap<>();
-
+    static HashMap<String,Double[]> SurvivedObjects = new HashMap<>();
+    static double Totalbytes;
     //static double MinorReclaimPercentage = 0;
     //static double FullReclaimPercentage = 0;
 
@@ -105,8 +105,8 @@ public class Showing {
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,2100, 3200);
-        MainPanel.setPreferredSize(new Dimension(2100, 3200));
+        MainPanel.setBounds(0,0,2100, 3800);
+        MainPanel.setPreferredSize(new Dimension(2100, 3800));
         MainPanel.setBackground(Color.WHITE);
 
         SettleInformation();
@@ -128,33 +128,16 @@ public class Showing {
         ShowHeap.YoungGenStats(MainPanel,850,1620,1000,600);
 
         if(FullGCcount > 0){
-            Table.MajorGCStats(MainPanel,"Major GC",150,2280,600,340);
+            Drawing.ObjectDistributionChart(MainPanel,950,2300,740,520);
 
-
+            Table.MajorGCStats(MainPanel,"Major GC",150,2380,600,340);
         }
 
-
-        JLabel TitleThird = new JLabel("Full GC",JLabel.CENTER);
-        TitleThird.setFont(TitleStyle);
-        TitleThird.setBounds(1220,1810,500,50);
-        MainPanel.add(TitleThird);
-        JPanel FullGCStats = Showing.FullGCStats();
-        FullGCStats.setBounds(1220,1860,500,210);
-        MainPanel.add(FullGCStats);
-
         JScrollPane jsp = new JScrollPane(MainPanel);
-        jsp.setBounds(20,10,1880, 980);
+        jsp.setBounds(15,5,1890, 1070);
         jsp.setBackground(Color.WHITE);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        if(FullGCcount > 0 ){
-            PieChart FullPieChart = Showing.createFullPieChart();
-            MainPanel.add(FullPieChart);
-
-            PieChart ObjectPieChart = Showing.createObjectPieChart();
-            MainPanel.add(ObjectPieChart);
-        }
 
         XYChart chart = ShowHeap.createHeapXYChart();
         chart.setBounds(10,2800,1800,800);
@@ -162,7 +145,6 @@ public class Showing {
 
         Mainframe.add(jsp);
         Mainframe.setVisible(true);
-
     }
 
     private static void SettleInformation() {
@@ -286,6 +268,26 @@ public class Showing {
             FinalRefillWaste += entry.getValue().WasteSizeList.get(entry.getValue().WasteSizeList.size() - 1);
         }
 
+        for(int i=1;i<LogReader.distributions.size();i+=2){
+            InstanceDistribution after = LogReader.distributions.get(i);
+            Double[] handle;
+            for(int j=0;j<after.bytes.size();j++){
+                if(SurvivedObjects.containsKey(after.className.get(j))){
+                    handle = SurvivedObjects.get(after.className.get(j));
+                    handle[0] += after.bytes.get(j);
+                    handle[1] += after.instances.get(j);
+                    SurvivedObjects.put(after.className.get(j),handle);
+                }
+                else{
+                    handle = new Double[2];
+                    handle[0] = (double)after.bytes.get(j);
+                    handle[1] = (double)after.instances.get(j);
+                    SurvivedObjects.put(after.className.get(j),handle);
+                }
+                Totalbytes += after.bytes.get(j);
+            }
+        }
+
         ThreadTotalNum = LogReader.AllThread.size();
         InitialMeanTLAB /= ThreadTotalNum;
         InitialRefillWaste /= ThreadTotalNum;
@@ -303,40 +305,6 @@ public class Showing {
 
         PrintInforTime = totalExecutionTime - CollectInfoTime - FullRunTime - MinorRunTime - WarmupTime - AdaptiveTime - Apptime - SafePointTotal;
 
-    }
-
-    private static PieChart createObjectPieChart() {
-        ArrayList<Segment> values = new ArrayList<>();
-
-        double time = 0;
-        InstanceDistribution last = LogReader.distributions.get(LogReader.distributions.size()-1);
-        long[] topFive = new long[5];
-        long totalFive = 0;
-
-        for(int i=0;i<5;i++){
-            topFive[i] = last.bytes.get(i);
-            totalFive += topFive[i];
-        }
-
-        long others = last.totalBytes - totalFive;
-
-        values.add(new Segment(time = (double)topFive[0] / last.totalBytes * 100,
-                "1- " + InstanceDistribution.DealingName(last.className.get(0)) + " -" + df.format(time) + "%", new Color(255, 0, 255,160)));
-        values.add(new Segment(time = (double)topFive[1] / last.totalBytes * 100,
-                "2- " + InstanceDistribution.DealingName(last.className.get(1)) + " -"  + df.format(time) + "%", new Color(128, 0, 255,160)));
-        values.add(new Segment(time = (double)topFive[2] / last.totalBytes * 100,
-                "3- " + InstanceDistribution.DealingName(last.className.get(2)) + " -"  + df.format(time) + "%", new Color(255, 0, 128,160)));
-        values.add(new Segment(time = (double)topFive[3] / last.totalBytes * 100,
-                "4- " + InstanceDistribution.DealingName(last.className.get(3)) + " -"  + df.format(time) + "%", new Color(128, 0, 128,160)));
-        values.add(new Segment(time = (double)topFive[4] / last.totalBytes * 100,
-                "5- " + InstanceDistribution.DealingName(last.className.get(4)) + " -"  + df.format(time) + "%", new Color(0, 0, 255,160)));
-        values.add(new Segment(time = (double)others / last.totalBytes * 100, "Others -" + df.format(time) + "%", new Color(255, 0, 0,160)));
-
-        PieChart pieChart = new PieChart(values, "Object Type Distribution");
-        pieChart.setSize(600, 700);
-        pieChart.setBounds(1200,1820,600,700);
-        pieChart.setVisible(true);
-        return pieChart;
     }
 
     private static PieChart createFullPieChart() {
@@ -360,51 +328,5 @@ public class Showing {
         return pieChart;
 
     }
-
-    private static JPanel FullGCStats() {
-        GridLayout layout = new GridLayout(7, 2);
-        JPanel FullGC = new JPanel(layout);
-        FullGC.setBackground(Color.WHITE);
-
-        FullGC.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        JLabel[] TextLable = new JLabel[14];
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        for(int i=0;i<14;i++){
-            TextLable[i] = new JLabel("",JLabel.CENTER);
-            TextLable[i].setPreferredSize(new Dimension(50,30));
-            TextLable[i].setBorder(border);
-            Font set = new Font("Dialog", 0, 18);
-            TextLable[i].setFont(set);
-        }
-
-        double backup = 0;
-        long numberbackup = 0;
-        TextLable[0].setText("Full GC总数");
-        TextLable[1].setText(String.valueOf(FullGCcount));
-
-        TextLable[2].setText("平均Full GC时间");
-        TextLable[3].setText(df.format (backup = (FullGCcount != 0) ? (FullGCtimeSum / FullGCcount) : 0) + " sec");
-
-        TextLable[4].setText("平均标记阶段时间");
-        TextLable[5].setText(df.format( backup = (FullGCcount != 0) ? (MarkingTimeTotal / FullGCcount) : 0) + " sec");
-
-        TextLable[6].setText("平均整理阶段时间");
-        TextLable[7].setText(df.format( backup = (FullGCcount != 0) ? (CompactTimeTotal / FullGCcount)  : 0)+ " sec");
-
-        TextLable[8].setText("平均处理对象大小");
-        TextLable[9].setText( (numberbackup = (FullGCcount != 0) ? (FullTotalProcess / FullGCcount) : 0) + " bytes");
-
-        TextLable[10].setText("平均清理对象大小");
-        TextLable[11].setText( (numberbackup = (FullGCcount != 0) ? (FullTotalClean / FullGCcount) : 0) + " bytes");
-
-        TextLable[12].setText("平均CPU利用率");
-        TextLable[13].setText(df.format( backup = (FullGCcount != 0) ? (FullCPUPercentage / FullGCcount * 100) : 0) + "%");
-
-        for(int i=0;i<14;i++)
-            FullGC.add(TextLable[i]);
-
-        return FullGC;
-    }
-
 
 }

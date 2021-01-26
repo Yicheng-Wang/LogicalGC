@@ -232,33 +232,6 @@ public class Table {
         double backup = 0;
         long numberbackup = 0;
 
-        /*TextLable[0].setText("Minor GC次数");
-        TextLable[1].setText(String.valueOf(Showing.MinorGCcount));
-
-        TextLable[2].setText("平均Minor GC时间");
-        TextLable[3].setText(df.format(Showing.MinorGCtimeSum / Showing.MinorGCcount) + " sec");
-
-        TextLable[4].setText("最大Minor GC时间");
-        TextLable[5].setText(df.format(Showing.MaxMinorGCTime) + " sec");
-
-        TextLable[6].setText("溢出次数");
-        TextLable[7].setText(String.valueOf(Showing.overFlowTime));
-
-        TextLable[8].setText("平均幸存比例");
-        TextLable[9].setText((df.format((double) Showing.survivedTotal / (double)Showing.MinorTotalProcess * 100)) + "%");
-
-        TextLable[10].setText("平均晋升比例");
-        TextLable[11].setText((df.format((double)Showing.promotionTotal / (double)Showing.MinorTotalProcess * 100)) + "%");
-
-        TextLable[12].setText("平均清理比例");
-        TextLable[13].setText((df.format((double)Showing.MinorTotalClean / (double)Showing.MinorTotalProcess * 100)) + "%");
-
-        TextLable[14].setText("平均CPU利用率");
-        TextLable[15].setText((df.format(Showing.MinorCPUPercentage / Showing.MinorGCcount * 100)) + "%");
-
-        TextLable[16].setText("最终晋升阈值");
-        TextLable[17].setText(df2.format(Showing.FinalThreshold));*/
-
         TextLable[0].setText("Full GC总数");
         TextLable[1].setText(String.valueOf(Showing.FullGCcount));
 
@@ -266,22 +239,26 @@ public class Table {
         TextLable[3].setText(df.format (backup = (Showing.FullGCcount != 0) ? (Showing.FullGCtimeSum / Showing.FullGCcount) : 0) + " sec");
 
         TextLable[4].setText("最大Full GC时间");
-        TextLable[5].setText(df.format( backup = (Showing.FullGCcount != 0) ? (Showing.MarkingTimeTotal / Showing.FullGCcount) : 0) + " sec");
+        TextLable[5].setText(df.format( backup = (Showing.FullGCcount != 0) ? (Showing.MaxMajorGCTime) : 0) + " sec");
 
         TextLable[6].setText("平均CPU利用率");
-        TextLable[7].setText(df.format( backup = (Showing.FullGCcount != 0) ? (Showing.CompactTimeTotal / Showing.FullGCcount)  : 0)+ " sec");
+        TextLable[7].setText(df.format( backup = (Showing.FullGCcount != 0) ? (Showing.FullCPUPercentage / Showing.FullGCcount * 100)  : 0)+ "%");
 
         TextLable[8].setText("平均幸存比例");
-        TextLable[9].setText( (numberbackup = (Showing.FullGCcount != 0) ? (Showing.FullTotalProcess / Showing.FullGCcount) : 0) + " bytes");
+        TextLable[9].setText(df.format (numberbackup = (Showing.FullGCcount != 0) ? (1 - Showing.FullTotalClean / Showing.FullTotalProcess)  * 100 : 0) + "%");
 
-        for()
-        TextLable[10].setText("主要幸存对象类型");
-        TextLable[11].setText( (numberbackup = (Showing.FullGCcount != 0) ? (Showing.FullTotalClean / Showing.FullGCcount) : 0) + " bytes");
+        for(int i=0;i<5;i++){
+            TextLable[10 + 2*i].setText("主要幸存对象类型" + i + " (大小)" );
+            TextLable[10 + 2*i + 1].setText(InstanceDistribution.DealingName(Drawing.topFiveName[i]) + " (" + Drawing.topFive[i] + " bytes)");
+        }
 
-        TextLable[12].setText("平均CPU利用率");
-        TextLable[13].setText(df.format( backup = (Showing.FullGCcount != 0) ? (Showing.FullCPUPercentage / Showing.FullGCcount * 100) : 0) + "%");
-
-        for(int i=0;i<14;i++)
+        for(int i=0;i<20;i++)
             FullGC.add(TextLable[i]);
+
+        JLabel Title = SetTitle(name,x,y-60,width,50);
+        mainPanel.add(Title);
+
+        FullGC.setBounds(x,y,width,height);
+        mainPanel.add(FullGC);
     }
 }

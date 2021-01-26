@@ -62,7 +62,7 @@ public class LegendVertical extends AbstractLegend implements Serializable{
         if(chart instanceof XYChart)
             if (((XYChart)chart).isYAxis2){
                 legendX += 50;
-                legendWidth += 30;
+                legendWidth += 50;
             }
         //draw outside rectangle
         g.setColor(legendBackgroundColor);
