@@ -1,3 +1,6 @@
+import com.frontangle.ichart.chart.XYChart;
+import com.frontangle.ichart.chart.bar.XYBarDataSeries;
+import com.frontangle.ichart.chart.datapoint.DataPointBar;
 import com.frontangle.ichart.pie.PieChart;
 import com.frontangle.ichart.pie.Segment;
 
@@ -8,6 +11,7 @@ import java.util.*;
 
 public class Drawing {
     static DecimalFormat df = new DecimalFormat("#0.000");
+    static DecimalFormat df2 = new DecimalFormat("#0");
     static double[] topFive = new double[5];
     static String[] topFiveName = new String[5];
 
@@ -53,8 +57,19 @@ public class Drawing {
         double Total = Showing.GCtimesum;
         int index = 0;
         int CauseNum = Showing.GCCauseTotal.size();
+        XYBarDataSeries barSeries = new XYBarDataSeries();
+        for(int i=0;i<LogReader.GCRecord.size();i++){
+            GC Judge = LogReader.GCRecord.get(i);
+            if(Judge instanceof FullGC){
+                barSeries.add(new DataPointBar("F", Judge.timeCost*1000, Color.RED));
+            }
+            else{
+                barSeries.add(new DataPointBar("Y", Judge.timeCost*1000, Color.BLUE));
+            }
+        }
 
-        Iterator map1it=Showing.GCCauseTotal.entrySet().iterator();
+        XYChart chart = new XYChart("GC Pause Time Distribution", "Type", "Time (ms)",barSeries);
+        /*Iterator map1it=Showing.GCCauseTotal.entrySet().iterator();
         while(map1it.hasNext())
         {
             Map.Entry<String, Double[]> entry=(Map.Entry<String, Double[]>) map1it.next();
@@ -65,8 +80,15 @@ public class Drawing {
         PieChart pieChart = new PieChart(values, "GC Cause Time Distribution");
         pieChart.setSize(width, height);
         pieChart.setBounds(x,y,width,height);
-        pieChart.setVisible(true);
-        mainPanel.add(pieChart);
+        pieChart.setVisible(true);*/
+
+        chart.setSize(1200, 600);
+
+        chart.setTitleFont(new Font("Ariel", Font.PLAIN, 24));
+        chart.setTitle("GC Pause Time Distribution");
+        chart.setBounds(x,y,width,height);
+
+        mainPanel.add(chart);
     }
 
     public static void ObjectDistributionChart(JPanel mainPanel, int x, int y, int width, int height) {

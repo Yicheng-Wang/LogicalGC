@@ -249,7 +249,7 @@ public class Table {
 
         for(int i=0;i<5;i++){
             TextLable[10 + 2*i].setText("主要幸存对象类型" + i + " (大小)" );
-            TextLable[10 + 2*i + 1].setText(InstanceDistribution.DealingName(Drawing.topFiveName[i]) + " (" + Drawing.topFive[i] + " bytes)");
+            TextLable[10 + 2*i + 1].setText(InstanceDistribution.DealingName(Drawing.topFiveName[i]) + " (" + df2.format(Drawing.topFive[i] / 1024) + " MB)");
         }
 
         for(int i=0;i<20;i++)

@@ -121,7 +121,7 @@ public class Showing {
 
         Table.TotalGCStats(MainPanel,"GC情况",150,1200,600,34 * (4 + 2 * GCCauseTotal.size()));
 
-        Drawing.createCauseChart(MainPanel,950,1080,740,520);
+        Drawing.createCauseChart(MainPanel,850,1080,900,520);
 
         Table.MinorGCStats(MainPanel,"Minor GC",150,1740,600,340);
 
