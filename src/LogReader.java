@@ -40,11 +40,17 @@ public class LogReader {
 
     public static void main(String[] args) throws IOException {
         //String logPath = args[0];
-        String logPath = "C:\\Users\\DELL\\Desktop\\gc1.log";
+        //Test Java Arguments:
+        /*-XX:+PrintGCDetails -XX:+PrintAdaptiveSizePolicy -XX:+PrintClassHistogramAfterFullGC -XX:+PrintClassHistogramBeforeFullGC
+        -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCTaskTimeStamps -XX:+PrintHeapAtGC
+        -XX:+PrintHeapAtGCExtended -XX:+PrintOldPLAB -XX:+PrintParallelOldGCPhaseTimes -XX:+PrintPLAB -XX:+PrintPromotionFailure
+        -XX:+PrintReferenceGC -XX:+PrintStringDeduplicationStatistics -XX:+PrintTenuringDistribution -XX:+PrintTLAB
+        -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation -XX:+UnlockDiagnosticVMOptions
+         */
+        String logPath = "..\\gc1.log";
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
-
 
         //Parse
         while(rowindex < rows.length){
