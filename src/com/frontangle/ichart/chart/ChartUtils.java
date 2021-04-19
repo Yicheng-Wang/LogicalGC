@@ -388,8 +388,9 @@ public class ChartUtils {
 		double min = dr.min;
 
 		if (max - min < 0.0000001) {
-			throw new RuntimeException(
-					"data range cannot be less than XXXXXX. DataRange = " + dr);
+			// throw new RuntimeException(
+			// 		"data range cannot be less than XXXXXX. DataRange = " + dr);
+			max = min + 0.00001;
 		} else if (max - min > 100000000) {
 			throw new RuntimeException(
 					"data range cannot be more than XXXXXX. DataRange = " + dr);

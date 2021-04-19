@@ -1,8 +1,12 @@
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class LogReader {
     static ArrayList<HeapSnapshot> HeapRecord = new ArrayList<>();
@@ -15,7 +19,7 @@ public class LogReader {
     static TLAB LastTLAB = new TLAB();
     static HashMap<String,Thread> AllThread = new HashMap<>();
 
-    public static String[] LoadLog(String logPath) throws  IOException{
+    public static String[] LoadLog(String logPath) throws IOException{
         File logFile = new File(logPath);
         FileInputStream fileInputStream = null;
         try {
@@ -39,15 +43,19 @@ public class LogReader {
     }
 
     public static void main(String[] args) throws IOException {
-        //String logPath = args[0];
-        //Test Java Arguments:
-        /*-XX:+PrintGCDetails -XX:+PrintAdaptiveSizePolicy -XX:+PrintClassHistogramAfterFullGC -XX:+PrintClassHistogramBeforeFullGC
-        -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCTaskTimeStamps -XX:+PrintHeapAtGC
-        -XX:+PrintHeapAtGCExtended -XX:+PrintOldPLAB -XX:+PrintParallelOldGCPhaseTimes -XX:+PrintPLAB -XX:+PrintPromotionFailure
-        -XX:+PrintReferenceGC -XX:+PrintStringDeduplicationStatistics -XX:+PrintTenuringDistribution -XX:+PrintTLAB
-        -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation -XX:+UnlockDiagnosticVMOptions
+        /*
+         * Test Java Arguments:
+         * -XX:+PrintGCDetails -XX:+UnlockDiagnosticVMOptions
+         * -XX:+PrintClassHistogramAfterFullGC -XX:+PrintClassHistogramBeforeFullGC
+         * -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime
+         * -XX:+PrintHeapAtGC -XX:+PrintHeapAtGCExtended
+         * -XX:+PrintOldPLAB -XX:+PrintPLAB -XX:+PrintTLAB
+         * -XX:+PrintParallelOldGCPhaseTimes -XX:+PrintReferenceGC
+         * -XX:+PrintTenuringDistribution -XX:+PrintPromotionFailure
+         * -XX:+PrintStringDeduplicationStatistics -XX:+PrintAdaptiveSizePolicy
+         * -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation
          */
-        String logPath = "..\\gc1.log";
+        String logPath = args[0];
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
@@ -239,7 +247,7 @@ public class LogReader {
                 giveBack = Utility.skipSpace(rows[rowindex],index);
                 String totalbytes = (String) giveBack[0];
                 beforeDistribution.totalInstance = Long.parseLong(totalInstance);
-                beforeDistribution.totalBytes = Long.parseLong(totalbytes);
+                beforeDistribution.totalBytes = Long.parseLong(totalbytes.trim());
                 rowindex++;
 
                 beforeDistribution.timecost = Utility.Number.parseNumber(", ",rows[rowindex]).valueDouble;
@@ -294,6 +302,10 @@ public class LogReader {
         last.phase.type = ApplicationRecord.get(ApplicationRecord.size()-1).type;
         last.complete = true;
 
-        Showing.shows();
+        String title = logPath;
+        if (logPath.lastIndexOf('/') != -1) {
+            title = logPath.substring(logPath.lastIndexOf('/')+1);
+        }
+        Showing.shows(title);
     }
 }

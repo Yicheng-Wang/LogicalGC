@@ -64,9 +64,9 @@ public class ShowHeap {
         for(int i=1;i<LogReader.HeapRecord.size();i++){
             TimeStamps[i] = Showing.df.format(LogReader.timeLine.get(i-1));
             if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.OldGC)
-                TimeStamps[i] += " (Full)";
+                TimeStamps[i] += "F";
             if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.YoungGC)
-                TimeStamps[i] += " (Minor)";
+                TimeStamps[i] += "M";
         }
 
         double min = 0;
@@ -89,7 +89,7 @@ public class ShowHeap {
                 max = LogReader.HeapRecord.get(i).totalSize.ValueFormM;
         }
 
-        XYChart chart = new XYChart("Heap Memory Usage ", "Time And Event (Sec)",
+        XYChart chart = new XYChart("Heap Memory Usage", "Time And Event (Sec)",
                 "Size of Heap (MB)", al);
         chart.title.titleColor = Color.BLACK;
         chart.title.titleFont =new Font("Purisa", 1, 33);

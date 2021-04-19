@@ -1,21 +1,19 @@
-import com.frontangle.ichart.chart.XYChart;
-import com.frontangle.ichart.chart.XYDataSeries;
-import com.frontangle.ichart.chart.axis.YAxis;
-import com.frontangle.ichart.chart.datapoint.DataPoint;
-import com.frontangle.ichart.chart.draw.Area;
-import com.frontangle.ichart.pie.PieChart;
-import com.frontangle.ichart.pie.Segment;
-import com.frontangle.ichart.scaling.LinearNumericalAxisScaling;
-import sun.rmi.runtime.Log;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.swing.*;
-import javax.swing.border.Border;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import com.frontangle.ichart.chart.XYChart;
+import com.frontangle.ichart.pie.PieChart;
+import com.frontangle.ichart.pie.Segment;
 
 public class Showing {
 
@@ -97,50 +95,56 @@ public class Showing {
     static int overFlowTime = 0;
     static double Apptime = 0;
 
-    public static void shows() {
-
+    public static void shows(String title) {
+        final int MAX_HEIGHT = 850;
+        final int MAX_WIDTH = 1430;
+        final int PADDING = 50;
+        final int FIRST_COLUMN_WIDTH = 500;
+        final int SECOND_COLUMN_WIDTH = 800;
+        final int SECOND_COLUMN_START = PADDING + FIRST_COLUMN_WIDTH;
         JFrame Mainframe = new JFrame();
         Mainframe.setLayout(null);
-        Mainframe.setSize(1920,1080);
+        Mainframe.setSize(MAX_WIDTH, MAX_HEIGHT);
+        Mainframe.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        Mainframe.setTitle(title);
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0,0,2100, 3800);
-        MainPanel.setPreferredSize(new Dimension(2100, 3800));
+        MainPanel.setBounds(0, 0, MAX_WIDTH, 3800);
+        MainPanel.setPreferredSize(new Dimension(MAX_WIDTH, 3800));
         MainPanel.setBackground(Color.WHITE);
 
         SettleInformation();
 
-        Table.OverallStats(MainPanel,"用时情况",150,110,600,340);
+        Table.OverallStats(MainPanel,"用时情况",PADDING,110,FIRST_COLUMN_WIDTH,340);
 
-        Drawing.createTimePieChart(MainPanel,950,20,740,520);
+        Drawing.createTimePieChart(MainPanel,SECOND_COLUMN_START,20,SECOND_COLUMN_WIDTH,520);
 
-        Table.ApplicationStats(MainPanel,"应用线程",150,620,600,374);
+        Table.ApplicationStats(MainPanel,"应用线程",PADDING,620,FIRST_COLUMN_WIDTH,374);
 
-        Drawing.createThreadChart(MainPanel,950,550,740,520);
+        Drawing.createThreadChart(MainPanel,SECOND_COLUMN_START,550,SECOND_COLUMN_WIDTH,520);
 
-        Table.TotalGCStats(MainPanel,"GC情况",150,1200,600,34 * (4 + 2 * GCCauseTotal.size()));
+        Table.TotalGCStats(MainPanel,"GC情况",PADDING,1200,FIRST_COLUMN_WIDTH,34 * (4 + 2 * GCCauseTotal.size()));
 
-        Drawing.createCauseChart(MainPanel,850,1080,900,520);
+        Drawing.createCauseChart(MainPanel,SECOND_COLUMN_START,1080,SECOND_COLUMN_WIDTH,520);
 
-        Table.MinorGCStats(MainPanel,"Minor GC",150,1740,600,340);
+        Table.MinorGCStats(MainPanel,"Minor GC",PADDING,1740,FIRST_COLUMN_WIDTH,340);
 
-        ShowHeap.YoungGenStats(MainPanel,850,1620,1000,600);
+        ShowHeap.YoungGenStats(MainPanel,SECOND_COLUMN_START,1620,SECOND_COLUMN_WIDTH,600);
 
         if(FullGCcount > 0){
-            Drawing.ObjectDistributionChart(MainPanel,950,2300,740,520);
-
-            Table.MajorGCStats(MainPanel,"Major GC",150,2380,600,340);
+            Drawing.ObjectDistributionChart(MainPanel,SECOND_COLUMN_START,2300,SECOND_COLUMN_WIDTH,520);
+            Table.MajorGCStats(MainPanel, "Major GC", PADDING, 2380, FIRST_COLUMN_WIDTH, 340);
         }
 
         JScrollPane jsp = new JScrollPane(MainPanel);
-        jsp.setBounds(15,5,1890, 1070);
+        jsp.setBounds(10,10,MAX_WIDTH-30, MAX_HEIGHT-50);
         jsp.setBackground(Color.WHITE);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(10,2800,1800,800);
+        chart.setBounds(PADDING, 2800, 1300, 800);
         MainPanel.add(chart);
 
         Mainframe.add(jsp);
@@ -161,7 +165,7 @@ public class Showing {
 
         for(int i=0;i<GCcount;i++){
             GC Judge =  LogReader.GCRecord.get(i);
-            if(Judge instanceof FullGC){
+            if (Judge instanceof FullGC) {
                 FullGCcount++;
                 FullGCtimeSum += Judge.timeCost;
                 FullTotalProcess += Judge.processSize.valueForm;
@@ -177,21 +181,18 @@ public class Showing {
                 MaxMajorGCTime = (Judge.timeCost > MaxMajorGCTime)?Judge.timeCost:MaxMajorGCTime;
 
                 Double old[];
-                if(GCCauseOld.containsKey(Judge.Cause)){
+                if (GCCauseOld.containsKey(Judge.Cause)) {
                     old = GCCauseOld.get(Judge.Cause);
                     old[0] += 1;
                     old[1] += Judge.timeCost;
                     GCCauseOld.put(Judge.Cause,old);
-                }
-                else{
+                } else {
                     old = new Double[2];
                     old[0] = 1.0;
                     old[1] = Judge.timeCost;
                     GCCauseOld.put(Judge.Cause,old);
                 }
-            }
-
-            else{
+            } else {
                 MinorGCcount++;
                 MinorGCtimeSum += Judge.timeCost;
                 MinorTotalProcess += Judge.processSize.valueForm;

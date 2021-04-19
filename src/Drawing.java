@@ -1,13 +1,17 @@
+import java.awt.Color;
+import java.awt.Font;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+
+import javax.swing.JPanel;
+
 import com.frontangle.ichart.chart.XYChart;
 import com.frontangle.ichart.chart.bar.XYBarDataSeries;
 import com.frontangle.ichart.chart.datapoint.DataPointBar;
 import com.frontangle.ichart.pie.PieChart;
 import com.frontangle.ichart.pie.Segment;
-
-import javax.swing.*;
-import java.awt.*;
-import java.text.DecimalFormat;
-import java.util.*;
 
 public class Drawing {
     static DecimalFormat df = new DecimalFormat("#0.000");
@@ -104,9 +108,9 @@ public class Drawing {
         double time = 0;
         double totalFive = 0;
 
-        for(int i=0;i<5;i++){
+        for(int i = 0; i < 5; i++){
             topFive[i] = list.get(i).getValue()[0];
-            topFiveName[i] = list.get(i).getKey();
+            topFiveName[i] = list.get(i).getKey().trim();
             totalFive += topFive[i];
         }
 
