@@ -3,9 +3,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class LogReader {
@@ -55,7 +58,7 @@ public class LogReader {
          * -XX:+PrintStringDeduplicationStatistics -XX:+PrintAdaptiveSizePolicy
          * -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation
          */
-        String logPath = args[0];
+        String logPath = args[1];
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
         int rowindex = 3;
@@ -215,7 +218,9 @@ public class LogReader {
                 }
 
                 GC Last = GCRecord.get(LogReader.GCRecord.size()-1);
-                Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                if (Last.AdaptiveTime != 0) {
+                    Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                }
                 if(Last instanceof FullGC){
                     Last.timeCost = ((FullGC)Last).PreCompact + ((FullGC)Last).Markingphase + ((FullGC)Last).Summaryphase
                             + ((FullGC)Last).AdjustRoots + ((FullGC)Last).Compactionphase + ((FullGC)Last).PostCompact
@@ -302,10 +307,83 @@ public class LogReader {
         last.phase.type = ApplicationRecord.get(ApplicationRecord.size()-1).type;
         last.complete = true;
 
-        String title = logPath;
-        if (logPath.lastIndexOf('/') != -1) {
-            title = logPath.substring(logPath.lastIndexOf('/')+1);
+        if (args[0].equals("optimize")) {
+            optimize();
+        } else if (args[0].equals("show")) {
+            String title = logPath;
+            if (logPath.lastIndexOf('/') != -1) {
+                title = logPath.substring(logPath.lastIndexOf('/') + 1);
+            }
+            Showing.shows(title);
+        } else if (args[0].equals("analyze")) {
+            Showing.shows("");
+            DecimalFormat df = new DecimalFormat("#0.000");
+            String runTime = LogReader.timeLine.get(LogReader.timeLine.size() - 1).toString(); // sec
+            String throughputRate = df.format(Showing.Apptime / Showing.totalExecutionTime * 100); // %
+            String GCTime = df.format(Showing.GCtimesum); // sec
+            System.out.println(runTime + "|" + throughputRate + "|" + GCTime);
+            System.exit(0);
+        } else {
+            System.out.println("请指定使用模式");
         }
-        Showing.shows(title);
+    }
+
+    static int calcNewRatio(double extraOldRatio) {
+        LinkedList<Double> l = new LinkedList<Double>();
+        for (HeapSnapshot hs : HeapRecord) {
+            if (hs.phase.type == TimePeriod.usageType.OldGC) {
+                Generation old = hs.HeapPartition[3];
+                double used = old.usedSize.ValueFormM;
+                l.offer(used);
+            }
+        }
+        double heapSize = HeapSnapshot.maxSize.ValueFormM;
+        double max = Collections.max(l)*extraOldRatio;
+        // NewRatio = Old:Young = Old/(HeapSize - Old)
+        int NewRatio = (int)Math.ceil(max/(heapSize - max));
+        System.out.printf("heapSize: %.3f, maxUsed: %.3f, NewRatio: %d\n", heapSize, max, NewRatio);
+        return NewRatio;
+    }
+
+    static int calcSurvivorRatio() {
+        // SurvivorRatio = Eden/To
+        // only 50% To is available
+        double avg_cleaned = (double)Showing.MinorTotalClean/(double)Showing.MinorTotalProcess;
+        int SurvivorRatio = (int)Math.ceil((1/(1 - avg_cleaned))/2);
+        int overflow = Showing.overFlowTime;
+        int sum = 0, count = 0;
+        for (GC t : GCRecord) {
+            if (t instanceof YoungGC) {
+                sum += ((YoungGC)t).newThreshold;
+                count++;
+            }
+        }
+        double avg_threshold = sum/count;
+        System.out.printf("avgCleaned: %.3f, overflow: %d, avgThreshold: %.3f, SurvivorRatio: %d\n", avg_cleaned, overflow, avg_threshold, SurvivorRatio);
+        return SurvivorRatio;
+    }
+
+    static int calcTargetSurvivorRatio() {
+        double avg_survived = (double)Showing.survivedTotal/(double)Showing.MinorTotalProcess*100;
+        double avg_promoted = (double)Showing.promotionTotal/(double)Showing.MinorTotalProcess*100;
+        double diff = Math.abs(avg_survived - avg_promoted);
+        int TargetSurvivorRatio = 50;
+        if (diff > (avg_survived + avg_promoted)/20) {
+            if (avg_survived > avg_promoted) {
+                TargetSurvivorRatio = 75;
+            } else {
+                TargetSurvivorRatio = 25;
+            }
+        }
+        System.out.printf("avgSurvived: %.3f, avgPromoted: %.3f, TargetSurvivorRatio: %d\n", avg_survived, avg_promoted, TargetSurvivorRatio);
+        return TargetSurvivorRatio;
+    }
+
+    static void optimize() {
+        calcNewRatio(1.2);
+        Showing.shows("");
+        calcSurvivorRatio();
+        calcTargetSurvivorRatio();
+        System.exit(0);
     }
 }
