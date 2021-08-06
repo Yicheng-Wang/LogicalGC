@@ -63,7 +63,7 @@ class Optimizer:
             test_argument.set('SurvivorRatio')
             test_range.set('2:16:2')
 
-        set_for_test()
+        # set_for_test()
 
         def parse_test_range():
             test_range_str = test_range.get()
@@ -109,10 +109,14 @@ class Optimizer:
                 time_thread = threading.Thread(target=self.execution_time, args=(heap_size.get(), test_argument.get(), parsed_test_range, jar_path.get(), run_argument.get(), True))
                 threading.Thread(target=warm_up, args=(time_thread,)).start()
 
-        Button(window, text='优化参数', font=('Arial', 12), width=10, command=buttun_optimize).place(x=80, y=110, width=100, height=30)
-        Button(window, text='生成日志', font=('Arial', 12), width=10, command=buttun_generate).place(x=260, y=110, width=100, height=30)
-        Button(window, text='展示日志', font=('Arial', 12), width=10, command=buttun_show).place(x=440, y=110, width=100, height=30)
-        Button(window, text='执行时间', font=('Arial', 12), width=10, command=buttun_time).place(x=620, y=110, width=100, height=30)
+        def buttun_demo():
+            threading.Thread(target=self.show_demo).start()
+
+        Button(window, text='优化参数', font=('Arial', 12), width=10, command=buttun_optimize).place(x=40, y=110, width=100, height=30)
+        Button(window, text='生成日志', font=('Arial', 12), width=10, command=buttun_generate).place(x=195, y=110, width=100, height=30)
+        Button(window, text='展示日志', font=('Arial', 12), width=10, command=buttun_show).place(x=350, y=110, width=100, height=30)
+        Button(window, text='执行时间', font=('Arial', 12), width=10, command=buttun_time).place(x=505, y=110, width=100, height=30)
+        Button(window, text='展示效果', font=('Arial', 12), width=10, command=buttun_demo).place(x=660, y=110, width=100, height=30)
 
         self.output = Text(window, state=DISABLED, font=('Arial', 12))
         self.output.place(x=5, y=145, width=790, height=150)
@@ -132,6 +136,68 @@ class Optimizer:
         self.output.delete(1.0, END)
         self.output.config(state=DISABLED)
 
+    def show_demo(self):
+        output_data = [
+            '数据来自实测：\n',
+            '执行预热\n',
+            '生成日志到log/75M_default.log\n',
+            '解析日志log/75M_default.log\n',
+            '建议的NewRatio：5\n',
+            '正在搜索参数...\n',
+            '搜索到的最优参数：-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=25 -XX:OldPLABSize=1024 -XX:YoungPLABSize=4096 -XX:PLABWeight=80 \n',
+            '生成日志到log/75M_opt.log\n',
+            '解析日志log/75M_opt.log\n',
+            '执行时间减少：68.55%\n',
+            '吞吐率提升：56.32%\n',
+            'GC时间减少：98.84%\n'
+        ]
+        for s in output_data:
+            self.output_str(s)
+            time.sleep(0.8)
+
+    def search_arguments(self, heap_size, jar_path, run_argument, opt_arg):
+        self.output_str('正在搜索参数...\n')
+        arguments = [
+            ('SurvivorRatio', (4, 16, 4)), # default: 8
+            ('TargetSurvivorRatio', (25, 100, 25)), # default: 50
+            ('OldPLABSize', (1024, 5120, 1024)), # default: 1024
+            ('YoungPLABSize', (1024, 5120, 1024)), # default: 4096
+            ('PLABWeight', (70, 85, 5)), # default: 75
+        ]
+        index = [0]*len(arguments)
+        for i in range(0, len(index)):
+            index[i] = arguments[i][1][0]
+        min_time = -1
+        result = ''
+        while (index[0] < arguments[0][1][1]):
+            cmd = 'java -Xmx{0} -Xms{0} {1} '.format(heap_size, opt_arg)
+            cmd_arg = ''
+            for i in range(0, len(arguments)):
+                arg = arguments[i]
+                cmd_arg += '-XX:{0}={1} '.format(arg[0], index[i])
+            cmd += cmd_arg
+            cmd += '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
+            st = time.time()
+            os.system(cmd)
+            et = time.time()
+            if min_time == -1 or min_time > (et - st):
+                min_time = (et - st)
+                result = cmd_arg
+            i = len(arguments) - 1
+            while True:
+                arg = arguments[i]
+                index[i] += arg[1][2]
+                if index[i] >= arg[1][1]:
+                    if i > 0:
+                        index[i] = arg[1][0]
+                        i -= 1
+                    else:
+                        break
+                else:
+                    break
+        self.output_str('搜索到的最优参数：' + result + '\n')
+        return result
+
     def optimize(self, heap_size, jar_path, run_argument):
         append_args = '-Xloggc:log/{0}_default.log -Xmx{0} -Xms{0} '.format(heap_size)
         cmd = 'java ' + self.default_args + append_args + '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
@@ -149,22 +215,23 @@ class Optimizer:
         p.wait()
         line = str(p.stdout.readline())
         NewRatio_line = line[2:-3]
-        print(NewRatio_line)
+        # print(NewRatio_line)
         NewRatio = int(NewRatio_line[NewRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
-        SurvivorRatio_line = line[2:-3]
-        print(SurvivorRatio_line)
-        SurvivorRatio = int(SurvivorRatio_line[SurvivorRatio_line.rfind(' ')+1:])
+        # SurvivorRatio_line = line[2:-3]
+        # print(SurvivorRatio_line)
+        # SurvivorRatio = int(SurvivorRatio_line[SurvivorRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
-        TargetSurvivorRatio_line = line[2:-3]
-        print(TargetSurvivorRatio_line)
-        TargetSurvivorRatio = int(TargetSurvivorRatio_line[TargetSurvivorRatio_line.rfind(' ')+1:])
+        # TargetSurvivorRatio_line = line[2:-3]
+        # print(TargetSurvivorRatio_line)
+        # TargetSurvivorRatio = int(TargetSurvivorRatio_line[TargetSurvivorRatio_line.rfind(' ')+1:])
         self.output_str('建议的NewRatio：%d\n'%(NewRatio))
-        self.output_str('建议的SurvivorRatio：%d\n'%(SurvivorRatio))
-        self.output_str('建议的TargetSurvivorRatio：%d\n'%(TargetSurvivorRatio))
+        # self.output_str('建议的SurvivorRatio：%d\n'%(SurvivorRatio))
+        # self.output_str('建议的TargetSurvivorRatio：%d\n'%(TargetSurvivorRatio))
 
-        # fix: NewRatio
-        append_args = '-Xloggc:log/{0}_opt.log -Xmx{0} -Xms{0} -XX:NewRatio={1} '.format(heap_size, NewRatio)
+        search_result = self.search_arguments(heap_size, jar_path, run_argument, '-XX:NewRatio={0}'.format(NewRatio))
+
+        append_args = '-Xloggc:log/{0}_opt.log -Xmx{0} -Xms{0} -XX:NewRatio={1} {2} '.format(heap_size, NewRatio, search_result)
         cmd = 'java ' + self.default_args + append_args + '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
         self.output_str('生成日志到log/{0}_opt.log\n'.format(heap_size))
         os.system(cmd)
