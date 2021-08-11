@@ -4,3 +4,4 @@ scratch
 log
 LogReader.jar
 tool/dacapo-*.jar
+tool.ini

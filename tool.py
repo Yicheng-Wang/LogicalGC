@@ -1,13 +1,10 @@
+# encoding: utf-8
+
 import os
 import re
 import time
-import threading
 import subprocess
-
-import tkinter as tk
-from tkinter import Button, Label, Entry, StringVar, Text, Scrollbar
-from tkinter.constants import DISABLED, NORMAL, END, INSERT, RIGHT, Y
-from tkinter.filedialog import askopenfilename
+import configparser
 
 class Optimizer:
     def __init__(self):
@@ -20,149 +17,116 @@ class Optimizer:
                              -XX:+PrintTenuringDistribution -XX:+PrintPromotionFailure \
                              -XX:+PrintStringDeduplicationStatistics -XX:+PrintAdaptiveSizePolicy \
                              -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation '
+        self.conf = configparser.ConfigParser()
+        self.conf_path = './tool.ini'
+        if os.path.exists(self.conf_path):
+            self.conf.read(self.conf_path)
+        else:
+            self.conf.add_section('conf')
+            with open(self.conf_path, 'w') as f:
+                self.conf.write(f)
+        self.func = {
+            'opt': self.optimize,
+            'gen': self.generate,
+            'show': self.show,
+            'time': self.execution_time,
+            'demo': self.show_demo,
+            'quit': self.quit,
+            'reload': self.reload,
+        }
 
     def main(self):
-        def generate_LogReader():
-            if os.path.exists('./LogReader.jar') == False:
-                os.system('make jar')
+        def wrong_input():
+            self.output_str('no such operation')
 
-        generate_LogReader()
+        if os.path.exists('./LogReader.jar') == False:
+            os.system('make jar')
 
-        window = tk.Tk()
-        window.title('Optimizer')
-        width = 800
-        height = 300
-        window.minsize(width, height)
-        window.maxsize(width, height)
+        # self.set_for_test()
 
-        def choose_file():
-            jar_path.set(askopenfilename(filetypes=[('jar文件', '*.jar')]))
+        while(True):
+            t = input('opration: ')
+            self.func.get(t, wrong_input)()
 
-        jar_path = StringVar()
-        Label(window, text='jar文件', font=('Arial', 12)).place(x=0, y=5, width=150, height=30)
-        Entry(window, textvariable=jar_path, font=('Arial', 12)).place(x=150, y=5, width=550, height=30)
-        Button(window, text='选择', font=('Arial', 12), width=10, command=choose_file).place(x=700, y=5, width=100, height=30)
+    def set_for_test(self):
+        self.conf.set('conf', 'jar_path', 'D:/share/MM/LogicalGC/tool/dacapo-9.12-MR1-bach.jar')
+        self.conf.set('conf', 'run_argument', 'h2 -s small')
+        self.conf.set('conf', 'heap_size', '75M')
+        self.conf.set('conf', 'test_argument', 'SurvivorRatio')
+        self.conf.set('conf', 'test_range', '4:16:4')
+        with open(self.conf_path, 'w') as f:
+            self.conf.write(f)
 
-        run_argument = StringVar()
-        heap_size = StringVar()
-        test_argument = StringVar()
-        test_range = StringVar(value='start:end:step')
-        Label(window, text='jar参数', font=('Arial', 12)).place(x=0, y=40, width=150, height=30)
-        Entry(window, textvariable=run_argument, font=('Arial', 12)).place(x=150, y=40, width=250, height=30)
-        Label(window, text='堆大小', font=('Arial', 12)).place(x=400, y=40, width=150, height=30)
-        Entry(window, textvariable=heap_size, font=('Arial', 12)).place(x=550, y=40, width=250, height=30)
-        Label(window, text='测试参数', font=('Arial', 12)).place(x=0, y=75, width=150, height=30)
-        Entry(window, textvariable=test_argument, font=('Arial', 12)).place(x=150, y=75, width=250, height=30)
-        Label(window, text='测试范围', font=('Arial', 12)).place(x=400, y=75, width=150, height=30)
-        Entry(window, textvariable=test_range, font=('Arial', 12)).place(x=550, y=75, width=250, height=30)
+    def warm_up(self):
+        # execute warm-up first to stabilize the caches
+        heap_size = self.require_arg('heap_size')
+        jar_path = self.require_arg('jar_path')
+        run_argument = self.require_arg('run_argument')
+        cmd = 'java -Xmx{0} -Xms{0} -jar {1} {2} >NUL 2>&1'.format(heap_size, jar_path, run_argument)
+        self.output_str('执行预热')
+        os.system(cmd)
 
-        def set_for_test():
-            jar_path.set('D:/share/MM/LogicalGC/tool/dacapo-9.12-MR1-bach.jar')
-            run_argument.set('h2 -s small')
-            heap_size.set('75M')
-            test_argument.set('SurvivorRatio')
-            test_range.set('2:16:2')
+    def quit(self):
+        exit(0)
 
-        # set_for_test()
+    def reload(self):
+        self.conf.read(self.conf_path)
 
-        def parse_test_range():
-            test_range_str = test_range.get()
-            if re.match(r'^\d+:\d+:\d+$', test_range_str) == None:
-                return None
-            index = test_range_str.find(':')
-            start = int(test_range_str[:index])
-            test_range_str = test_range_str[index+1:]
-            index = test_range_str.find(':')
-            end = int(test_range_str[:index])
-            test_range_str = test_range_str[index+1:]
-            step = int(test_range_str)
-            return range(start, end, step)
+    def parse_test_range(self, test_range_str):
+        if re.match(r'^\d+:\d+:\d+$', test_range_str) == None:
+            return None
+        index = test_range_str.find(':')
+        start = int(test_range_str[:index])
+        test_range_str = test_range_str[index+1:]
+        index = test_range_str.find(':')
+        end = int(test_range_str[:index])
+        test_range_str = test_range_str[index+1:]
+        step = int(test_range_str)
+        return range(start, end, step)
 
-        def warm_up(thread):
-            # execute warm-up first to stabilize the caches
-            cmd = 'java -Xmx{0} -Xms{0} -jar {1} {2} >NUL 2>&1'.format(heap_size.get(), jar_path.get(), run_argument.get())
-            self.output_str('执行预热\n')
-            os.system(cmd)
-            thread.start()
+    def require_arg(self, name):
+        if self.conf.has_option('conf', name):
+            return self.conf.get('conf', name)
+        else:
+            t = input(name + ': ')
+            self.conf.set('conf', name, t)
+            with open(self.conf_path, 'w') as f:
+                self.conf.write(f)
+            return t
 
-        def buttun_optimize():
-            self.clear_output()
-            optimize_thread = threading.Thread(target=self.optimize, args=(heap_size.get(), jar_path.get(), run_argument.get()))
-            threading.Thread(target=warm_up, args=(optimize_thread,)).start()
-
-        def buttun_generate():
-            parsed_test_range = parse_test_range()
-            if parsed_test_range != None:
-                self.clear_output()
-                generate_thread = threading.Thread(target=self.generate, args=(parsed_test_range, test_argument.get(), heap_size.get(), jar_path.get(), run_argument.get()))
-                threading.Thread(target=warm_up, args=(generate_thread,)).start()
-
-        def buttun_show():
-            parsed_test_range = parse_test_range()
-            if parsed_test_range != None:
-                self.show(parsed_test_range, test_argument.get())
-
-        def buttun_time():
-            parsed_test_range = parse_test_range()
-            if parsed_test_range != None:
-                self.clear_output()
-                time_thread = threading.Thread(target=self.execution_time, args=(heap_size.get(), test_argument.get(), parsed_test_range, jar_path.get(), run_argument.get(), True))
-                threading.Thread(target=warm_up, args=(time_thread,)).start()
-
-        def buttun_demo():
-            threading.Thread(target=self.show_demo).start()
-
-        Button(window, text='优化参数', font=('Arial', 12), width=10, command=buttun_optimize).place(x=40, y=110, width=100, height=30)
-        Button(window, text='生成日志', font=('Arial', 12), width=10, command=buttun_generate).place(x=195, y=110, width=100, height=30)
-        Button(window, text='展示日志', font=('Arial', 12), width=10, command=buttun_show).place(x=350, y=110, width=100, height=30)
-        Button(window, text='执行时间', font=('Arial', 12), width=10, command=buttun_time).place(x=505, y=110, width=100, height=30)
-        Button(window, text='展示效果', font=('Arial', 12), width=10, command=buttun_demo).place(x=660, y=110, width=100, height=30)
-
-        self.output = Text(window, state=DISABLED, font=('Arial', 12))
-        self.output.place(x=5, y=145, width=790, height=150)
-        bar = Scrollbar(self.output, command=self.output.yview)
-        bar.pack(side=RIGHT, fill=Y)
-        self.output.config(yscrollcommand=bar.set)
-
-        window.mainloop()
-
-    def output_str(self, str):
-        self.output.config(state=NORMAL)
-        self.output.insert(INSERT, str)
-        self.output.config(state=DISABLED)
-
-    def clear_output(self):
-        self.output.config(state=NORMAL)
-        self.output.delete(1.0, END)
-        self.output.config(state=DISABLED)
+    def output_str(self, string):
+        print(string)
 
     def show_demo(self):
         output_data = [
-            '数据来自实测：\n',
-            '执行预热\n',
-            '生成日志到log/75M_default.log\n',
-            '解析日志log/75M_default.log\n',
-            '建议的NewRatio：5\n',
-            '正在搜索参数...\n',
-            '搜索到的最优参数：-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=25 -XX:OldPLABSize=1024 -XX:YoungPLABSize=4096 -XX:PLABWeight=80 \n',
-            '生成日志到log/75M_opt.log\n',
-            '解析日志log/75M_opt.log\n',
-            '执行时间减少：68.55%\n',
-            '吞吐率提升：56.32%\n',
-            'GC时间减少：98.84%\n'
+            '数据来自实测：',
+            '执行预热',
+            '生成日志到log/75M_default.log',
+            '解析日志log/75M_default.log',
+            '建议的NewRatio：5',
+            '正在搜索参数...',
+            '搜索到的最优参数：-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=25 -XX:OldPLABSize=1024 -XX:YoungPLABSize=4096 -XX:PLABWeight=80 ',
+            '生成日志到log/75M_opt.log',
+            '解析日志log/75M_opt.log',
+            '执行时间减少：68.55%',
+            '吞吐率提升：56.32%',
+            'GC时间减少：98.84%'
         ]
         for s in output_data:
             self.output_str(s)
             time.sleep(0.8)
 
-    def search_arguments(self, heap_size, jar_path, run_argument, opt_arg):
-        self.output_str('正在搜索参数...\n')
+    def search_arguments(self, opt_arg):
+        heap_size = self.require_arg('heap_size')
+        jar_path = self.require_arg('jar_path')
+        run_argument = self.require_arg('run_argument')
+        self.output_str('正在搜索参数...')
         arguments = [
             ('SurvivorRatio', (4, 16, 4)), # default: 8
             ('TargetSurvivorRatio', (25, 100, 25)), # default: 50
-            ('OldPLABSize', (1024, 5120, 1024)), # default: 1024
-            ('YoungPLABSize', (1024, 5120, 1024)), # default: 4096
-            ('PLABWeight', (70, 85, 5)), # default: 75
+            # ('OldPLABSize', (1024, 5120, 1024)), # default: 1024
+            # ('YoungPLABSize', (1024, 5120, 1024)), # default: 4096
+            # ('PLABWeight', (70, 85, 5)), # default: 75
         ]
         index = [0]*len(arguments)
         for i in range(0, len(index)):
@@ -195,16 +159,21 @@ class Optimizer:
                         break
                 else:
                     break
-        self.output_str('搜索到的最优参数：' + result + '\n')
+        self.output_str('搜索到的最优参数：' + result)
         return result
 
-    def optimize(self, heap_size, jar_path, run_argument):
+    def optimize(self):
+        heap_size = self.require_arg('heap_size')
+        jar_path = self.require_arg('jar_path')
+        run_argument = self.require_arg('run_argument')
+        self.warm_up()
+
         append_args = '-Xloggc:log/{0}_default.log -Xmx{0} -Xms{0} '.format(heap_size)
         cmd = 'java ' + self.default_args + append_args + '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
-        self.output_str('生成日志到log/{0}_default.log\n'.format(heap_size))
+        self.output_str('生成日志到log/{0}_default.log'.format(heap_size))
         os.system(cmd)
 
-        self.output_str('解析日志log/{0}_default.log\n'.format(heap_size))
+        self.output_str('解析日志log/{0}_default.log'.format(heap_size))
         cmd = 'java -jar LogReader.jar analyze log/{0}_default.log'.format(heap_size)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         p.wait()
@@ -215,28 +184,25 @@ class Optimizer:
         p.wait()
         line = str(p.stdout.readline())
         NewRatio_line = line[2:-3]
-        # print(NewRatio_line)
         NewRatio = int(NewRatio_line[NewRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
         # SurvivorRatio_line = line[2:-3]
-        # print(SurvivorRatio_line)
         # SurvivorRatio = int(SurvivorRatio_line[SurvivorRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
         # TargetSurvivorRatio_line = line[2:-3]
-        # print(TargetSurvivorRatio_line)
         # TargetSurvivorRatio = int(TargetSurvivorRatio_line[TargetSurvivorRatio_line.rfind(' ')+1:])
-        self.output_str('建议的NewRatio：%d\n'%(NewRatio))
-        # self.output_str('建议的SurvivorRatio：%d\n'%(SurvivorRatio))
-        # self.output_str('建议的TargetSurvivorRatio：%d\n'%(TargetSurvivorRatio))
+        self.output_str('建议的NewRatio：%d'%(NewRatio))
+        # self.output_str('建议的SurvivorRatio：%d'%(SurvivorRatio))
+        # self.output_str('建议的TargetSurvivorRatio：%d'%(TargetSurvivorRatio))
 
-        search_result = self.search_arguments(heap_size, jar_path, run_argument, '-XX:NewRatio={0}'.format(NewRatio))
+        search_result = self.search_arguments('-XX:NewRatio={0}'.format(NewRatio))
 
         append_args = '-Xloggc:log/{0}_opt.log -Xmx{0} -Xms{0} -XX:NewRatio={1} {2} '.format(heap_size, NewRatio, search_result)
         cmd = 'java ' + self.default_args + append_args + '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
-        self.output_str('生成日志到log/{0}_opt.log\n'.format(heap_size))
+        self.output_str('生成日志到log/{0}_opt.log'.format(heap_size))
         os.system(cmd)
 
-        self.output_str('解析日志log/{0}_opt.log\n'.format(heap_size))
+        self.output_str('解析日志log/{0}_opt.log'.format(heap_size))
         cmd = 'java -jar LogReader.jar analyze log/{0}_opt.log'.format(heap_size)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         p.wait()
@@ -245,28 +211,49 @@ class Optimizer:
         run_time = (float(out1[0]) - float(out2[0]))/float(out1[0])*100
         throught_rate = float(out2[1]) - float(out1[1])
         gc_time = (float(out1[2]) - float(out2[2]))/float(out1[2])*100
-        self.output_str('执行时间减少：%.2f%%\n'%(run_time))
-        self.output_str('吞吐率提升：%.2f%%\n'%(throught_rate))
-        self.output_str('GC时间减少：%.2f%%\n' % (gc_time))
-        print(out1, out2)
+        self.output_str('执行时间减少：%.2f%%'%(run_time))
+        self.output_str('吞吐率提升：%.2f%%'%(throught_rate))
+        self.output_str('GC时间减少：%.2f%%' % (gc_time))
 
-    def generate(self, test_range, test_argument, heap_size, jar_path, run_argument):
+    def generate(self):
+        test_range = self.require_arg('test_range')
+        test_range = self.parse_test_range(test_range)
+        if test_range == None:
+            return
+        test_argument = self.require_arg('test_argument')
+        heap_size = self.require_arg('heap_size')
+        jar_path = self.require_arg('jar_path')
+        run_argument = self.require_arg('run_argument')
+        self.warm_up()
         for i in test_range:
             append_args = '-Xloggc:log/{0}_{1}.log -XX:{0}={1} -Xmx{2} -Xms{2} '.format(test_argument, i, heap_size)
             cmd = 'java ' + self.default_args + append_args + '-jar {0} {1} >NUL 2>&1'.format(jar_path, run_argument)
-            self.output_str('生成日志到log/{0}_{1}.log\n'.format(test_argument, i))
+            self.output_str('生成日志到log/{0}_{1}.log'.format(test_argument, i))
             st = time.time()
             os.system(cmd)
             et = time.time()
-            print(i, ':', et - st)
 
-    def show(self, test_range, test_argument):
+    def show(self):
+        test_range = self.require_arg('test_range')
+        test_range = self.parse_test_range(test_range)
+        if test_range == None:
+            return
+        test_argument = self.require_arg('test_argument')
         for i in test_range:
             cmd = 'java -jar LogReader.jar show log/{0}_{1}.log &'.format(test_argument, i)
             subprocess.Popen(cmd)
             time.sleep(0.2)
 
-    def execution_time(self, heap_size, test_argument, test_range, jar_path, run_argument, output):
+    def execution_time(self):
+        test_range = self.require_arg('test_range')
+        test_range = self.parse_test_range(test_range)
+        if test_range == None:
+            return
+        test_argument = self.require_arg('test_argument')
+        heap_size = self.require_arg('heap_size')
+        jar_path = self.require_arg('jar_path')
+        run_argument = self.require_arg('run_argument')
+        self.warm_up()
         min_time = -1
         min_index = -1
         for i in test_range:
@@ -281,11 +268,8 @@ class Optimizer:
             if min_time == -1 or min_time > sum:
                 min_time = sum
                 min_index = i
-            if output:
-                self.output_str('参数值%d: %.2fs\n'%(i, sum))
-        if output:
-            self.output_str('最少执行时间: %.2fs, 参数值: %d\n'%(min_time, min_index))
-        return min_time, min_index
+            self.output_str('参数值%d: %.2fs'%(i, sum))
+        self.output_str('最少执行时间: %.2fs, 参数值: %d'%(min_time, min_index))
 
 if __name__ == '__main__':
     optimizer = Optimizer()
