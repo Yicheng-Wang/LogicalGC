@@ -99,7 +99,7 @@ public class Showing {
     static double Apptime = 0;
 
     public static void shows(String title) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter("Info.txt"));
+        BufferedWriter out = new BufferedWriter(new FileWriter(title + "_Info.txt"));
 
         SettleInformation();
 
@@ -186,7 +186,7 @@ public class Showing {
         Graphics2D g2 = image.createGraphics();
         //c.paint(image.getGraphics());
         MainPanel.print(g2);
-        ImageIO.write(image, "png", new java.io.File("jpanel.jpg"));
+        ImageIO.write(image, "png", new java.io.File(title + "InfoPic.jpg"));
     }
 
     private static void SettleInformation() {
