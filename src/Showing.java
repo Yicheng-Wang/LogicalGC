@@ -1,12 +1,15 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -95,26 +98,47 @@ public class Showing {
     static int overFlowTime = 0;
     static double Apptime = 0;
 
-    public static void shows(String title) {
+    public static void shows(String title) throws IOException {
+        BufferedWriter out = new BufferedWriter(new FileWriter("Info.txt"));
+
+        SettleInformation();
+
+        out.write("=================用时情况==================");
+        out.newLine();
+        WriteInfo.writeTime(out);
+
+        out.write("=================应用线程==================");
+        out.newLine();
+        WriteInfo.ApplicationStats(out);
+
+        out.write("=================GC情况==================");
+        out.newLine();
+        WriteInfo.TotalGCStats(out);
+
+        out.write("=================Minor GC==================");
+        out.newLine();
+        WriteInfo.MinorGCStats(out);
+
+        if(FullGCcount > 0){
+            out.write("=================Major GC==================");
+            out.newLine();
+            WriteInfo.MajorGCStats(out);
+        }
+
+        out.close();
+
         final int MAX_HEIGHT = 850;
         final int MAX_WIDTH = 1430;
         final int PADDING = 50;
         final int FIRST_COLUMN_WIDTH = 500;
         final int SECOND_COLUMN_WIDTH = 800;
         final int SECOND_COLUMN_START = PADDING + FIRST_COLUMN_WIDTH;
-        JFrame Mainframe = new JFrame();
-        Mainframe.setLayout(null);
-        Mainframe.setSize(MAX_WIDTH, MAX_HEIGHT);
-        Mainframe.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        Mainframe.setTitle(title);
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
         MainPanel.setBounds(0, 0, MAX_WIDTH, 3800);
         MainPanel.setPreferredSize(new Dimension(MAX_WIDTH, 3800));
         MainPanel.setBackground(Color.WHITE);
-
-        SettleInformation();
 
         Table.OverallStats(MainPanel,"用时情况",PADDING,110,FIRST_COLUMN_WIDTH,340);
 
@@ -146,9 +170,23 @@ public class Showing {
         XYChart chart = ShowHeap.createHeapXYChart();
         chart.setBounds(PADDING, 2800, 1300, 800);
         MainPanel.add(chart);
+        MainPanel.setVisible(true);
+
+        /*JFrame Mainframe = new JFrame();
+        Mainframe.setLayout(null);
+        Mainframe.setSize(MAX_WIDTH, MAX_HEIGHT);
+        Mainframe.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        Mainframe.setTitle(title);
 
         Mainframe.add(jsp);
-        Mainframe.setVisible(true);
+        Mainframe.setVisible(true);*/
+
+        //Component c = jsp.getViewport().getView();
+        BufferedImage image = new BufferedImage(MainPanel.getWidth(),MainPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        //c.paint(image.getGraphics());
+        MainPanel.print(g2);
+        ImageIO.write(image, "png", new java.io.File("jpanel.jpg"));
     }
 
     private static void SettleInformation() {

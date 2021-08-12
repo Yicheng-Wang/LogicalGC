@@ -42,7 +42,7 @@ public class PointPlotter extends AbstractPlotter {
 		//get point in ui
 		Point point = ChartPlotter.getPoint(xyFactor,dataPoint, chart); 
 		
-		ChartPlotter.checkForRunawayProcess(xyFactor, point.x, point.y);
+		//ChartPlotter.checkForRunawayProcess(xyFactor, point.x, point.y);
 
 		UIPointXY pointType = xYDataSeries.pointType;
 

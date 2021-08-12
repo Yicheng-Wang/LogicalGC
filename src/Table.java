@@ -45,14 +45,19 @@ public class Table {
         TextLable[18].setText("其他用时");
         TextLable[19].setText(df.format(Showing.PrintInforTime + Showing.AdaptiveTime) + " sec");
 
-        for(int i=0;i<20;i++)
-            TotalGC.add(TextLable[i]);
+        for(int i=0;i<20;i++){
+            //TextLable[i].setLayout(null);
+            TextLable[i].setBounds(x+(i%2)*width/2,y+(i/2)*height/10,width/2,height/10);
+            //TotalGC.add(TextLable[i]);
+            mainPanel.add(TextLable[i]);
+        }
+
 
         JLabel Title = SetTitle(name,x,y-60,width,50);
         mainPanel.add(Title);
 
-        TotalGC.setBounds(x,y,width,height);
-        mainPanel.add(TotalGC);
+        //TotalGC.setBounds(x,y,width,height);
+        //mainPanel.add(TotalGC);
     }
 
     private static JLabel[] initialBorde(int num) {
@@ -112,14 +117,19 @@ public class Table {
         TextLable[20].setText("平均慢速分配");
         TextLable[21].setText(String.valueOf(Showing.MeanSlowAlloc));
 
-        for(int i=0;i<22;i++)
-            Application.add(TextLable[i]);
+        for(int i=0;i<22;i++){
+            //TextLable[i].setLayout(null);
+            TextLable[i].setBounds(x+(i%2)*width/2,y+(i/2)*height/11,width/2,height/11);
+            //TotalGC.add(TextLable[i]);
+            mainPanel.add(TextLable[i]);
+        }
+            //Application.add(TextLable[i]);
 
         JLabel Title = SetTitle(name,x,y-60,width,50);
         mainPanel.add(Title);
 
-        Application.setBounds(x,y,width,height);
-        mainPanel.add(Application);
+        //Application.setBounds(x,y,width,height);
+        //mainPanel.add(Application);
     }
 
 
@@ -175,14 +185,19 @@ public class Table {
         TextLable[18].setText("最终幸存者区占比");
         TextLable[19].setText((df.format((FromSize+ToSize) / (FromSize+ToSize+EdenSize) * 100)) + "%");
 
-        for(int i=0;i<20;i++)
-            MinorGC.add(TextLable[i]);
+        for(int i=0;i<20;i++){
+            //TextLable[i].setLayout(null);
+            TextLable[i].setBounds(x+(i%2)*width/2,y+(i/2)*height/10,width/2,height/10);
+            //TotalGC.add(TextLable[i]);
+            mainPanel.add(TextLable[i]);
+        }
+            //MinorGC.add(TextLable[i]);
 
         JLabel Title = SetTitle(name,x,y-60,width,50);
         mainPanel.add(Title);
 
-        MinorGC.setBounds(x,y,width,height);
-        mainPanel.add(MinorGC);
+        //MinorGC.setBounds(x,y,width,height);
+        //mainPanel.add(MinorGC);
     }
 
     public static void TotalGCStats(JPanel mainPanel, String name, int x, int y, int width, int height) {
@@ -192,7 +207,7 @@ public class Table {
         JLabel[] TextLable = initialBorde(rowCount * 2);
 
         TextLable[0].setText("GC总次数");
-        TextLable[1].setText(String.valueOf(Showing.MinorGCcount));
+        TextLable[1].setText(String.valueOf(Showing.GCcount));
 
         TextLable[2].setText("GC平均用时");
         TextLable[3].setText(df.format(Showing.GCtimesum / Showing.GCcount) + " sec");
@@ -216,14 +231,19 @@ public class Table {
             index ++;
         }
 
-        for(int i=0;i<rowCount * 2;i++)
-            Application.add(TextLable[i]);
+        for(int i=0;i<rowCount * 2;i++){
+            //TextLable[i].setLayout(null);
+            TextLable[i].setBounds(x+(i%2)*width/2,y+(i/2)*height/rowCount,width/2,height/rowCount);
+            //TotalGC.add(TextLable[i]);
+            mainPanel.add(TextLable[i]);
+        }
+            //Application.add(TextLable[i]);
 
         JLabel Title = SetTitle(name,x,y-60,width,50);
         mainPanel.add(Title);
 
-        Application.setBounds(x,y,width,height);
-        mainPanel.add(Application);
+        //Application.setBounds(x,y,width,height);
+        //mainPanel.add(Application);
     }
 
     public static void MajorGCStats(JPanel mainPanel, String name, int x, int y, int width, int height) {
@@ -252,13 +272,18 @@ public class Table {
             TextLable[10 + 2*i + 1].setText(InstanceDistribution.DealingName(Drawing.topFiveName[i]) + " (" + df2.format(Drawing.topFive[i] / 1024) + " MB)");
         }
 
-        for(int i=0;i<20;i++)
-            FullGC.add(TextLable[i]);
+        for(int i=0;i<20;i++){
+            //TextLable[i].setLayout(null);
+            TextLable[i].setBounds(x+(i%2)*width/2,y+(i/2)*height/10,width/2,height/10);
+            //TotalGC.add(TextLable[i]);
+            mainPanel.add(TextLable[i]);
+        }
+            //FullGC.add(TextLable[i]);
 
         JLabel Title = SetTitle(name,x,y-60,width,50);
         mainPanel.add(Title);
 
-        FullGC.setBounds(x,y,width,height);
-        mainPanel.add(FullGC);
+        //FullGC.setBounds(x,y,width,height);
+        //mainPanel.add(FullGC);
     }
 }

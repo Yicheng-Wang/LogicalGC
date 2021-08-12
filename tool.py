@@ -206,12 +206,12 @@ class Optimizer:
 
         self.output_str('解析日志log/{0}_default.log\n'.format(heap_size))
         cmd = 'java -jar LogReader.jar analyze log/{0}_default.log'.format(heap_size)
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         p.wait()
         out1 = str(p.stdout.read())[2:-5].split('|')
 
         cmd = 'java -jar LogReader.jar optimize log/{0}_default.log'.format(heap_size)
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         p.wait()
         line = str(p.stdout.readline())
         NewRatio_line = line[2:-3]
@@ -238,7 +238,7 @@ class Optimizer:
 
         self.output_str('解析日志log/{0}_opt.log\n'.format(heap_size))
         cmd = 'java -jar LogReader.jar analyze log/{0}_opt.log'.format(heap_size)
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         p.wait()
         out2 = str(p.stdout.read())[2:-5].split('|')
 
@@ -263,7 +263,7 @@ class Optimizer:
     def show(self, test_range, test_argument):
         for i in test_range:
             cmd = 'java -jar LogReader.jar show log/{0}_{1}.log &'.format(test_argument, i)
-            subprocess.Popen(cmd)
+            subprocess.Popen(cmd,shell=True)
             time.sleep(0.2)
 
     def execution_time(self, heap_size, test_argument, test_range, jar_path, run_argument, output):

@@ -1,0 +1,1303 @@
+Using scaled threading model. 8 processors detected, 8 threads used to drive the workload, in a possible range of [1,4000]
+Application time: 1.8247303 seconds
+Total time for which application threads were stopped: 0.0008550 seconds, Stopping threads took: 0.0002215 seconds
+Application time: 1.0001505 seconds
+Total time for which application threads were stopped: 0.0007622 seconds, Stopping threads took: 0.0001750 seconds
+Application time: 1.0019051 seconds
+Total time for which application threads were stopped: 0.0076157 seconds, Stopping threads took: 0.0069058 seconds
+Application time: 0.1755560 seconds
+Total time for which application threads were stopped: 0.0008844 seconds, Stopping threads took: 0.0003055 seconds
+Application time: 1.0004643 seconds
+Total time for which application threads were stopped: 0.0009279 seconds, Stopping threads took: 0.0004439 seconds
+Application time: 1.0001568 seconds
+Total time for which application threads were stopped: 0.0007910 seconds, Stopping threads took: 0.0002381 seconds
+Application time: 1.0003333 seconds
+Total time for which application threads were stopped: 0.0015052 seconds, Stopping threads took: 0.0006258 seconds
+Application time: 0.1299269 seconds
+{Heap before GC invocations=1 (full 0):
+ PSYoungGen      total 153088K, used 131584K [0x0000000716b00000, 0x0000000721580000, 0x00000007c0000000)
+  eden space 131584K, 100% used [0x0000000716b00000,0x000000071eb80000,0x000000071eb80000)
+  from space 21504K, 0% used [0x0000000720080000,0x0000000720080000,0x0000000721580000)
+  to   space 21504K, 0% used [0x000000071eb80000,0x000000071eb80000,0x0000000720080000)
+ ParOldGen       total 349696K, used 0K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 0% used [0x00000005c4000000,0x00000005c4000000,0x00000005d9580000)
+ Metaspace       used 7268K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff020e800 [id: 817] desired_size: 2631KB slow allocs: 0  refill waste: 42104B alloc: 1.00000   131584KB refills: 1 waste 99.9% gc: 2693232B slow: 0B fast: 0B
+TLAB: gc thread: 0x000000fff020b800 [id: 816] desired_size: 2631KB slow allocs: 0  refill waste: 42104B alloc: 1.00000   131584KB refills: 1 waste 100.0% gc: 2694632B slow: 0B fast: 0B
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 2631KB slow allocs: 0  refill waste: 42104B alloc: 1.00000   131584KB refills: 47 waste  0.0% gc: 0B slow: 27616B fast: 0B
+TLAB totals: thrds: 3  refills: 49 max: 47 slow allocs: 0 max 0 waste:  4.1% gc: 5387864B max: 2694632B slow: 27616B max: 27616B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0002312 secs][WeakReference, 65 refs, 0.0000675 secs][FinalReference, 794 refs, 0.0045671 secs][PhantomReference, 0 refs, 0 refs, 0.0000396 secs][JNI Weak Reference, 0.0000186 secs]AdaptiveSizePolicy::update_averages:  survived: 22018888  promoted: 8605656  overflow: true
+AdaptiveSizeStart: 7.539 collection: 1 
+
+Desired survivor size 22020096 bytes, new threshold 7 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.020090 major_cost: 0.000000 mutator_cost: 0.979910 throughput_goal: 0.990000 live_space: 290454336 free_space: 269484032 old_eden_size: 134742016 desired_eden_size: 269484032
+AdaptiveSizePolicy::survivor space sizes: collection: 1 (22020096, 22020096) -> (22020096, 22020096) 
+AdaptiveSizeStop: collection: 1 
+[PSYoungGen: 131584K->21502K(153088K)] 131584K->29906K(502784K), 0.1522763 secs] [Times: user=0.84 sys=0.10, real=0.15 secs] 
+Heap after GC invocations=1 (full 0):
+ PSYoungGen      total 153088K, used 21502K [0x0000000716b00000, 0x0000000729600000, 0x00000007c0000000)
+  eden space 131584K, 0% used [0x0000000716b00000,0x0000000716b00000,0x000000071eb80000)
+  from space 21504K, 99% used [0x000000071eb80000,0x000000072007fb48,0x0000000720080000)
+  to   space 21504K, 0% used [0x0000000728100000,0x0000000728100000,0x0000000729600000)
+ ParOldGen       total 349696K, used 8403K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 2% used [0x00000005c4000000,0x00000005c4834fd8,0x00000005d9580000)
+ Metaspace       used 7268K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.1536794 seconds, Stopping threads took: 0.0001863 seconds
+Application time: 1.0001505 seconds
+Total time for which application threads were stopped: 0.0005808 seconds, Stopping threads took: 0.0002620 seconds
+Application time: 1.6914624 seconds
+{Heap before GC invocations=2 (full 0):
+ PSYoungGen      total 153088K, used 153086K [0x0000000716b00000, 0x0000000729600000, 0x00000007c0000000)
+  eden space 131584K, 100% used [0x0000000716b00000,0x000000071eb80000,0x000000071eb80000)
+  from space 21504K, 99% used [0x000000071eb80000,0x000000072007fb48,0x0000000720080000)
+  to   space 21504K, 0% used [0x0000000728100000,0x0000000728100000,0x0000000729600000)
+ ParOldGen       total 349696K, used 8403K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 2% used [0x00000005c4000000,0x00000005c4834fd8,0x00000005d9580000)
+ Metaspace       used 7269K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 2552KB slow allocs: 0  refill waste: 40832B alloc: 0.96990   127623KB refills: 52 waste  0.0% gc: 0B slow: 4720B fast: 0B
+TLAB totals: thrds: 1  refills: 52 max: 52 slow allocs: 0 max 0 waste:  0.0% gc: 0B max: 0B slow: 4720B max: 4720B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0002293 secs][WeakReference, 23 refs, 0.0000357 secs][FinalReference, 80 refs, 0.0000372 secs][PhantomReference, 0 refs, 0 refs, 0.0000274 secs][JNI Weak Reference, 0.0000156 secs]AdaptiveSizePolicy::update_averages:  survived: 22002856  promoted: 30416896  overflow: true
+AdaptiveSizeStart: 10.514 collection: 2 
+
+Desired survivor size 22020096 bytes, new threshold 7 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.057072 major_cost: 0.000000 mutator_cost: 0.942928 throughput_goal: 0.990000 live_space: 290446336 free_space: 404226048 old_eden_size: 269484032 desired_eden_size: 269484032
+AdaptiveSizePolicy::survivor space sizes: collection: 2 (22020096, 22020096) -> (22020096, 22020096) 
+AdaptiveSizeStop: collection: 2 
+[PSYoungGen: 153086K->21487K(284672K)] 161490K->59595K(634368K), 0.2802374 secs] [Times: user=1.53 sys=0.10, real=0.28 secs] 
+Heap after GC invocations=2 (full 0):
+ PSYoungGen      total 284672K, used 21487K [0x0000000716b00000, 0x0000000729600000, 0x00000007c0000000)
+  eden space 263168K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000726c00000)
+  from space 21504K, 99% used [0x0000000728100000,0x00000007295fbca8,0x0000000729600000)
+  to   space 21504K, 0% used [0x0000000726c00000,0x0000000726c00000,0x0000000728100000)
+ ParOldGen       total 349696K, used 38107K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 10% used [0x00000005c4000000,0x00000005c6536fd8,0x00000005d9580000)
+ Metaspace       used 7269K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.2820638 seconds, Stopping threads took: 0.0002224 seconds
+Application time: 5.2710182 seconds
+{Heap before GC invocations=3 (full 0):
+ PSYoungGen      total 284672K, used 284655K [0x0000000716b00000, 0x0000000729600000, 0x00000007c0000000)
+  eden space 263168K, 100% used [0x0000000716b00000,0x0000000726c00000,0x0000000726c00000)
+  from space 21504K, 99% used [0x0000000728100000,0x00000007295fbca8,0x0000000729600000)
+  to   space 21504K, 0% used [0x0000000726c00000,0x0000000726c00000,0x0000000728100000)
+ ParOldGen       total 349696K, used 38107K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 10% used [0x00000005c4000000,0x00000005c6536fd8,0x00000005d9580000)
+ Metaspace       used 7276K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 5160KB slow allocs: 0  refill waste: 82560B alloc: 0.98042   258015KB refills: 51 waste  0.0% gc: 0B slow: 42688B fast: 0B
+TLAB totals: thrds: 1  refills: 51 max: 51 slow allocs: 0 max 0 waste:  0.0% gc: 0B max: 0B slow: 42688B max: 42688B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0002298 secs][WeakReference, 23 refs, 0.0000797 secs][FinalReference, 80 refs, 0.0000528 secs][PhantomReference, 0 refs, 0 refs, 0.0000279 secs][JNI Weak Reference, 0.0000166 secs]AdaptiveSizePolicy::update_averages:  survived: 22002872  promoted: 59170816  overflow: true
+AdaptiveSizeStart: 16.251 collection: 3 
+
+Desired survivor size 22020096 bytes, new threshold 7 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.064907 major_cost: 0.000000 mutator_cost: 0.935093 throughput_goal: 0.990000 live_space: 290443680 free_space: 404226048 old_eden_size: 269484032 desired_eden_size: 538968064
+AdaptiveSizePolicy::survivor space sizes: collection: 3 (22020096, 22020096) -> (22020096, 22020096) 
+AdaptiveSizeStop: collection: 3 
+[PSYoungGen: 284655K->21487K(284672K)] 322763K->117379K(634368K), 0.4646411 secs] [Times: user=2.49 sys=0.31, real=0.47 secs] 
+Heap after GC invocations=3 (full 0):
+ PSYoungGen      total 284672K, used 21487K [0x0000000716b00000, 0x0000000739700000, 0x00000007c0000000)
+  eden space 263168K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000726c00000)
+  from space 21504K, 99% used [0x0000000726c00000,0x00000007280fbcb8,0x0000000728100000)
+  to   space 21504K, 0% used [0x0000000738200000,0x0000000738200000,0x0000000739700000)
+ ParOldGen       total 349696K, used 95891K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 27% used [0x00000005c4000000,0x00000005c9da4fd8,0x00000005d9580000)
+ Metaspace       used 7276K, capacity 7414K, committed 7552K, reserved 1056768K
+  class space    used 753K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.4663033 seconds, Stopping threads took: 0.0002356 seconds
+Application time: 1.0001994 seconds
+Total time for which application threads were stopped: 0.0010423 seconds, Stopping threads took: 0.0004527 seconds
+Application time: 2.0003024 seconds
+Total time for which application threads were stopped: 0.0008071 seconds, Stopping threads took: 0.0004899 seconds
+Application time: 2.0003093 seconds
+Total time for which application threads were stopped: 0.0017829 seconds, Stopping threads took: 0.0014104 seconds
+Application time: 1.0001652 seconds
+Total time for which application threads were stopped: 0.0008101 seconds, Stopping threads took: 0.0003965 seconds
+Application time: 1.0001446 seconds
+Total time for which application threads were stopped: 0.0006810 seconds, Stopping threads took: 0.0003696 seconds
+Application time: 1.0001955 seconds
+Total time for which application threads were stopped: 0.0015884 seconds, Stopping threads took: 0.0007182 seconds
+Application time: 1.0001510 seconds
+Total time for which application threads were stopped: 0.0009934 seconds, Stopping threads took: 0.0003774 seconds
+Application time: 0.2375420 seconds
+{Heap before GC invocations=4 (full 0):
+ PSYoungGen      total 284672K, used 284655K [0x0000000716b00000, 0x0000000739700000, 0x00000007c0000000)
+  eden space 263168K, 100% used [0x0000000716b00000,0x0000000726c00000,0x0000000726c00000)
+  from space 21504K, 99% used [0x0000000726c00000,0x00000007280fbcb8,0x0000000728100000)
+  to   space 21504K, 0% used [0x0000000738200000,0x0000000738200000,0x0000000739700000)
+ ParOldGen       total 349696K, used 95891K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 27% used [0x00000005c4000000,0x00000005c9da4fd8,0x00000005d9580000)
+ Metaspace       used 7408K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff020e800 [id: 817] desired_size: 2631KB slow allocs: 0  refill waste: 42104B alloc: 0.50000   131584KB refills: 1 waste 100.0% gc: 2694832B slow: 0B fast: 0B
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 5196KB slow allocs: 0  refill waste: 83136B alloc: 0.98722   259804KB refills: 51 waste  0.0% gc: 0B slow: 58440B fast: 0B
+TLAB totals: thrds: 2  refills: 52 max: 51 slow allocs: 0 max 0 waste:  1.0% gc: 2694832B max: 2694832B slow: 58440B max: 58440B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0001726 secs][WeakReference, 23 refs, 0.0000372 secs][FinalReference, 102 refs, 0.0002347 secs][PhantomReference, 0 refs, 0 refs, 0.0000303 secs][JNI Weak Reference, 0.0000147 secs]AdaptiveSizePolicy::update_averages:  survived: 22002808  promoted: 45665192  overflow: true
+AdaptiveSizeStart: 25.976 collection: 4 
+
+Desired survivor size 22020096 bytes, new threshold 7 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.060858 major_cost: 0.000000 mutator_cost: 0.939142 throughput_goal: 0.990000 live_space: 290442336 free_space: 673710080 old_eden_size: 538968064 desired_eden_size: 538968064
+AdaptiveSizePolicy::survivor space sizes: collection: 4 (22020096, 22020096) -> (22020096, 22020096) 
+AdaptiveSizeStop: collection: 4 
+[PSYoungGen: 284655K->21487K(547840K)] 380547K->161973K(897536K), 0.4740637 secs] [Times: user=2.66 sys=0.18, real=0.47 secs] 
+Heap after GC invocations=4 (full 0):
+ PSYoungGen      total 547840K, used 21487K [0x0000000716b00000, 0x0000000739700000, 0x00000007c0000000)
+  eden space 526336K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000736d00000)
+  from space 21504K, 99% used [0x0000000738200000,0x00000007396fbc78,0x0000000739700000)
+  to   space 21504K, 0% used [0x0000000736d00000,0x0000000736d00000,0x0000000738200000)
+ ParOldGen       total 349696K, used 140486K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 40% used [0x00000005c4000000,0x00000005cc931b80,0x00000005d9580000)
+ Metaspace       used 7408K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.4751270 seconds, Stopping threads took: 0.0001926 seconds
+Application time: 1.0001891 seconds
+Total time for which application threads were stopped: 0.0009851 seconds, Stopping threads took: 0.0003183 seconds
+Application time: 1.0001397 seconds
+Total time for which application threads were stopped: 0.0006825 seconds, Stopping threads took: 0.0003026 seconds
+Application time: 1.0001378 seconds
+Total time for which application threads were stopped: 0.0007895 seconds, Stopping threads took: 0.0005060 seconds
+Application time: 7.2738315 seconds
+{Heap before GC invocations=5 (full 0):
+ PSYoungGen      total 547840K, used 547823K [0x0000000716b00000, 0x0000000739700000, 0x00000007c0000000)
+  eden space 526336K, 100% used [0x0000000716b00000,0x0000000736d00000,0x0000000736d00000)
+  from space 21504K, 99% used [0x0000000738200000,0x00000007396fbc78,0x0000000739700000)
+  to   space 21504K, 0% used [0x0000000736d00000,0x0000000736d00000,0x0000000738200000)
+ ParOldGen       total 349696K, used 140486K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 40% used [0x00000005c4000000,0x00000005cc931b80,0x00000005d9580000)
+ Metaspace       used 7408K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 10401KB slow allocs: 0  refill waste: 166424B alloc: 0.98812   520081KB refills: 51 waste  0.0% gc: 0B slow: 10960B fast: 0B
+TLAB totals: thrds: 1  refills: 51 max: 51 slow allocs: 0 max 0 waste:  0.0% gc: 0B max: 0B slow: 10960B max: 10960B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0002117 secs][WeakReference, 8 refs, 0.0000308 secs][FinalReference, 0 refs, 0.0001506 secs][PhantomReference, 0 refs, 0 refs, 0.0000284 secs][JNI Weak Reference, 0.0000152 secs]AdaptiveSizePolicy::update_averages:  survived: 22019144  promoted: 23183424  overflow: true
+AdaptiveSizeStart: 36.577 collection: 5 
+  avg_survived_padded_avg: 89649064.000000  avg_promoted_padded_avg: 67656088.000000  avg_pretenured_padded_avg: 0.000000  tenuring_thresh: 6  target_size: 89653248
+
+Desired survivor size 89653248 bytes, new threshold 6 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.053230 major_cost: 0.000000 mutator_cost: 0.946770 throughput_goal: 0.990000 live_space: 290444800 free_space: 673710080 old_eden_size: 538968064 desired_eden_size: 1077936128
+AdaptiveSizePolicy::survivor space sizes: collection: 5 (22020096, 22020096) -> (22020096, 89653248) 
+AdaptiveSizeStop: collection: 5 
+[PSYoungGen: 547823K->21503K(547840K)] 688309K->184630K(897536K), 0.3231157 secs] [Times: user=2.16 sys=0.08, real=0.33 secs] 
+Heap after GC invocations=5 (full 0):
+ PSYoungGen      total 547840K, used 21503K [0x0000000716b00000, 0x0000000761a00000, 0x00000007c0000000)
+  eden space 526336K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000736d00000)
+  from space 21504K, 99% used [0x0000000736d00000,0x00000007381ffc48,0x0000000738200000)
+  to   space 87552K, 0% used [0x000000075c480000,0x000000075c480000,0x0000000761a00000)
+ ParOldGen       total 349696K, used 163126K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 46% used [0x00000005c4000000,0x00000005cdf4dbc0,0x00000005d9580000)
+ Metaspace       used 7408K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.3247910 seconds, Stopping threads took: 0.0002469 seconds
+Application time: 3.0003835 seconds
+Total time for which application threads were stopped: 0.0019731 seconds, Stopping threads took: 0.0016959 seconds
+Application time: 2.0002707 seconds
+Total time for which application threads were stopped: 0.0010921 seconds, Stopping threads took: 0.0006126 seconds
+Application time: 1.8511725 seconds
+{Heap before GC invocations=6 (full 0):
+ PSYoungGen      total 547840K, used 547839K [0x0000000716b00000, 0x0000000761a00000, 0x00000007c0000000)
+  eden space 526336K, 100% used [0x0000000716b00000,0x0000000736d00000,0x0000000736d00000)
+  from space 21504K, 99% used [0x0000000736d00000,0x00000007381ffc48,0x0000000738200000)
+  to   space 87552K, 0% used [0x000000075c480000,0x000000075c480000,0x0000000761a00000)
+ ParOldGen       total 349696K, used 163126K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 46% used [0x00000005c4000000,0x00000005cdf4dbc0,0x00000005d9580000)
+ Metaspace       used 7454K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 10445KB slow allocs: 0  refill waste: 167120B alloc: 0.99227   522266KB refills: 51 waste  0.0% gc: 0B slow: 1704B fast: 0B
+TLAB totals: thrds: 1  refills: 51 max: 51 slow allocs: 0 max 0 waste:  0.0% gc: 0B max: 0B slow: 1704B max: 1704B fast: 0B max: 0B
+[GC (Allocation Failure) [SoftReference, 0 refs, 0.0001784 secs][WeakReference, 3 refs, 0.0000259 secs][FinalReference, 0 refs, 0.0000196 secs][PhantomReference, 0 refs, 0 refs, 0.0000269 secs][JNI Weak Reference, 0.0000147 secs]AdaptiveSizePolicy::update_averages:  survived: 51935960  promoted: 8192  overflow: false
+AdaptiveSizeStart: 43.865 collection: 6 
+  avg_survived_padded_avg: 84986832.000000  avg_promoted_padded_avg: 70267408.000000  avg_pretenured_padded_avg: 0.000000  tenuring_thresh: 5  target_size: 85458944
+
+Desired survivor size 85458944 bytes, new threshold 5 (max 15)
+PSAdaptiveSizePolicy::compute_eden_space_size: costs minor_time: 0.054650 major_cost: 0.000000 mutator_cost: 0.945350 throughput_goal: 0.990000 live_space: 295233056 free_space: 1212678144 old_eden_size: 1077936128 desired_eden_size: 1077936128
+AdaptiveSizePolicy::survivor space sizes: collection: 6 (81264640, 22020096) -> (81264640, 85458944) 
+AdaptiveSizeStop: collection: 6 
+[PSYoungGen: 547839K->50718K(1132032K)] 710966K->213853K(1481728K), 0.4300375 secs] [Times: user=2.27 sys=0.08, real=0.44 secs] 
+Heap after GC invocations=6 (full 0):
+ PSYoungGen      total 1132032K, used 50718K [0x0000000716b00000, 0x0000000761200000, 0x00000007c0000000)
+  eden space 1052672K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000756f00000)
+  from space 79360K, 63% used [0x000000075c480000,0x000000075f607ad8,0x0000000761200000)
+  to   space 83456K, 0% used [0x0000000756f00000,0x0000000756f00000,0x000000075c080000)
+ ParOldGen       total 349696K, used 163134K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 46% used [0x00000005c4000000,0x00000005cdf4fbc0,0x00000005d9580000)
+ Metaspace       used 7454K, capacity 7542K, committed 7808K, reserved 1056768K
+  class space    used 759K, capacity 794K, committed 896K, reserved 1048576K
+}
+Total time for which application threads were stopped: 0.4318605 seconds, Stopping threads took: 0.0002127 seconds
+Application time: 1.7771559 seconds
+{Heap before GC invocations=7 (full 0):
+ PSYoungGen      total 1132032K, used 281142K [0x0000000716b00000, 0x0000000761200000, 0x00000007c0000000)
+  eden space 1052672K, 21% used [0x0000000716b00000,0x0000000724c05fe8,0x0000000756f00000)
+  from space 79360K, 63% used [0x000000075c480000,0x000000075f607ad8,0x0000000761200000)
+  to   space 83456K, 0% used [0x0000000756f00000,0x0000000756f00000,0x000000075c080000)
+ ParOldGen       total 349696K, used 163134K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 46% used [0x00000005c4000000,0x00000005cdf4fbc0,0x00000005d9580000)
+ Metaspace       used 7500K, capacity 7606K, committed 7808K, reserved 1056768K
+  class space    used 763K, capacity 794K, committed 896K, reserved 1048576K
+TLAB: gc thread: 0x000000fff000a000 [id: 803] desired_size: 20947KB slow allocs: 0  refill waste: 335160B alloc: 0.99497   229266KB refills: 11 waste  1.1% gc: 2667792B slow: 288B fast: 0B
+TLAB totals: thrds: 1  refills: 11 max: 11 slow allocs: 0 max 0 waste:  1.1% gc: 2667792B max: 2667792B slow: 288B max: 288B fast: 0B max: 0B
+[GC (System.gc()) [SoftReference, 0 refs, 0.0001946 secs][WeakReference, 0 refs, 0.0000244 secs][FinalReference, 28 refs, 0.0001926 secs][PhantomReference, 0 refs, 0 refs, 0.0000288 secs][JNI Weak Reference, 0.0000152 secs]AdaptiveSizePolicy::update_averages:  survived: 29294608  promoted: 4331016  overflow: false
+AdaptiveSizeStart: 45.984 collection: 7 
+  avg_survived_padded_avg: 86400304.000000  avg_promoted_padded_avg: 69584736.000000  avg_pretenured_padded_avg: 0.000000  tenuring_thresh: 4  target_size: 86507520
+
+Desired survivor size 86507520 bytes, new threshold 4 (max 15)
+AdaptiveSizePolicy::survivor space sizes: collection: 7 (85458944, 81264640) -> (85458944, 86507520) 
+AdaptiveSizeStop: collection: 7 
+[PSYoungGen: 281142K->28608K(1136128K)] 444277K->195972K(1485824K), 0.3394646 secs] [Times: user=1.75 sys=0.07, real=0.34 secs] 
+Heap after GC invocations=7 (full 0):
+ PSYoungGen      total 1136128K, used 28608K [0x0000000716b00000, 0x0000000761400000, 0x00000007c0000000)
+  eden space 1052672K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000756f00000)
+  from space 83456K, 34% used [0x0000000756f00000,0x0000000758af0010,0x000000075c080000)
+  to   space 84480K, 0% used [0x000000075c180000,0x000000075c180000,0x0000000761400000)
+ ParOldGen       total 349696K, used 167364K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 47% used [0x00000005c4000000,0x00000005ce3711c8,0x00000005d9580000)
+ Metaspace       used 7500K, capacity 7606K, committed 7808K, reserved 1056768K
+  class space    used 763K, capacity 794K, committed 896K, reserved 1048576K
+}
+[Class Histogram (before full gc): 
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:        915031       44794904  [Lorg.h2.value.Value;
+   2:        515364       41229120  org.h2.result.Row
+   3:       1011010       32352320  org.h2.index.TreeNode
+   4:        426784       20920008  [C
+   5:        960351       15365616  org.h2.value.ValueStringFixed
+   6:        426757       10242168  java.lang.String
+   7:        487555        7800880  org.h2.value.ValueInt
+   8:        190885        7635400  java.math.BigDecimal
+   9:          1052        5835816  [Ljava.lang.Object;
+  10:        190859        4580616  org.h2.value.ValueDecimal
+  11:          1620        2891320  [B
+  12:        145156        2322496  org.h2.value.ValueString
+  13:         21763        1315432  [I
+  14:         12317        1182432  sun.util.calendar.Gregorian$Date
+  15:         57774         924384  org.h2.value.ValueShort
+  16:         12312         393984  java.sql.Timestamp
+  17:         12312         196992  org.h2.value.ValueTimestamp
+  18:          1179         136944  java.lang.Class
+  19:           170         133752  [Ljava.util.HashMap$Node;
+  20:          1799          57568  java.util.HashMap$Node
+  21:           353          36712  org.h2.table.Column
+  22:           659          21088  java.util.concurrent.ConcurrentHashMap$Node
+  23:           368          20608  java.util.zip.ZipFile$ZipFileInflaterInputStream
+  24:           368          20608  java.util.zip.ZipFile$ZipFileInputStream
+  25:           253          17552  [Ljava.lang.String;
+  26:           509          16288  java.util.Hashtable$Entry
+  27:           341          10912  sun.misc.FDBigInteger
+  28:           203           9744  java.util.HashMap
+  29:           125           9000  java.lang.reflect.Field
+  30:           542           8672  java.lang.Object
+  31:           214           8560  java.util.LinkedHashMap$Entry
+  32:            33           6256  [Ljava.util.concurrent.ConcurrentHashMap$Node;
+  33:            71           6248  org.h2.value.DataType
+  34:           129           5160  java.lang.ref.SoftReference
+  35:            19           4848  [Ljava.util.Hashtable$Entry;
+  36:           151           4832  org.h2.expression.FunctionInfo
+  37:           111           4440  java.math.BigInteger
+  38:           110           4400  java.lang.ref.Finalizer
+  39:           173           4152  org.h2.table.IndexColumn
+  40:           105           4136  [Lorg.h2.table.Column;
+  41:           256           4096  java.lang.Integer
+  42:            48           3840  [S
+  43:            44           3520  java.lang.reflect.Constructor
+  44:           141           3384  org.h2.util.ObjectArray
+  45:            36           3168  org.h2.index.TreeIndex
+  46:            48           3072  java.net.URL
+  47:            28           2912  org.h2.table.MetaTable
+  48:            53           2544  java.util.zip.Inflater
+  49:            28           2464  java.lang.reflect.Method
+  50:           100           2400  org.h2.value.ValueLong
+  51:            36           2304  java.util.concurrent.ConcurrentHashMap
+  52:            38           2128  java.lang.Class$ReflectionData
+  53:            10           2080  org.h2.engine.Session
+  54:           128           2048  java.lang.Character
+  55:            54           2040  [Lorg.h2.table.IndexColumn;
+  56:            34           2008  [J
+  57:            41           1968  sun.util.locale.LocaleObjectCache$CacheEntry
+  58:             5           1880  java.lang.Thread
+  59:            78           1872  java.util.ArrayList
+  60:            75           1800  java.security.Provider$ServiceKey
+  61:            32           1792  java.security.Provider$Service
+  62:            13           1768  org.h2.table.TableData
+  63:            29           1624  java.lang.Package
+  64:             2           1568  [Lorg.h2.value.ValueInt;
+  65:             1           1568  [[B
+  66:            62           1488  org.h2.index.IndexType
+  67:            13           1456  org.h2.index.ScanIndex
+  68:             8           1408  org.h2.command.dml.Select
+  69:            35           1400  java.io.ObjectStreamField
+  70:            15           1392  [Ljava.util.WeakHashMap$Entry;
+  71:             1           1376  [Lsun.misc.FDBigInteger;
+  72:            18           1296  org.h2.command.dml.TransactionCommand
+  73:            39           1280  [Ljava.math.BigInteger;
+  74:            53           1272  java.util.zip.ZStreamRef
+  75:            59           1264  [Ljava.lang.Class;
+  76:            25           1200  org.apache.commons.cli.Option
+  77:            49           1176  java.util.jar.Attributes$Name
+  78:            28           1120  org.h2.command.CommandContainer
+  79:            20           1120  sun.misc.URLClassPath$JarLoader
+  80:             2           1064  [Ljava.lang.invoke.MethodHandle;
+  81:            11           1056  org.h2.constraint.ConstraintReferential
+  82:             1           1040  [Ljava.lang.Integer;
+  83:             9           1008  org.h2.jdbc.JdbcConnection
+  84:            30            960  java.security.Provider$EngineDescription
+  85:            19            912  org.h2.expression.ExpressionColumn
+  86:            16            896  sun.nio.cs.UTF_8$Encoder
+  87:            10            880  org.h2.table.TableFilter
+  88:            20            800  sun.util.locale.BaseLocale$Key
+  89:            24            768  java.lang.ref.ReferenceQueue
+  90:            13            744  [Ljava.lang.reflect.Field;
+  91:             5            720  java.text.DecimalFormat
+  92:            15            720  java.util.WeakHashMap
+  93:             9            720  org.h2.index.MetaIndex
+  94:            22            704  java.io.File
+  95:            21            672  java.io.FileDescriptor
+  96:            28            672  java.security.Provider$UString
+  97:            21            672  java.util.Locale
+  98:             7            672  java.util.jar.JarFile$JarFileEntry
+  99:             9            648  org.h2.command.dml.Set
+ 100:             8            640  org.apache.derbyTesting.system.oe.model.Customer
+ 101:            10            640  org.h2.index.IndexCursor
+ 102:            20            640  org.h2.message.Trace
+ 103:            20            640  sun.util.locale.BaseLocale
+ 104:            39            624  java.util.HashSet
+ 105:            19            608  java.lang.Exception
+ 106:            12            576  java.util.Hashtable
+ 107:             9            576  org.h2.constraint.ConstraintUnique
+ 108:            18            576  org.h2.index.MultiVersionIndex
+ 109:             1            528  [Ljava.lang.Character;
+ 110:            22            528  [Ljava.lang.reflect.Constructor;
+ 111:            22            528  sun.reflect.NativeConstructorAccessorImpl
+ 112:             2            512  [D
+ 113:             8            512  org.h2.util.SmallLRUCache
+ 114:             7            504  org.h2.result.LocalResult
+ 115:             9            504  sun.util.calendar.ZoneInfo
+ 116:            12            480  java.security.AccessControlContext
+ 117:            20            480  java.util.Locale$LocaleKey
+ 118:             7            448  java.util.jar.JarFile
+ 119:             4            448  org.h2.index.ViewIndex
+ 120:            11            440  sun.nio.cs.UTF_8$Decoder
+ 121:            18            432  java.text.DateFormat$Field
+ 122:             9            432  sun.util.locale.provider.LocaleResources$ResourceReference
+ 123:             1            416  [Lorg.h2.value.ValueLong;
+ 124:            13            416  java.io.FileInputStream
+ 125:            26            416  java.lang.ref.ReferenceQueue$Lock
+ 126:            10            400  java.security.ProtectionDomain
+ 127:             7            392  java.util.ResourceBundle$CacheKey
+ 128:             1            392  org.h2.engine.DatabaseCloser
+ 129:             7            392  org.h2.engine.Setting
+ 130:             1            384  java.lang.ref.Finalizer$FinalizerThread
+ 131:             6            384  java.nio.DirectByteBuffer
+ 132:            12            384  java.util.Vector
+ 133:             1            376  java.lang.ref.Reference$ReferenceHandler
+ 134:            12            360  [Ljava.io.ObjectStreamField;
+ 135:             9            360  java.util.IdentityHashMap
+ 136:            15            360  java.util.concurrent.atomic.AtomicLong
+ 137:             9            360  org.h2.expression.Comparison
+ 138:            15            360  sun.misc.MetaIndex
+ 139:            22            352  sun.reflect.DelegatingConstructorAccessorImpl
+ 140:             6            336  java.nio.DirectLongBufferU
+ 141:             3            336  java.util.GregorianCalendar
+ 142:             6            336  java.util.LinkedHashMap
+ 143:             7            336  java.util.ResourceBundle$BundleReference
+ 144:            10            320  java.lang.OutOfMemoryError
+ 145:            10            320  java.security.CodeSource
+ 146:             5            320  java.text.DateFormatSymbols
+ 147:             5            320  java.text.DecimalFormatSymbols
+ 148:            10            320  java.util.Random
+ 149:             8            320  java.util.TreeMap$Entry
+ 150:             8            320  java.util.WeakHashMap$Entry
+ 151:            10            320  java.util.zip.ZipCoder
+ 152:             8            320  org.apache.derbyTesting.system.oe.direct.Standard
+ 153:             8            320  org.apache.derbyTesting.system.oe.model.District
+ 154:             8            320  org.apache.derbyTesting.system.oe.model.Order
+ 155:             8            320  org.apache.derbyTesting.system.oe.util.OERandom
+ 156:             8            320  org.dacapo.h2.TPCCSubmitter
+ 157:             8            320  org.dacapo.parser.Config$OutputFile
+ 158:            10            320  org.h2.log.UndoLog
+ 159:             1            312  org.h2.engine.Database
+ 160:             2            304  org.h2.table.TableView
+ 161:             9            288  org.h2.expression.Parameter
+ 162:             9            288  sun.security.jca.ProviderConfig
+ 163:             8            256  java.io.FileOutputStream
+ 164:             8            256  org.apache.derbyTesting.system.oe.model.Warehouse
+ 165:             8            256  org.h2.engine.Mode
+ 166:            10            240  java.util.ArrayDeque
+ 167:             5            240  java.util.Properties
+ 168:            10            240  org.h2.expression.ValueExpression
+ 169:             5            240  sun.misc.URLClassPath
+ 170:             3            240  sun.net.www.protocol.jar.URLJarFile
+ 171:            14            224  java.util.HashMap$KeySet
+ 172:             7            224  java.util.ResourceBundle$LoaderReference
+ 173:             3            216  sun.security.provider.NativePRNG$RandomIO
+ 174:             2            208  sun.util.calendar.ImmutableGregorianDate
+ 175:             2            200  [Ljava.text.DateFormat$Field;
+ 176:             9            200  [Lorg.h2.expression.Expression;
+ 177:             5            200  java.text.DigitList
+ 178:             8            192  java.lang.StringBuffer
+ 179:             8            192  java.math.RoundingMode
+ 180:             4            192  java.nio.HeapByteBuffer
+ 181:             3            192  java.text.SimpleDateFormat
+ 182:             6            192  java.util.Stack
+ 183:             6            192  org.h2.index.TreeCursor
+ 184:             4            192  sun.nio.cs.StreamEncoder
+ 185:             2            176  java.util.jar.JarVerifier
+ 186:             1            168  [[Ljava.math.BigInteger;
+ 187:            10            160  [Ljava.security.Principal;
+ 188:             4            160  java.io.BufferedWriter
+ 189:             5            160  java.io.FilePermission
+ 190:             5            160  java.lang.ThreadLocal$ThreadLocalMap$Entry
+ 191:             5            160  java.security.Permissions
+ 192:            10            160  java.security.ProtectionDomain$Key
+ 193:             4            160  org.dacapo.parser.Config$Size
+ 194:             2            160  org.h2.schema.Schema
+ 195:             5            160  sun.util.locale.provider.LocaleProviderAdapter$Type
+ 196:             3            144  [Ljava.lang.reflect.Method;
+ 197:             2            144  [Ljava.math.BigDecimal;
+ 198:             3            144  org.h2.index.MultiVersionCursor
+ 199:             6            144  org.h2.util.IntArray
+ 200:             6            144  sun.misc.PerfCounter
+ 201:             2            128  java.io.ExpiringCache$1
+ 202:             2            128  org.h2.engine.User
+ 203:             4            128  org.h2.index.ViewIndex$CostElement
+ 204:             4            128  org.h2.result.SortOrder
+ 205:             1            120  [Lorg.apache.commons.cli.Option;
+ 206:             3            120  [Z
+ 207:             1            120  [[Ljava.lang.String;
+ 208:             5            120  java.io.FilePermissionCollection
+ 209:             5            120  java.util.Collections$UnmodifiableRandomAccessList
+ 210:             1            120  org.dacapo.h2.TPCC
+ 211:             3            120  sun.misc.FloatingDecimal$BinaryToASCIIBuffer
+ 212:             5            120  sun.misc.FloatingDecimal$PreparedASCIIToBinaryBuffer
+ 213:             2            112  org.h2.expression.Function
+ 214:             1            104  sun.net.www.protocol.file.FileURLConnection
+ 215:             1             96  [[J
+ 216:             4             96  java.io.ExpiringCache$Entry
+ 217:             4             96  java.io.OutputStreamWriter
+ 218:             2             96  java.lang.ThreadGroup
+ 219:             3             96  java.lang.ref.WeakReference
+ 220:             4             96  java.math.MathContext
+ 221:             4             96  java.util.LinkedList$Node
+ 222:             2             96  java.util.TreeMap
+ 223:             4             96  java.util.jar.Manifest
+ 224:             3             96  org.h2.expression.ConditionAndOr
+ 225:             3             96  org.h2.index.IndexCondition
+ 226:             1             96  sun.misc.Launcher$AppClassLoader
+ 227:             1             96  sun.net.www.protocol.jar.URLJarFile$URLJarFileEntry
+ 228:             4             96  sun.reflect.NativeMethodAccessorImpl
+ 229:             1             96  sun.security.jca.ProviderList$1
+ 230:             1             96  sun.security.provider.Sun
+ 231:             1             88  java.net.FactoryURLClassLoader
+ 232:             1             88  org.dacapo.harness.DacapoClassLoader
+ 233:             1             88  org.h2.schema.Sequence
+ 234:             1             88  sun.misc.Launcher$ExtClassLoader
+ 235:             1             88  sun.net.www.protocol.jar.JarURLConnection
+ 236:             1             80  [Ljava.lang.ThreadLocal$ThreadLocalMap$Entry;
+ 237:             3             80  [Ljava.security.ProtectionDomain;
+ 238:             2             80  java.io.ExpiringCache
+ 239:             2             80  java.lang.ClassLoader$NativeLibrary
+ 240:             5             80  java.util.HashMap$Values
+ 241:             2             80  java.util.Locale$Category
+ 242:             1             80  org.h2.log.LogSystem
+ 243:             2             80  sun.util.calendar.Era
+ 244:             2             72  [Lsun.security.jca.ProviderConfig;
+ 245:             3             72  java.lang.RuntimePermission
+ 246:             3             72  java.util.Arrays$ArrayList
+ 247:             3             72  java.util.Collections$SynchronizedSet
+ 248:             3             72  java.util.Date
+ 249:             1             72  java.util.ResourceBundle$RBClassLoader
+ 250:             3             72  java.util.concurrent.ConcurrentHashMap$KeySetView
+ 251:             3             72  java.util.concurrent.atomic.AtomicMarkableReference$Pair
+ 252:             3             72  org.dacapo.parser.Config$ThreadModel
+ 253:             3             72  sun.misc.FloatingDecimal$ExceptionalBinaryToASCIIBuffer
+ 254:             3             72  sun.misc.Signal
+ 255:             3             72  sun.security.provider.NativePRNG$Variant
+ 256:             1             72  sun.util.locale.provider.JRELocaleProviderAdapter
+ 257:             3             72  sun.util.resources.ParallelListResourceBundle$KeySet
+ 258:             1             64  [F
+ 259:             2             64  [Ljava.lang.Thread;
+ 260:             2             64  java.io.PrintStream
+ 261:             2             64  java.lang.ClassValue$Entry
+ 262:             4             64  java.lang.ThreadLocal
+ 263:             2             64  java.lang.VirtualMachineError
+ 264:             2             64  java.lang.ref.ReferenceQueue$Null
+ 265:             1             64  java.security.SecureRandom
+ 266:             2             64  java.util.LinkedList
+ 267:             2             64  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl
+ 268:             4             64  java.util.jar.Attributes
+ 269:             2             64  org.apache.commons.cli.Options
+ 270:             1             64  org.dacapo.harness.H2
+ 271:             2             64  org.dacapo.harness.TeeOutputStream
+ 272:             2             64  org.dacapo.harness.TeePrintStream
+ 273:             1             64  org.h2.command.dml.Call
+ 274:             1             64  org.h2.message.TraceSystem
+ 275:             4             64  sun.net.www.protocol.jar.Handler
+ 276:             4             64  sun.reflect.DelegatingMethodAccessorImpl
+ 277:             2             64  sun.util.locale.provider.LocaleResources
+ 278:             2             64  sun.util.locale.provider.LocaleServiceProviderPool
+ 279:             1             56  [Ljava.lang.Runnable;
+ 280:             1             56  org.h2.engine.Role
+ 281:             1             56  sun.security.provider.SHA
+ 282:             1             48  [Ljava.math.RoundingMode;
+ 283:             1             48  [Ljava.sql.Connection;
+ 284:             1             48  [Lorg.apache.derbyTesting.system.oe.client.Submitter;
+ 285:             1             48  [Lorg.apache.derbyTesting.system.oe.util.OERandom;
+ 286:             2             48  java.io.BufferedOutputStream
+ 287:             2             48  java.io.ByteArrayOutputStream
+ 288:             2             48  java.io.File$PathStatus
+ 289:             2             48  java.lang.StringBuilder
+ 290:             2             48  java.nio.charset.CoderResult
+ 291:             3             48  java.nio.charset.CodingErrorAction
+ 292:             2             48  java.sql.SQLPermission
+ 293:             3             48  java.text.AttributedCharacterIterator$Attribute
+ 294:             2             48  java.util.Currency
+ 295:             3             48  java.util.concurrent.atomic.AtomicMarkableReference
+ 296:             2             48  org.dacapo.harness.Callback$Mode
+ 297:             2             48  org.dacapo.harness.CommandLineArgs$Methodology
+ 298:             2             48  org.h2.expression.ConditionExists
+ 299:             2             48  org.h2.expression.ConditionNot
+ 300:             2             48  org.h2.index.ViewCursor
+ 301:             2             48  sun.misc.NativeSignalHandler
+ 302:             2             48  sun.security.jca.ProviderList
+ 303:             2             48  sun.security.jca.ProviderList$3
+ 304:             1             48  sun.text.resources.FormatData
+ 305:             1             48  sun.text.resources.en.FormatData_en
+ 306:             1             48  sun.text.resources.en.FormatData_en_AU
+ 307:             1             48  sun.util.resources.CalendarData
+ 308:             1             48  sun.util.resources.CurrencyNames
+ 309:             1             48  sun.util.resources.en.CalendarData_en
+ 310:             1             48  sun.util.resources.en.CurrencyNames_en_AU
+ 311:             1             40  [Lsun.util.locale.provider.LocaleProviderAdapter$Type;
+ 312:             1             40  java.io.BufferedInputStream
+ 313:             1             40  java.util.ResourceBundle$1
+ 314:             1             40  org.apache.commons.cli.PosixParser
+ 315:             1             40  org.dacapo.harness.Callback
+ 316:             1             40  org.dacapo.parser.Config
+ 317:             1             40  org.h2.expression.ConditionIn
+ 318:             1             40  sun.nio.cs.StandardCharsets$Aliases
+ 319:             1             40  sun.nio.cs.StandardCharsets$Cache
+ 320:             1             40  sun.nio.cs.StandardCharsets$Classes
+ 321:             1             32  [Ljava.lang.OutOfMemoryError;
+ 322:             2             32  [Ljava.lang.StackTraceElement;
+ 323:             1             32  [Ljava.lang.ThreadGroup;
+ 324:             2             32  [Ljava.security.CodeSigner;
+ 325:             1             32  [Lorg.dacapo.parser.Config$ThreadModel;
+ 326:             1             32  [Lsun.security.provider.NativePRNG$Variant;
+ 327:             1             32  java.io.UnixFileSystem
+ 328:             1             32  java.lang.ArithmeticException
+ 329:             2             32  java.lang.Boolean
+ 330:             1             32  java.lang.ClassCastException
+ 331:             1             32  java.lang.NullPointerException
+ 332:             2             32  java.lang.Shutdown$Lock
+ 333:             1             32  java.lang.StringCoding$StringDecoder
+ 334:             1             32  java.lang.StringCoding$StringEncoder
+ 335:             2             32  java.nio.ByteOrder
+ 336:             1             32  java.security.BasicPermissionCollection
+ 337:             1             32  java.security.MessageDigest$Delegate
+ 338:             1             32  java.util.ArrayList$Itr
+ 339:             2             32  java.util.LinkedHashMap$LinkedEntrySet
+ 340:             2             32  java.util.concurrent.atomic.AtomicInteger
+ 341:             1             32  java.util.concurrent.locks.ReentrantLock$NonfairSync
+ 342:             2             32  java.util.jar.JarVerifier$3
+ 343:             1             32  org.h2.value.CompareMode
+ 344:             2             32  org.h2.value.ValueBoolean
+ 345:             2             32  org.h2.value.ValueNull
+ 346:             1             32  sun.nio.cs.StandardCharsets
+ 347:             1             32  sun.nio.fs.LinuxFileSystem
+ 348:             1             32  sun.nio.fs.UnixPath
+ 349:             1             32  sun.security.provider.SecureRandom
+ 350:             1             24  [Ljava.io.File$PathStatus;
+ 351:             1             24  [Ljava.lang.ClassValue$Entry;
+ 352:             1             24  [Ljava.util.Locale$Category;
+ 353:             1             24  [Lorg.dacapo.harness.Callback$Mode;
+ 354:             1             24  [Lorg.dacapo.harness.CommandLineArgs$Methodology;
+ 355:             1             24  [Lsun.launcher.LauncherHelper;
+ 356:             1             24  [Lsun.util.calendar.Era;
+ 357:             1             24  java.lang.ClassValue$Version
+ 358:             1             24  java.lang.ThreadLocal$ThreadLocalMap
+ 359:             1             24  java.lang.invoke.MethodHandleImpl$4
+ 360:             1             24  java.lang.reflect.ReflectPermission
+ 361:             1             24  java.math.BigDecimal$StringBuilderHelper
+ 362:             1             24  java.math.MutableBigInteger
+ 363:             1             24  java.sql.DriverInfo
+ 364:             1             24  java.util.BitSet
+ 365:             1             24  java.util.Collections$EmptyMap
+ 366:             1             24  java.util.Collections$SetFromMap
+ 367:             1             24  java.util.Locale$Cache
+ 368:             1             24  java.util.ResourceBundle$Control$CandidateListCache
+ 369:             1             24  java.util.concurrent.CopyOnWriteArrayList
+ 370:             1             24  org.apache.commons.cli.CommandLine
+ 371:             1             24  org.dacapo.harness.CommandLineArgs
+ 372:             1             24  org.h2.expression.SequenceValue
+ 373:             1             24  org.h2.table.SingleColumnResolver
+ 374:             1             24  org.h2.util.TempFileDeleter
+ 375:             1             24  sun.launcher.LauncherHelper
+ 376:             1             24  sun.misc.URLClassPath$Loader
+ 377:             1             24  sun.net.www.MessageHeader
+ 378:             1             24  sun.net.www.protocol.jar.JarURLConnection$JarURLInputStream
+ 379:             1             24  sun.nio.cs.ISO_8859_1
+ 380:             1             24  sun.nio.cs.US_ASCII
+ 381:             1             24  sun.nio.cs.UTF_16
+ 382:             1             24  sun.nio.cs.UTF_16BE
+ 383:             1             24  sun.nio.cs.UTF_16LE
+ 384:             1             24  sun.nio.cs.UTF_8
+ 385:             1             24  sun.security.provider.NativeSeedGenerator
+ 386:             1             24  sun.util.locale.BaseLocale$Cache
+ 387:             1             24  sun.util.locale.provider.CalendarDataProviderImpl
+ 388:             1             24  sun.util.locale.provider.CalendarProviderImpl
+ 389:             1             24  sun.util.locale.provider.CurrencyNameProviderImpl
+ 390:             1             24  sun.util.locale.provider.DateFormatSymbolsProviderImpl
+ 391:             1             24  sun.util.locale.provider.DecimalFormatSymbolsProviderImpl
+ 392:             1             24  sun.util.locale.provider.NumberFormatProviderImpl
+ 393:             1             16  [Ljava.lang.Throwable;
+ 394:             1             16  [Ljava.security.Provider;
+ 395:             1             16  [Ljava.security.cert.Certificate;
+ 396:             1             16  [Ljava.text.FieldPosition;
+ 397:             1             16  java.io.FileDescriptor$1
+ 398:             1             16  java.lang.ApplicationShutdownHooks$1
+ 399:             1             16  java.lang.CharacterDataLatin1
+ 400:             1             16  java.lang.ClassValue$Identity
+ 401:             1             16  java.lang.InheritableThreadLocal
+ 402:             1             16  java.lang.Runtime
+ 403:             1             16  java.lang.String$CaseInsensitiveComparator
+ 404:             1             16  java.lang.System$2
+ 405:             1             16  java.lang.Terminator$1
+ 406:             1             16  java.lang.invoke.MemberName$Factory
+ 407:             1             16  java.lang.invoke.MethodHandleImpl$2
+ 408:             1             16  java.lang.invoke.MethodHandleImpl$3
+ 409:             1             16  java.lang.ref.Reference$1
+ 410:             1             16  java.lang.ref.Reference$Lock
+ 411:             1             16  java.lang.reflect.ReflectAccess
+ 412:             1             16  java.math.BigDecimal$1
+ 413:             1             16  java.net.URLClassLoader$7
+ 414:             1             16  java.nio.Bits$1
+ 415:             1             16  java.nio.charset.CoderResult$1
+ 416:             1             16  java.nio.charset.CoderResult$2
+ 417:             1             16  java.security.ProtectionDomain$2
+ 418:             1             16  java.security.ProtectionDomain$JavaSecurityAccessImpl
+ 419:             1             16  java.text.MessageFormat$Field
+ 420:             1             16  java.util.Collections$EmptyIterator
+ 421:             1             16  java.util.Collections$EmptyList
+ 422:             1             16  java.util.Collections$EmptySet
+ 423:             1             16  java.util.Currency$CurrencyNameGetter
+ 424:             1             16  java.util.Hashtable$EntrySet
+ 425:             1             16  java.util.Hashtable$KeySet
+ 426:             1             16  java.util.ResourceBundle$Control
+ 427:             1             16  java.util.WeakHashMap$KeySet
+ 428:             1             16  java.util.concurrent.locks.ReentrantLock
+ 429:             1             16  java.util.jar.JavaUtilJarAccessImpl
+ 430:             1             16  java.util.regex.Pattern$4
+ 431:             1             16  java.util.regex.Pattern$LastNode
+ 432:             1             16  java.util.regex.Pattern$Node
+ 433:             1             16  java.util.zip.ZipFile$1
+ 434:             1             16  org.dacapo.h2.TPCCReporter
+ 435:             1             16  org.dacapo.harness.TestHarness
+ 436:             1             16  org.h2.Driver
+ 437:             1             16  org.h2.engine.Engine
+ 438:             1             16  org.h2.util.BitField
+ 439:             1             16  sun.misc.ASCIICaseInsensitiveComparator
+ 440:             1             16  sun.misc.FloatingDecimal$1
+ 441:             1             16  sun.misc.Launcher
+ 442:             1             16  sun.misc.Launcher$Factory
+ 443:             1             16  sun.misc.Perf
+ 444:             1             16  sun.misc.Unsafe
+ 445:             1             16  sun.net.www.protocol.file.Handler
+ 446:             1             16  sun.net.www.protocol.jar.JarFileFactory
+ 447:             1             16  sun.nio.fs.LinuxFileSystemProvider
+ 448:             1             16  sun.reflect.ReflectionFactory
+ 449:             1             16  sun.util.calendar.Gregorian
+ 450:             1             16  sun.util.calendar.JulianCalendar
+ 451:             1             16  sun.util.locale.provider.AuxLocaleProviderAdapter$NullProvider
+ 452:             1             16  sun.util.locale.provider.CalendarDataUtility$CalendarWeekParameterGetter
+ 453:             1             16  sun.util.locale.provider.SPILocaleProviderAdapter
+ 454:             1             16  sun.util.resources.LocaleData
+ 455:             1             16  sun.util.resources.LocaleData$LocaleDataResourceBundleControl
+Total       5400208      200675800
+, 0.3686901 secs]
+[pre compact{Heap before GC invocations=8 (full 1):
+ PSYoungGen      total 1136128K, used 28608K [0x0000000716b00000, 0x0000000761400000, 0x00000007c0000000)
+  eden space 1052672K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000756f00000)
+  from space 83456K, 34% used [0x0000000756f00000,0x0000000758af0010,0x000000075c080000)
+  to   space 84480K, 0% used [0x000000075c180000,0x000000075c180000,0x0000000761400000)
+ ParOldGen       total 349696K, used 167364K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 47% used [0x00000005c4000000,0x00000005ce3711c8,0x00000005d9580000)
+ Metaspace       used 7500K, capacity 7606K, committed 7808K, reserved 1056768K
+  class space    used 763K, capacity 794K, committed 896K, reserved 1048576K
+, 0.0002322 secs]
+[Full GC (System.gc()) [marking phase[par mark, 0.6611562 secs]
+[reference processing[SoftReference, 0 refs, 0.0001965 secs][WeakReference, 13 refs, 0.0000406 secs][FinalReference, 80 refs, 0.0001780 secs][PhantomReference, 0 refs, 0 refs, 0.0000288 secs][JNI Weak Reference, 0.0000249 secs], 0.0005656 secs]
+[class unloading, 0.0146677 secs]
+, 0.6767625 secs]
+[summary phase, 0.0000249 secs]
+[adjust roots, 0.0134538 secs]
+[compaction phase[drain task setup, 0.0006742 secs]
+[dense prefix task setup, 0.0000122 secs]
+[steal task setup, 0.0000127 secs]
+[par compact, 1.7770087 secs]
+[deferred updates, 0.1999626 secs]
+, 1.9795585 secs]
+[post compact, 0.0028438 secs]
+AdaptiveSizeStart: 49.027 collection: 8 
+AdaptiveSizeStop: collection: 8 
+[PSYoungGen: 28608K->0K(1136128K)] [ParOldGen: 167364K->181034K(349696K)] 195972K->181034K(1485824K), [Metaspace: 7500K->7500K(1056768K)], 2.6733172 secs] [Times: user=15.03 sys=0.16, real=2.68 secs] 
+Heap after GC invocations=8 (full 1):
+ PSYoungGen      total 1136128K, used 0K [0x0000000716b00000, 0x0000000761400000, 0x00000007c0000000)
+  eden space 1052672K, 0% used [0x0000000716b00000,0x0000000716b00000,0x0000000756f00000)
+  from space 83456K, 0% used [0x0000000756f00000,0x0000000756f00000,0x000000075c080000)
+  to   space 84480K, 0% used [0x000000075c180000,0x000000075c180000,0x0000000761400000)
+ ParOldGen       total 349696K, used 181034K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 51% used [0x00000005c4000000,0x00000005cf0ca8e8,0x00000005d9580000)
+ Metaspace       used 7500K, capacity 7606K, committed 7808K, reserved 1056768K
+  class space    used 763K, capacity 794K, committed 896K, reserved 1048576K
+}
+[Class Histogram (after full gc): 
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:        515355       41228400  org.h2.result.Row
+   2:        515356       35202472  [Lorg.h2.value.Value;
+   3:       1011010       32352320  org.h2.index.TreeNode
+   4:        426747       20915448  [C
+   5:        960351       15365616  org.h2.value.ValueStringFixed
+   6:        426720       10241280  java.lang.String
+   7:        487555        7800880  org.h2.value.ValueInt
+   8:        190885        7635400  java.math.BigDecimal
+   9:        190859        4580616  org.h2.value.ValueDecimal
+  10:           999        3212632  [Ljava.lang.Object;
+  11:        145155        2322480  org.h2.value.ValueString
+  12:         12317        1182432  sun.util.calendar.Gregorian$Date
+  13:           540        1138928  [B
+  14:         57774         924384  org.h2.value.ValueShort
+  15:         12312         393984  java.sql.Timestamp
+  16:         12312         196992  org.h2.value.ValueTimestamp
+  17:          1179         136944  java.lang.Class
+  18:           159         131656  [Ljava.util.HashMap$Node;
+  19:          1782          57024  java.util.HashMap$Node
+  20:           860          49544  [I
+  21:           350          36400  org.h2.table.Column
+  22:           659          21088  java.util.concurrent.ConcurrentHashMap$Node
+  23:           253          17552  [Ljava.lang.String;
+  24:           509          16288  java.util.Hashtable$Entry
+  25:           341          10912  sun.misc.FDBigInteger
+  26:           125           9000  java.lang.reflect.Field
+  27:           186           8928  java.util.HashMap
+  28:           531           8496  java.lang.Object
+  29:           208           8320  java.util.LinkedHashMap$Entry
+  30:            33           6256  [Ljava.util.concurrent.ConcurrentHashMap$Node;
+  31:            71           6248  org.h2.value.DataType
+  32:           127           5080  java.lang.ref.SoftReference
+  33:           151           4832  org.h2.expression.FunctionInfo
+  34:            13           4464  [Ljava.util.Hashtable$Entry;
+  35:           111           4440  java.math.BigInteger
+  36:           110           4400  java.lang.ref.Finalizer
+  37:           173           4152  org.h2.table.IndexColumn
+  38:           256           4096  java.lang.Integer
+  39:            99           4024  [Lorg.h2.table.Column;
+  40:            48           3840  [S
+  41:            44           3520  java.lang.reflect.Constructor
+  42:            36           3168  org.h2.index.TreeIndex
+  43:            48           3072  java.net.URL
+  44:            28           2912  org.h2.table.MetaTable
+  45:            28           2464  java.lang.reflect.Method
+  46:            50           2400  java.util.zip.Inflater
+  47:           100           2400  org.h2.value.ValueLong
+  48:            36           2304  java.util.concurrent.ConcurrentHashMap
+  49:            90           2160  org.h2.util.ObjectArray
+  50:            38           2128  java.lang.Class$ReflectionData
+  51:            10           2080  org.h2.engine.Session
+  52:           128           2048  java.lang.Character
+  53:            34           2008  [J
+  54:            41           1968  sun.util.locale.LocaleObjectCache$CacheEntry
+  55:             5           1880  java.lang.Thread
+  56:            75           1800  java.security.Provider$ServiceKey
+  57:            32           1792  java.security.Provider$Service
+  58:            74           1776  java.util.ArrayList
+  59:            13           1768  org.h2.table.TableData
+  60:            29           1624  java.lang.Package
+  61:             2           1568  [Lorg.h2.value.ValueInt;
+  62:             1           1568  [[B
+  63:            46           1560  [Lorg.h2.table.IndexColumn;
+  64:            13           1456  org.h2.index.ScanIndex
+  65:            35           1400  java.io.ObjectStreamField
+  66:            58           1392  org.h2.index.IndexType
+  67:             1           1376  [Lsun.misc.FDBigInteger;
+  68:            18           1296  org.h2.command.dml.TransactionCommand
+  69:            39           1280  [Ljava.math.BigInteger;
+  70:            59           1264  [Ljava.lang.Class;
+  71:            13           1232  [Ljava.util.WeakHashMap$Entry;
+  72:            50           1200  java.util.zip.ZStreamRef
+  73:            25           1200  org.apache.commons.cli.Option
+  74:            28           1120  org.h2.command.CommandContainer
+  75:            20           1120  sun.misc.URLClassPath$JarLoader
+  76:             2           1064  [Ljava.lang.invoke.MethodHandle;
+  77:            11           1056  org.h2.constraint.ConstraintReferential
+  78:             1           1040  [Ljava.lang.Integer;
+  79:             9           1008  org.h2.jdbc.JdbcConnection
+  80:            30            960  java.security.Provider$EngineDescription
+  81:            35            840  java.util.jar.Attributes$Name
+  82:            20            800  sun.util.locale.BaseLocale$Key
+  83:            14            784  sun.nio.cs.UTF_8$Encoder
+  84:            13            744  [Ljava.lang.reflect.Field;
+  85:             5            720  java.text.DecimalFormat
+  86:             9            720  org.h2.index.MetaIndex
+  87:            22            704  java.io.File
+  88:            22            704  java.lang.ref.ReferenceQueue
+  89:            28            672  java.security.Provider$UString
+  90:            21            672  java.util.Locale
+  91:             9            648  org.h2.command.dml.Set
+  92:             8            640  org.apache.derbyTesting.system.oe.model.Customer
+  93:            20            640  org.h2.message.Trace
+  94:            20            640  sun.util.locale.BaseLocale
+  95:            13            624  java.util.WeakHashMap
+  96:            19            608  java.lang.Exception
+  97:             9            576  org.h2.constraint.ConstraintUnique
+  98:            18            576  org.h2.index.MultiVersionIndex
+  99:             1            528  [Ljava.lang.Character;
+ 100:            22            528  [Ljava.lang.reflect.Constructor;
+ 101:            22            528  sun.reflect.NativeConstructorAccessorImpl
+ 102:             2            512  [D
+ 103:            32            512  java.util.HashSet
+ 104:             9            504  sun.util.calendar.ZoneInfo
+ 105:            12            480  java.security.AccessControlContext
+ 106:            20            480  java.util.Locale$LocaleKey
+ 107:             5            480  java.util.jar.JarFile$JarFileEntry
+ 108:             8            448  java.util.zip.ZipFile$ZipFileInflaterInputStream
+ 109:             8            448  java.util.zip.ZipFile$ZipFileInputStream
+ 110:            18            432  java.text.DateFormat$Field
+ 111:             9            432  sun.util.locale.provider.LocaleResources$ResourceReference
+ 112:             1            416  [Lorg.h2.value.ValueLong;
+ 113:            10            400  java.security.ProtectionDomain
+ 114:             7            392  java.util.ResourceBundle$CacheKey
+ 115:             1            392  org.h2.engine.DatabaseCloser
+ 116:             7            392  org.h2.engine.Setting
+ 117:            12            384  java.io.FileDescriptor
+ 118:             1            384  java.lang.ref.Finalizer$FinalizerThread
+ 119:            24            384  java.lang.ref.ReferenceQueue$Lock
+ 120:             6            384  java.nio.DirectByteBuffer
+ 121:            12            384  java.util.Vector
+ 122:             1            376  java.lang.ref.Reference$ReferenceHandler
+ 123:            12            360  [Ljava.io.ObjectStreamField;
+ 124:             9            360  java.util.IdentityHashMap
+ 125:            15            360  java.util.concurrent.atomic.AtomicLong
+ 126:            15            360  sun.misc.MetaIndex
+ 127:             9            360  sun.nio.cs.UTF_8$Decoder
+ 128:            22            352  sun.reflect.DelegatingConstructorAccessorImpl
+ 129:             6            336  java.nio.DirectLongBufferU
+ 130:             3            336  java.util.GregorianCalendar
+ 131:             6            336  java.util.LinkedHashMap
+ 132:             7            336  java.util.ResourceBundle$BundleReference
+ 133:            10            320  java.lang.OutOfMemoryError
+ 134:            10            320  java.security.CodeSource
+ 135:             5            320  java.text.DateFormatSymbols
+ 136:             5            320  java.text.DecimalFormatSymbols
+ 137:            10            320  java.util.Random
+ 138:             8            320  java.util.TreeMap$Entry
+ 139:             8            320  java.util.WeakHashMap$Entry
+ 140:             5            320  java.util.jar.JarFile
+ 141:             8            320  org.apache.derbyTesting.system.oe.direct.Standard
+ 142:             8            320  org.apache.derbyTesting.system.oe.model.District
+ 143:             8            320  org.apache.derbyTesting.system.oe.model.Order
+ 144:             8            320  org.apache.derbyTesting.system.oe.util.OERandom
+ 145:             8            320  org.dacapo.h2.TPCCSubmitter
+ 146:             8            320  org.dacapo.parser.Config$OutputFile
+ 147:            10            320  org.h2.log.UndoLog
+ 148:             1            312  org.h2.engine.Database
+ 149:             6            288  java.util.Hashtable
+ 150:             9            288  org.h2.expression.Parameter
+ 151:             9            288  sun.security.jca.ProviderConfig
+ 152:             8            256  java.io.FileInputStream
+ 153:             8            256  java.util.zip.ZipCoder
+ 154:             8            256  org.apache.derbyTesting.system.oe.model.Warehouse
+ 155:             8            256  org.h2.engine.Mode
+ 156:             5            240  java.util.Properties
+ 157:             5            240  sun.misc.URLClassPath
+ 158:             3            240  sun.net.www.protocol.jar.URLJarFile
+ 159:            14            224  java.util.HashMap$KeySet
+ 160:             7            224  java.util.ResourceBundle$LoaderReference
+ 161:             3            216  sun.security.provider.NativePRNG$RandomIO
+ 162:             2            208  sun.util.calendar.ImmutableGregorianDate
+ 163:             2            200  [Ljava.text.DateFormat$Field;
+ 164:             5            200  java.text.DigitList
+ 165:             8            192  java.lang.StringBuffer
+ 166:             8            192  java.math.RoundingMode
+ 167:             4            192  java.nio.HeapByteBuffer
+ 168:             3            192  java.text.SimpleDateFormat
+ 169:             8            192  java.util.ArrayDeque
+ 170:             6            192  java.util.Stack
+ 171:             4            192  sun.nio.cs.StreamEncoder
+ 172:             2            176  org.h2.table.TableFilter
+ 173:             1            168  [[Ljava.math.BigInteger;
+ 174:            10            160  [Ljava.security.Principal;
+ 175:             4            160  java.io.BufferedWriter
+ 176:             5            160  java.io.FilePermission
+ 177:             5            160  java.lang.ThreadLocal$ThreadLocalMap$Entry
+ 178:             5            160  java.security.Permissions
+ 179:            10            160  java.security.ProtectionDomain$Key
+ 180:             4            160  org.dacapo.parser.Config$Size
+ 181:             2            160  org.h2.schema.Schema
+ 182:             5            160  sun.util.locale.provider.LocaleProviderAdapter$Type
+ 183:             3            144  [Ljava.lang.reflect.Method;
+ 184:             2            144  [Ljava.math.BigDecimal;
+ 185:             6            144  org.h2.expression.ValueExpression
+ 186:             6            144  sun.misc.PerfCounter
+ 187:             2            128  java.io.ExpiringCache$1
+ 188:             4            128  java.io.FileOutputStream
+ 189:             2            128  org.h2.engine.User
+ 190:             2            128  org.h2.index.IndexCursor
+ 191:             2            128  org.h2.util.SmallLRUCache
+ 192:             1            120  [Lorg.apache.commons.cli.Option;
+ 193:             3            120  [Z
+ 194:             1            120  [[Ljava.lang.String;
+ 195:             5            120  java.io.FilePermissionCollection
+ 196:             5            120  java.util.Collections$UnmodifiableRandomAccessList
+ 197:             1            120  org.dacapo.h2.TPCC
+ 198:             3            120  sun.misc.FloatingDecimal$BinaryToASCIIBuffer
+ 199:             5            120  sun.misc.FloatingDecimal$PreparedASCIIToBinaryBuffer
+ 200:             2            112  org.h2.expression.Function
+ 201:             1            104  sun.net.www.protocol.file.FileURLConnection
+ 202:             1             96  [[J
+ 203:             4             96  java.io.ExpiringCache$Entry
+ 204:             4             96  java.io.OutputStreamWriter
+ 205:             2             96  java.lang.ThreadGroup
+ 206:             3             96  java.lang.ref.WeakReference
+ 207:             4             96  java.math.MathContext
+ 208:             4             96  java.util.LinkedList$Node
+ 209:             2             96  java.util.TreeMap
+ 210:             1             96  sun.misc.Launcher$AppClassLoader
+ 211:             1             96  sun.net.www.protocol.jar.URLJarFile$URLJarFileEntry
+ 212:             4             96  sun.reflect.NativeMethodAccessorImpl
+ 213:             1             96  sun.security.jca.ProviderList$1
+ 214:             1             96  sun.security.provider.Sun
+ 215:             1             88  java.net.FactoryURLClassLoader
+ 216:             1             88  org.dacapo.harness.DacapoClassLoader
+ 217:             1             88  org.h2.schema.Sequence
+ 218:             1             88  sun.misc.Launcher$ExtClassLoader
+ 219:             1             88  sun.net.www.protocol.jar.JarURLConnection
+ 220:             1             80  [Ljava.lang.ThreadLocal$ThreadLocalMap$Entry;
+ 221:             3             80  [Ljava.security.ProtectionDomain;
+ 222:             2             80  java.io.ExpiringCache
+ 223:             2             80  java.lang.ClassLoader$NativeLibrary
+ 224:             5             80  java.util.HashMap$Values
+ 225:             2             80  java.util.Locale$Category
+ 226:             1             80  org.h2.log.LogSystem
+ 227:             2             80  sun.util.calendar.Era
+ 228:             2             72  [Lsun.security.jca.ProviderConfig;
+ 229:             3             72  java.lang.RuntimePermission
+ 230:             3             72  java.util.Arrays$ArrayList
+ 231:             3             72  java.util.Collections$SynchronizedSet
+ 232:             3             72  java.util.Date
+ 233:             1             72  java.util.ResourceBundle$RBClassLoader
+ 234:             3             72  java.util.concurrent.ConcurrentHashMap$KeySetView
+ 235:             3             72  java.util.concurrent.atomic.AtomicMarkableReference$Pair
+ 236:             3             72  org.dacapo.parser.Config$ThreadModel
+ 237:             3             72  sun.misc.FloatingDecimal$ExceptionalBinaryToASCIIBuffer
+ 238:             3             72  sun.misc.Signal
+ 239:             3             72  sun.security.provider.NativePRNG$Variant
+ 240:             1             72  sun.util.locale.provider.JRELocaleProviderAdapter
+ 241:             3             72  sun.util.resources.ParallelListResourceBundle$KeySet
+ 242:             1             64  [F
+ 243:             2             64  [Ljava.lang.Thread;
+ 244:             2             64  java.io.PrintStream
+ 245:             2             64  java.lang.ClassValue$Entry
+ 246:             4             64  java.lang.ThreadLocal
+ 247:             2             64  java.lang.VirtualMachineError
+ 248:             2             64  java.lang.ref.ReferenceQueue$Null
+ 249:             1             64  java.security.SecureRandom
+ 250:             2             64  java.util.LinkedList
+ 251:             2             64  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl
+ 252:             2             64  org.apache.commons.cli.Options
+ 253:             1             64  org.dacapo.harness.H2
+ 254:             2             64  org.dacapo.harness.TeeOutputStream
+ 255:             2             64  org.dacapo.harness.TeePrintStream
+ 256:             1             64  org.h2.command.dml.Call
+ 257:             1             64  org.h2.message.TraceSystem
+ 258:             4             64  sun.net.www.protocol.jar.Handler
+ 259:             4             64  sun.reflect.DelegatingMethodAccessorImpl
+ 260:             2             64  sun.util.locale.provider.LocaleResources
+ 261:             2             64  sun.util.locale.provider.LocaleServiceProviderPool
+ 262:             1             56  [Ljava.lang.Runnable;
+ 263:             1             56  org.h2.engine.Role
+ 264:             1             56  sun.security.provider.SHA
+ 265:             1             48  [Ljava.math.RoundingMode;
+ 266:             1             48  [Ljava.sql.Connection;
+ 267:             1             48  [Lorg.apache.derbyTesting.system.oe.client.Submitter;
+ 268:             1             48  [Lorg.apache.derbyTesting.system.oe.util.OERandom;
+ 269:             2             48  java.io.BufferedOutputStream
+ 270:             2             48  java.io.File$PathStatus
+ 271:             2             48  java.lang.StringBuilder
+ 272:             2             48  java.nio.charset.CoderResult
+ 273:             3             48  java.nio.charset.CodingErrorAction
+ 274:             2             48  java.sql.SQLPermission
+ 275:             3             48  java.text.AttributedCharacterIterator$Attribute
+ 276:             2             48  java.util.Currency
+ 277:             3             48  java.util.concurrent.atomic.AtomicMarkableReference
+ 278:             2             48  java.util.jar.Manifest
+ 279:             2             48  org.dacapo.harness.Callback$Mode
+ 280:             2             48  org.dacapo.harness.CommandLineArgs$Methodology
+ 281:             1             48  org.h2.expression.ExpressionColumn
+ 282:             2             48  sun.misc.NativeSignalHandler
+ 283:             2             48  sun.security.jca.ProviderList
+ 284:             2             48  sun.security.jca.ProviderList$3
+ 285:             1             48  sun.text.resources.FormatData
+ 286:             1             48  sun.text.resources.en.FormatData_en
+ 287:             1             48  sun.text.resources.en.FormatData_en_AU
+ 288:             1             48  sun.util.resources.CalendarData
+ 289:             1             48  sun.util.resources.CurrencyNames
+ 290:             1             48  sun.util.resources.en.CalendarData_en
+ 291:             1             48  sun.util.resources.en.CurrencyNames_en_AU
+ 292:             1             40  [Lsun.util.locale.provider.LocaleProviderAdapter$Type;
+ 293:             1             40  java.io.BufferedInputStream
+ 294:             1             40  java.util.ResourceBundle$1
+ 295:             1             40  org.apache.commons.cli.PosixParser
+ 296:             1             40  org.dacapo.harness.Callback
+ 297:             1             40  org.dacapo.parser.Config
+ 298:             1             40  org.h2.expression.ConditionIn
+ 299:             1             40  sun.nio.cs.StandardCharsets$Aliases
+ 300:             1             40  sun.nio.cs.StandardCharsets$Cache
+ 301:             1             40  sun.nio.cs.StandardCharsets$Classes
+ 302:             1             32  [Ljava.lang.OutOfMemoryError;
+ 303:             2             32  [Ljava.lang.StackTraceElement;
+ 304:             1             32  [Ljava.lang.ThreadGroup;
+ 305:             1             32  [Lorg.dacapo.parser.Config$ThreadModel;
+ 306:             2             32  [Lorg.h2.expression.Expression;
+ 307:             1             32  [Lsun.security.provider.NativePRNG$Variant;
+ 308:             1             32  java.io.UnixFileSystem
+ 309:             1             32  java.lang.ArithmeticException
+ 310:             2             32  java.lang.Boolean
+ 311:             1             32  java.lang.ClassCastException
+ 312:             1             32  java.lang.NullPointerException
+ 313:             2             32  java.lang.Shutdown$Lock
+ 314:             1             32  java.lang.StringCoding$StringDecoder
+ 315:             1             32  java.lang.StringCoding$StringEncoder
+ 316:             2             32  java.nio.ByteOrder
+ 317:             1             32  java.security.BasicPermissionCollection
+ 318:             1             32  java.security.MessageDigest$Delegate
+ 319:             1             32  java.util.ArrayList$Itr
+ 320:             2             32  java.util.LinkedHashMap$LinkedEntrySet
+ 321:             2             32  java.util.concurrent.atomic.AtomicInteger
+ 322:             1             32  java.util.concurrent.locks.ReentrantLock$NonfairSync
+ 323:             2             32  java.util.jar.Attributes
+ 324:             1             32  org.h2.value.CompareMode
+ 325:             2             32  org.h2.value.ValueBoolean
+ 326:             2             32  org.h2.value.ValueNull
+ 327:             1             32  sun.nio.cs.StandardCharsets
+ 328:             1             32  sun.nio.fs.LinuxFileSystem
+ 329:             1             32  sun.nio.fs.UnixPath
+ 330:             1             32  sun.security.provider.SecureRandom
+ 331:             1             24  [Ljava.io.File$PathStatus;
+ 332:             1             24  [Ljava.lang.ClassValue$Entry;
+ 333:             1             24  [Ljava.util.Locale$Category;
+ 334:             1             24  [Lorg.dacapo.harness.Callback$Mode;
+ 335:             1             24  [Lorg.dacapo.harness.CommandLineArgs$Methodology;
+ 336:             1             24  [Lsun.launcher.LauncherHelper;
+ 337:             1             24  [Lsun.util.calendar.Era;
+ 338:             1             24  java.lang.ClassValue$Version
+ 339:             1             24  java.lang.ThreadLocal$ThreadLocalMap
+ 340:             1             24  java.lang.invoke.MethodHandleImpl$4
+ 341:             1             24  java.lang.reflect.ReflectPermission
+ 342:             1             24  java.math.BigDecimal$StringBuilderHelper
+ 343:             1             24  java.math.MutableBigInteger
+ 344:             1             24  java.sql.DriverInfo
+ 345:             1             24  java.util.BitSet
+ 346:             1             24  java.util.Collections$EmptyMap
+ 347:             1             24  java.util.Collections$SetFromMap
+ 348:             1             24  java.util.Locale$Cache
+ 349:             1             24  java.util.ResourceBundle$Control$CandidateListCache
+ 350:             1             24  java.util.concurrent.CopyOnWriteArrayList
+ 351:             1             24  org.apache.commons.cli.CommandLine
+ 352:             1             24  org.dacapo.harness.CommandLineArgs
+ 353:             1             24  org.h2.expression.SequenceValue
+ 354:             1             24  org.h2.table.SingleColumnResolver
+ 355:             1             24  org.h2.util.TempFileDeleter
+ 356:             1             24  sun.launcher.LauncherHelper
+ 357:             1             24  sun.misc.URLClassPath$Loader
+ 358:             1             24  sun.net.www.MessageHeader
+ 359:             1             24  sun.net.www.protocol.jar.JarURLConnection$JarURLInputStream
+ 360:             1             24  sun.nio.cs.ISO_8859_1
+ 361:             1             24  sun.nio.cs.US_ASCII
+ 362:             1             24  sun.nio.cs.UTF_16
+ 363:             1             24  sun.nio.cs.UTF_16BE
+ 364:             1             24  sun.nio.cs.UTF_16LE
+ 365:             1             24  sun.nio.cs.UTF_8
+ 366:             1             24  sun.security.provider.NativeSeedGenerator
+ 367:             1             24  sun.util.locale.BaseLocale$Cache
+ 368:             1             24  sun.util.locale.provider.CalendarDataProviderImpl
+ 369:             1             24  sun.util.locale.provider.CalendarProviderImpl
+ 370:             1             24  sun.util.locale.provider.CurrencyNameProviderImpl
+ 371:             1             24  sun.util.locale.provider.DateFormatSymbolsProviderImpl
+ 372:             1             24  sun.util.locale.provider.DecimalFormatSymbolsProviderImpl
+ 373:             1             24  sun.util.locale.provider.NumberFormatProviderImpl
+ 374:             1             16  [Ljava.lang.Throwable;
+ 375:             1             16  [Ljava.security.Provider;
+ 376:             1             16  [Ljava.security.cert.Certificate;
+ 377:             1             16  [Ljava.text.FieldPosition;
+ 378:             1             16  java.io.FileDescriptor$1
+ 379:             1             16  java.lang.ApplicationShutdownHooks$1
+ 380:             1             16  java.lang.CharacterDataLatin1
+ 381:             1             16  java.lang.ClassValue$Identity
+ 382:             1             16  java.lang.InheritableThreadLocal
+ 383:             1             16  java.lang.Runtime
+ 384:             1             16  java.lang.String$CaseInsensitiveComparator
+ 385:             1             16  java.lang.System$2
+ 386:             1             16  java.lang.Terminator$1
+ 387:             1             16  java.lang.invoke.MemberName$Factory
+ 388:             1             16  java.lang.invoke.MethodHandleImpl$2
+ 389:             1             16  java.lang.invoke.MethodHandleImpl$3
+ 390:             1             16  java.lang.ref.Reference$1
+ 391:             1             16  java.lang.ref.Reference$Lock
+ 392:             1             16  java.lang.reflect.ReflectAccess
+ 393:             1             16  java.math.BigDecimal$1
+ 394:             1             16  java.net.URLClassLoader$7
+ 395:             1             16  java.nio.Bits$1
+ 396:             1             16  java.nio.charset.CoderResult$1
+ 397:             1             16  java.nio.charset.CoderResult$2
+ 398:             1             16  java.security.ProtectionDomain$2
+ 399:             1             16  java.security.ProtectionDomain$JavaSecurityAccessImpl
+ 400:             1             16  java.text.MessageFormat$Field
+ 401:             1             16  java.util.Collections$EmptyIterator
+ 402:             1             16  java.util.Collections$EmptyList
+ 403:             1             16  java.util.Collections$EmptySet
+ 404:             1             16  java.util.Currency$CurrencyNameGetter
+ 405:             1             16  java.util.Hashtable$EntrySet
+ 406:             1             16  java.util.Hashtable$KeySet
+ 407:             1             16  java.util.ResourceBundle$Control
+ 408:             1             16  java.util.WeakHashMap$KeySet
+ 409:             1             16  java.util.concurrent.locks.ReentrantLock
+ 410:             1             16  java.util.jar.JavaUtilJarAccessImpl
+ 411:             1             16  java.util.regex.Pattern$4
+ 412:             1             16  java.util.regex.Pattern$LastNode
+ 413:             1             16  java.util.regex.Pattern$Node
+ 414:             1             16  java.util.zip.ZipFile$1
+ 415:             1             16  org.dacapo.h2.TPCCReporter
+ 416:             1             16  org.dacapo.harness.TestHarness
+ 417:             1             16  org.h2.Driver
+ 418:             1             16  org.h2.engine.Engine
+ 419:             1             16  org.h2.util.BitField
+ 420:             1             16  sun.misc.ASCIICaseInsensitiveComparator
+ 421:             1             16  sun.misc.FloatingDecimal$1
+ 422:             1             16  sun.misc.Launcher
+ 423:             1             16  sun.misc.Launcher$Factory
+ 424:             1             16  sun.misc.Perf
+ 425:             1             16  sun.misc.Unsafe
+ 426:             1             16  sun.net.www.protocol.file.Handler
+ 427:             1             16  sun.net.www.protocol.jar.JarFileFactory
+ 428:             1             16  sun.nio.fs.LinuxFileSystemProvider
+ 429:             1             16  sun.reflect.ReflectionFactory
+ 430:             1             16  sun.util.calendar.Gregorian
+ 431:             1             16  sun.util.calendar.JulianCalendar
+ 432:             1             16  sun.util.locale.provider.AuxLocaleProviderAdapter$NullProvider
+ 433:             1             16  sun.util.locale.provider.CalendarDataUtility$CalendarWeekParameterGetter
+ 434:             1             16  sun.util.locale.provider.SPILocaleProviderAdapter
+ 435:             1             16  sun.util.resources.LocaleData
+ 436:             1             16  sun.util.resources.LocaleData$LocaleDataResourceBundleControl
+Total       4977348      185379048
+, 0.2845894 secs]
+Total time for which application threads were stopped: 3.6686523 seconds, Stopping threads took: 0.0002547 seconds
+Application time: 0.0187904 seconds
+Total time for which application threads were stopped: 0.0055003 seconds, Stopping threads took: 0.0052212 seconds
+Application time: 0.0182482 seconds
+Total time for which application threads were stopped: 0.0010085 seconds, Stopping threads took: 0.0008682 seconds
+Application time: 0.0211311 seconds
+Total time for which application threads were stopped: 0.0084830 seconds, Stopping threads took: 0.0082512 seconds
+Application time: 0.0188916 seconds
+Total time for which application threads were stopped: 0.0040137 seconds, Stopping threads took: 0.0038890 seconds
+Application time: 0.0059907 seconds
+Total time for which application threads were stopped: 0.0007172 seconds, Stopping threads took: 0.0005739 seconds
+Application time: 0.0382041 seconds
+Total time for which application threads were stopped: 0.0005246 seconds, Stopping threads took: 0.0003373 seconds
+Application time: 0.0017252 seconds
+Total time for which application threads were stopped: 0.0006639 seconds, Stopping threads took: 0.0005265 seconds
+Application time: 1.0001515 seconds
+Total time for which application threads were stopped: 0.0006531 seconds, Stopping threads took: 0.0002909 seconds
+Application time: 1.0001578 seconds
+Total time for which application threads were stopped: 0.0007221 seconds, Stopping threads took: 0.0002821 seconds
+Application time: 1.0001319 seconds
+Total time for which application threads were stopped: 0.0006580 seconds, Stopping threads took: 0.0003261 seconds
+Application time: 1.0001769 seconds
+Total time for which application threads were stopped: 0.0010164 seconds, Stopping threads took: 0.0006380 seconds
+Application time: 1.0001446 seconds
+Total time for which application threads were stopped: 0.0009641 seconds, Stopping threads took: 0.0005549 seconds
+Application time: 1.0001568 seconds
+Total time for which application threads were stopped: 0.0077037 seconds, Stopping threads took: 0.0073312 seconds
+Application time: 1.0001148 seconds
+Total time for which application threads were stopped: 0.0006419 seconds, Stopping threads took: 0.0002855 seconds
+Application time: 2.0003029 seconds
+Total time for which application threads were stopped: 0.0010169 seconds, Stopping threads took: 0.0002972 seconds
+.Application time: 1.0003455 seconds
+Total time for which application threads were stopped: 0.0008257 seconds, Stopping threads took: 0.0003412 seconds
+Application time: 1.0001573 seconds
+Total time for which application threads were stopped: 0.0007964 seconds, Stopping threads took: 0.0004825 seconds
+Application time: 2.0003210 seconds
+Total time for which application threads were stopped: 0.0008096 seconds, Stopping threads took: 0.0003984 seconds
+Application time: 2.0002829 seconds
+Total time for which application threads were stopped: 0.0070124 seconds, Stopping threads took: 0.0066443 seconds
+.Application time: 1.0001739 seconds
+Total time for which application threads were stopped: 0.0006942 seconds, Stopping threads took: 0.0002992 seconds
+Application time: 1.0001456 seconds
+Total time for which application threads were stopped: 0.0007098 seconds, Stopping threads took: 0.0002831 seconds
+Application time: 1.0002087 seconds
+Total time for which application threads were stopped: 0.0006492 seconds, Stopping threads took: 0.0003202 seconds
+Application time: 1.0001344 seconds
+Total time for which application threads were stopped: 0.0009592 seconds, Stopping threads took: 0.0005862 seconds
+Application time: 1.0001207 seconds
+Total time for which application threads were stopped: 0.0006287 seconds, Stopping threads took: 0.0003007 seconds
+Application time: 1.0001358 seconds
+Total time for which application threads were stopped: 0.0006693 seconds, Stopping threads took: 0.0003016 seconds
+.Application time: 3.3454408 seconds
+Total time for which application threads were stopped: 0.0010882 seconds, Stopping threads took: 0.0005671 seconds
+Application time: 1.2769741 seconds
+Total time for which application threads were stopped: 0.0005896 seconds, Stopping threads took: 0.0001921 seconds
+Application time: 0.3378763 seconds
+Total time for which application threads were stopped: 0.0005573 seconds, Stopping threads took: 0.0003124 seconds
+Application time: 0.0294621 seconds
+Total time for which application threads were stopped: 0.0005211 seconds, Stopping threads took: 0.0003623 seconds
+Application time: 0.0051508 seconds
+Total time for which application threads were stopped: 0.0003931 seconds, Stopping threads took: 0.0002557 seconds
+.
+Completed 4000 transactions
+	Stock level .............   155 ( 3.9%)
+	Order status by name ....   108 ( 2.7%)
+	Order status by ID ......    65 ( 1.6%)
+	Payment by name .........  1050 (26.2%)
+	Payment by ID ...........   661 (16.5%)
+	Delivery schedule .......   167 ( 4.2%)
+	New order ...............  1774 (44.4%)
+	New order rollback ......    20 ( 0.5%)
+Resetting database to initial state
+Application time: 1.0001353 seconds
+Total time for which application threads were stopped: 0.0007323 seconds, Stopping threads took: 0.0003999 seconds
+Application time: 1.0015907 seconds
+Total time for which application threads were stopped: 0.0419558 seconds, Stopping threads took: 0.0415666 seconds
+Application time: 1.0002321 seconds
+Total time for which application threads were stopped: 0.0032163 seconds, Stopping threads took: 0.0028565 seconds
+Application time: 3.5077503 seconds
+Total time for which application threads were stopped: 0.0006003 seconds, Stopping threads took: 0.0002474 seconds
+Application time: 0.0006155 seconds
+Total time for which application threads were stopped: 0.0002141 seconds, Stopping threads took: 0.0001413 seconds
+Application time: 0.0002044 seconds
+Total time for which application threads were stopped: 0.0001687 seconds, Stopping threads took: 0.0001100 seconds
+Application time: 0.0002513 seconds
+Total time for which application threads were stopped: 0.0001868 seconds, Stopping threads took: 0.0001115 seconds
+Application time: 0.0001569 seconds
+Total time for which application threads were stopped: 0.0001687 seconds, Stopping threads took: 0.0001095 seconds
+Application time: 0.0002053 seconds
+Total time for which application threads were stopped: 0.0001848 seconds, Stopping threads took: 0.0001203 seconds
+Application time: 0.0001750 seconds
+Total time for which application threads were stopped: 0.0001657 seconds, Stopping threads took: 0.0001080 seconds
+Application time: 0.0001516 seconds
+Total time for which application threads were stopped: 0.0001975 seconds, Stopping threads took: 0.0001076 seconds
+Heap
+ PSYoungGen      total 1136128K, used 892126K [0x0000000716b00000, 0x0000000761400000, 0x00000007c0000000)
+  eden space 1052672K, 84% used [0x0000000716b00000,0x000000074d237b38,0x0000000756f00000)
+  from space 83456K, 0% used [0x0000000756f00000,0x0000000756f00000,0x000000075c080000)
+  to   space 84480K, 0% used [0x000000075c180000,0x000000075c180000,0x0000000761400000)
+ ParOldGen       total 349696K, used 181034K [0x00000005c4000000, 0x00000005d9580000, 0x0000000716b00000)
+  object space 349696K, 51% used [0x00000005c4000000,0x00000005cf0ca8e8,0x00000005d9580000)
+ Metaspace       used 7942K, capacity 8118K, committed 8320K, reserved 1056768K
+  class space    used 794K, capacity 858K, committed 896K, reserved 1048576K
+Application time: 0.0067264 seconds

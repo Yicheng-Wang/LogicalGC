@@ -331,7 +331,7 @@ public class XYChart extends Chart implements Legendable, MouseMotionListener {
 	// Paint the background, Title, Grid and Axis. All the elements of the chart
 	// except for the actual data.
 	protected void prePaint(Graphics2D g2d, ArrayList<XYDataSeries> data) {
-
+		this.rightOffset = 200;
 		this.calculateHeighAndWidthOfChart();
 
 		/**

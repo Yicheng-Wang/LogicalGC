@@ -21,9 +21,13 @@ public class LogReader {
     static long lastcreate = 0;
     static TLAB LastTLAB = new TLAB();
     static HashMap<String,Thread> AllThread = new HashMap<>();
+    static boolean isfull = false;
+    static boolean lastisfull = false;
 
     public static String[] LoadLog(String logPath) throws IOException{
         File logFile = new File(logPath);
+        //File logFile = new File("gc_long.log");
+        //File logFile = new File("haiguang.log");
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(logFile);
@@ -61,7 +65,7 @@ public class LogReader {
         String logPath = args[1];
         String[] rows = LoadLog(logPath);
         HeapSnapshot initial = new HeapSnapshot().initial(rows[2]);
-        int rowindex = 3;
+        int rowindex = 1;
 
         //Parse
         while(rowindex < rows.length){
@@ -96,9 +100,9 @@ public class LogReader {
                 rowindex += 9;
             }
 
-            else if(rows[rowindex].contains("TLAB: gc thread:")){
+            else if(rows[rowindex].contains("TLAB: gc ") && !isfull){
                 YoungGC newGC = new YoungGC();
-                while(rows[rowindex].contains("TLAB: gc thread:")){
+                while(rows[rowindex].contains("TLAB: gc ")){
                     String ThreadID = Utility.Number.parseNumber("id: ", rows[rowindex]).size;
                     Thread thisRowThread;
                     if(!AllThread.containsKey(ThreadID)){
@@ -151,7 +155,7 @@ public class LogReader {
                     initial.phase = warmup;
                     HeapRecord.add(initial);
                 }
-                if(! rows[rowindex-2].contains("Application time")){
+                if(! rows[rowindex-1].contains("stopped")){
                     TimePeriod Application = new TimePeriod();
                     Application.type = TimePeriod.usageType.Application;
                     Application.length = applicationtime.valueDouble;
@@ -172,6 +176,7 @@ public class LogReader {
                 GCPrint = Arrays.copyOfRange(rows,rowindex,rowindex+2);
                 SentenceReader.ParseYoungGCcause(((YoungGC)GCRecord.get(GCRecord.size()-1)),GCPrint);
                 rowindex += 2;
+                lastisfull = false;
             }
 
             else if(rows[rowindex].contains("AdaptiveSizePolicy::update_averages:")){
@@ -207,25 +212,36 @@ public class LogReader {
             //Full GC
             else if(rows[rowindex].contains("Class Histogram")) {
                 double systemTime = Utility.Number.parseNumber("",rows[rowindex]).valueDouble;
-                if(rows[rowindex].contains("(before full gc)")){
-                    HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
-                    TimePeriod youngGCTime = new TimePeriod();
-                    youngGCTime.length = systemTime - timeLine.peek();
-                    timeLine.push(systemTime);
-                    youngGCTime.type = TimePeriod.usageType.YoungGC;
-                    afterGC.phase = youngGCTime;
-                    afterGC.complete = true;
-                }
-
                 GC Last = GCRecord.get(LogReader.GCRecord.size()-1);
-                if (Last.AdaptiveTime != 0) {
-                    Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                if(rows[rowindex].contains("(before full gc)")){
+                    isfull = true;
+                    if(!lastisfull){
+                        HeapSnapshot afterGC = HeapRecord.get(HeapRecord.size()-1);
+                        TimePeriod youngGCTime = new TimePeriod();
+                        youngGCTime.length = systemTime - timeLine.peek();
+                        timeLine.push(systemTime);
+                        youngGCTime.type = TimePeriod.usageType.YoungGC;
+                        afterGC.phase = youngGCTime;
+                        afterGC.complete = true;
+
+                        if (Last.AdaptiveTime != 0) {
+                            Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                        }
+                    }
                 }
-                if(Last instanceof FullGC){
+                else if(rows[rowindex].contains("(after full gc)")){
+                    isfull = false;
+
+                    if (Last.AdaptiveTime != 0) {
+                        Last.AdaptiveTime = systemTime - Last.AdaptiveTime;
+                    }
+
                     Last.timeCost = ((FullGC)Last).PreCompact + ((FullGC)Last).Markingphase + ((FullGC)Last).Summaryphase
                             + ((FullGC)Last).AdjustRoots + ((FullGC)Last).Compactionphase + ((FullGC)Last).PostCompact
                             + Last.AdaptiveTime;
                     Last.CPUpercentage = Last.CPUpercentage / Last.timeCost / Last.threadNum;
+
+                    lastisfull = true;
                 }
 
                 rowindex += 3;
@@ -379,7 +395,7 @@ public class LogReader {
         return TargetSurvivorRatio;
     }
 
-    static void optimize() {
+    static void optimize() throws IOException {
         calcNewRatio(1.2);
         Showing.shows("");
         calcSurvivorRatio();
