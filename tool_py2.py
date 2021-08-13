@@ -4,7 +4,7 @@ import os
 import re
 import time
 import subprocess
-import configparser
+import ConfigParser
 
 class Optimizer:
     def __init__(self):
@@ -17,7 +17,7 @@ class Optimizer:
                              -XX:+PrintTenuringDistribution -XX:+PrintPromotionFailure \
                              -XX:+PrintStringDeduplicationStatistics -XX:+PrintAdaptiveSizePolicy \
                              -XX:+TraceDynamicGCThreads -XX:+TraceMetadataHumongousAllocation '
-        self.conf = configparser.ConfigParser()
+        self.conf = ConfigParser.ConfigParser()
         self.conf_path = './tool.ini'
         if os.path.exists(self.conf_path):
             self.conf.read(self.conf_path)
@@ -45,7 +45,7 @@ class Optimizer:
         # self.set_for_test()
 
         while(True):
-            t = input('opration: ')
+            t = raw_input('opration: ')
             self.func.get(t, wrong_input)()
 
     def set_for_test(self):
@@ -88,7 +88,7 @@ class Optimizer:
         if self.conf.has_option('conf', name):
             return self.conf.get('conf', name)
         else:
-            t = input(name + ': ')
+            t = raw_input(name + ': ')
             self.conf.set('conf', name, t)
             with open(self.conf_path, 'w') as f:
                 self.conf.write(f)
@@ -183,13 +183,13 @@ class Optimizer:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         p.wait()
         line = str(p.stdout.readline())
-        NewRatio_line = line[2:-3]
+        NewRatio_line = line
         NewRatio = int(NewRatio_line[NewRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
-        # SurvivorRatio_line = line[2:-3]
+        # SurvivorRatio_line = line
         # SurvivorRatio = int(SurvivorRatio_line[SurvivorRatio_line.rfind(' ')+1:])
         line = str(p.stdout.readline())
-        # TargetSurvivorRatio_line = line[2:-3]
+        # TargetSurvivorRatio_line = line
         # TargetSurvivorRatio = int(TargetSurvivorRatio_line[TargetSurvivorRatio_line.rfind(' ')+1:])
         self.output_str('建议的NewRatio：%d'%(NewRatio))
         # self.output_str('建议的SurvivorRatio：%d'%(SurvivorRatio))
