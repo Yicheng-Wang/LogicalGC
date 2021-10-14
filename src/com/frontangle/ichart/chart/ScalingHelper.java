@@ -228,6 +228,11 @@ public class ScalingHelper {
 		// get padded range
 		DataRange drY = ChartUtils.getDataRangeY(xySeriesList);
 
+		if(drY.max == drY.min){
+			drY.max = drY.min * 2;
+			drY.min = drY.max / 3;
+		}
+
 		// get sensible interval
 		double initialIntervalY = ChartUtils.getInterval(drY);
 

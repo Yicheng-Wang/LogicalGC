@@ -3,6 +3,7 @@ package com.frontangle.ichart.chart.legend;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.frontangle.ichart.chart.Category;
 import com.frontangle.ichart.chart.Chart;
@@ -28,6 +29,9 @@ public class LegendUtil {
 		XYDataSeries series = chart.data.get(0);
 		DataPoint dp = (DataPoint) series.dataPoints.get(0);
 
+		if(series.type == XYDataSeriesType.MULTI_BAR){
+			categories = LegendUtil.setupLegendBarCategories(chart, g);
+		}
 		if (dp instanceof DataPointMultiBar) {
 			categories = LegendUtil.setupLegendMultiBarCategories(chart, g);
 		}
@@ -35,10 +39,11 @@ public class LegendUtil {
 			categories = LegendUtil.setupLegendManySeriesCategories(chart, g);
 		}
 
-		LegendUtil.drawLegend(chart, categories, g);
-
 		if (chart.isYAxis2) {
 			LegendUtil.setupLegendYAxis2(chart, g);
+		}
+		else{
+			LegendUtil.drawLegend(chart, categories, g);
 		}
 
 	}
@@ -72,7 +77,7 @@ public class LegendUtil {
 
 		LegendVertical legend = new LegendVertical(chart.legendFont, chart, startingPoint);
 
-		legend.paddingLegendLeft = offset;
+		legend.paddingLegendLeft = 0;
 		chart.rightOffset = 200;
 
 		legend.drawLegend(g, chart, categories);
@@ -153,6 +158,36 @@ public class LegendUtil {
 			category.block = true;
 			category.color = dpb.color;
 			categories.add(category);
+		}
+
+		return categories;
+	}
+
+	public static ArrayList<Category> setupLegendBarCategories(
+			XYChart chart, Graphics2D g) {
+
+		XYDataSeries series = chart.data.get(0);
+
+		HashMap<String,Category> count = new HashMap<>();
+		ArrayList<Category> categories = new ArrayList<Category>();
+
+		/**
+		 * if DataPointMultiBar then we pull the categories out of a single
+		 * datapoint in its array
+		 */
+
+		for (int i=0;i<series.dataPoints.size();i++) {
+			DataPointBar dp = (DataPointBar) series.dataPoints.get(i);
+			if(!count.containsKey(dp.name)){
+				Category category;
+				String finalname = dp.name.contains("Y")?"Minor GC Pause Time":"Major GC Pause Time";
+				category = new Category(finalname, series.pointType, null);
+				category.block = true;
+				category.color = dp.color;
+				categories.add(category);
+				count.put(dp.name,category);
+			}
+
 		}
 
 		return categories;

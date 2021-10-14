@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import com.frontangle.ichart.chart.XYChart;
+import com.frontangle.ichart.chart.XYDataSeriesType;
 import com.frontangle.ichart.chart.bar.XYBarDataSeries;
 import com.frontangle.ichart.chart.datapoint.DataPointBar;
 import com.frontangle.ichart.pie.PieChart;
@@ -15,6 +16,7 @@ import com.frontangle.ichart.pie.Segment;
 
 public class Drawing {
     static DecimalFormat df = new DecimalFormat("#0.000");
+    static DecimalFormat df1 = new DecimalFormat("#0.0");
     static DecimalFormat df2 = new DecimalFormat("#0");
     static double[] topFive = new double[5];
     static String[] topFiveName = new String[5];
@@ -55,14 +57,15 @@ public class Drawing {
         mainPanel.add(pieChart);
     }
 
-    public static void createCauseChart(JPanel mainPanel, int x, int y, int width, int height) {
+    public static void createCauseChart(JPanel mainPanel, int x, int y, int width, int height, int count) {
         ArrayList<Segment> values = new ArrayList<>();
         double size;
         double Total = Showing.GCtimesum;
         int index = 0;
         int CauseNum = Showing.GCCauseTotal.size();
         XYBarDataSeries barSeries = new XYBarDataSeries();
-        for(int i=0;i<LogReader.GCRecord.size();i++){
+        int number = Math.min(LogReader.GCRecord.size(), (count+1) * 100);
+        for(int i= 100*count;i<number;i++){
             GC Judge = LogReader.GCRecord.get(i);
             if(Judge instanceof FullGC){
                 barSeries.add(new DataPointBar("F", Judge.timeCost*1000, Color.RED));
@@ -71,7 +74,7 @@ public class Drawing {
                 barSeries.add(new DataPointBar("Y", Judge.timeCost*1000, Color.BLUE));
             }
         }
-
+        barSeries.type = XYDataSeriesType.MULTI_BAR;
         XYChart chart = new XYChart("GC Pause Time Distribution", "Type", "Time (ms)",barSeries);
         /*Iterator map1it=Showing.GCCauseTotal.entrySet().iterator();
         while(map1it.hasNext())
@@ -117,16 +120,16 @@ public class Drawing {
         double others = Showing.Totalbytes - totalFive;
 
         values.add(new Segment(time = (double)topFive[0] / Showing.Totalbytes * 100,
-                "1- " + InstanceDistribution.DealingName(topFiveName[0]) + " -" + df.format(time) + "%", new Color(255, 0, 255,160)));
+                 InstanceDistribution.DealingName(topFiveName[0]) + " -" + df1.format(time) + "%", new Color(255, 0, 255,160)));
         values.add(new Segment(time = (double)topFive[1] / Showing.Totalbytes * 100,
-                "2- " + InstanceDistribution.DealingName(topFiveName[1]) + " -"  + df.format(time) + "%", new Color(128, 0, 255,160)));
+                InstanceDistribution.DealingName(topFiveName[1]) + " -"  + df1.format(time) + "%", new Color(128, 0, 255,160)));
         values.add(new Segment(time = (double)topFive[2] / Showing.Totalbytes * 100,
-                "3- " + InstanceDistribution.DealingName(topFiveName[2]) + " -"  + df.format(time) + "%", new Color(255, 0, 128,160)));
+                InstanceDistribution.DealingName(topFiveName[2]) + " -"  + df1.format(time) + "%", new Color(255, 0, 128,160)));
         values.add(new Segment(time = (double)topFive[3] / Showing.Totalbytes * 100,
-                "4- " + InstanceDistribution.DealingName(topFiveName[3]) + " -"  + df.format(time) + "%", new Color(128, 0, 128,160)));
+                InstanceDistribution.DealingName(topFiveName[3]) + " -"  + df1.format(time) + "%", new Color(128, 0, 128,160)));
         values.add(new Segment(time = (double)topFive[4] / Showing.Totalbytes * 100,
-                "5- " + InstanceDistribution.DealingName(topFiveName[4]) + " -"  + df.format(time) + "%", new Color(0, 0, 255,160)));
-        values.add(new Segment(time = (double)others / Showing.Totalbytes * 100, "Others -" + df.format(time) + "%", new Color(255, 0, 0,160)));
+                InstanceDistribution.DealingName(topFiveName[4]) + " -"  + df1.format(time) + "%", new Color(0, 0, 255,160)));
+        values.add(new Segment(time = (double)others / Showing.Totalbytes * 100, "Others -" + df1.format(time) + "%", new Color(255, 0, 0,160)));
 
         PieChart pieChart = new PieChart(values, "Object Type Distribution");
         pieChart.setSize(width, height);

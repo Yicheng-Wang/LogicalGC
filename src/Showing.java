@@ -20,13 +20,15 @@ import com.frontangle.ichart.pie.Segment;
 
 public class Showing {
 
-    static DecimalFormat df = new DecimalFormat("#0.000");
+    static DecimalFormat df = new DecimalFormat("#0.00");
+    static DecimalFormat df2 = new DecimalFormat("#0");
     static Font TitleStyle = new Font("Dialog", 1, 20);
     static Font TableStyle = new Font("Dialog", 0, 18);
 
     static long GCcount = 0;
     static long MinorGCcount = 0;
     static long FullGCcount = 0;
+    static ArrayList<YoungGC> YoungGCRecord = new ArrayList<>();
 
     static double SafePointTotal = 0;
     static double GCtimesum = 0;
@@ -127,17 +129,22 @@ public class Showing {
 
         out.close();
 
+        int CauseChartCount = (int) (Math.ceil((double)LogReader.GCRecord.size() / 100));
+        int YoungChartCount = (int) (Math.ceil((double)MinorGCcount / 100));
+        int HeapChartCount = (int) Math.ceil((double)LogReader.HeapRecord.size() / 200);
+
         final int MAX_HEIGHT = 850;
-        final int MAX_WIDTH = 1430;
+        final int MAX_WIDTH = 3200;
         final int PADDING = 50;
         final int FIRST_COLUMN_WIDTH = 500;
-        final int SECOND_COLUMN_WIDTH = 800;
+        final int SECOND_COLUMN_WIDTH = 900;
+        final int SECOND_GRAPH_WIDTH = 2500;
         final int SECOND_COLUMN_START = PADDING + FIRST_COLUMN_WIDTH;
 
         JPanel MainPanel = new JPanel();
         MainPanel.setLayout(null);
-        MainPanel.setBounds(0, 0, MAX_WIDTH, 3800);
-        MainPanel.setPreferredSize(new Dimension(MAX_WIDTH, 3800));
+        MainPanel.setBounds(0, 0, MAX_WIDTH, 3800 + (CauseChartCount-1) * 540 + (YoungChartCount-1)*680+ (HeapChartCount-1) * 850);
+        MainPanel.setPreferredSize(new Dimension(MAX_WIDTH, 3800 + (CauseChartCount-1) * (540+680) + (HeapChartCount-1) * 850));
         MainPanel.setBackground(Color.WHITE);
 
         Table.OverallStats(MainPanel,"用时情况",PADDING,110,FIRST_COLUMN_WIDTH,340);
@@ -148,18 +155,32 @@ public class Showing {
 
         Drawing.createThreadChart(MainPanel,SECOND_COLUMN_START,550,SECOND_COLUMN_WIDTH,520);
 
-        Table.TotalGCStats(MainPanel,"GC情况",PADDING,1200,FIRST_COLUMN_WIDTH,34 * (4 + 2 * GCCauseTotal.size()));
-
-        Drawing.createCauseChart(MainPanel,SECOND_COLUMN_START,1080,SECOND_COLUMN_WIDTH,520);
-
-        Table.MinorGCStats(MainPanel,"Minor GC",PADDING,1740,FIRST_COLUMN_WIDTH,340);
-
-        ShowHeap.YoungGenStats(MainPanel,SECOND_COLUMN_START,1620,SECOND_COLUMN_WIDTH,600);
+        int YoungYStart = 1080;
 
         if(FullGCcount > 0){
-            Drawing.ObjectDistributionChart(MainPanel,SECOND_COLUMN_START,2300,SECOND_COLUMN_WIDTH,520);
-            Table.MajorGCStats(MainPanel, "Major GC", PADDING, 2380, FIRST_COLUMN_WIDTH, 340);
+            Drawing.ObjectDistributionChart(MainPanel,SECOND_COLUMN_START,YoungYStart,SECOND_COLUMN_WIDTH,520);
+            Table.MajorGCStats(MainPanel, "Major GC", PADDING, YoungYStart+80, FIRST_COLUMN_WIDTH, 340);
         }
+
+        YoungYStart = (FullGCcount > 0)?YoungYStart+540:YoungYStart;
+
+        Table.TotalGCStats(MainPanel,"GC情况",PADDING,YoungYStart+120,FIRST_COLUMN_WIDTH,34 * (4 + 2 * GCCauseTotal.size()));
+
+
+        for(int i=0;i<CauseChartCount;i++){
+            Drawing.createCauseChart(MainPanel,SECOND_COLUMN_START,YoungYStart + i * 540,SECOND_GRAPH_WIDTH,520,i);
+        }
+
+        YoungYStart += CauseChartCount * 540;
+
+        Table.MinorGCStats(MainPanel,"Minor GC",PADDING,YoungYStart+120,FIRST_COLUMN_WIDTH,340);
+
+
+        for(int i=0;i<YoungChartCount;i++){
+            ShowHeap.YoungGenStats(MainPanel,SECOND_COLUMN_START, YoungYStart + i * 680,SECOND_GRAPH_WIDTH,600,i);
+        }
+
+        YoungYStart += YoungChartCount * 680;
 
         JScrollPane jsp = new JScrollPane(MainPanel);
         jsp.setBounds(10,10,MAX_WIDTH-30, MAX_HEIGHT-50);
@@ -167,9 +188,13 @@ public class Showing {
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        XYChart chart = ShowHeap.createHeapXYChart();
-        chart.setBounds(PADDING, 2800, 1300, 800);
-        MainPanel.add(chart);
+
+        for(int i=0;i<HeapChartCount;i++){
+            XYChart chart = ShowHeap.createHeapXYChart(i);
+            chart.setBounds(PADDING, YoungYStart + i*850, SECOND_GRAPH_WIDTH + FIRST_COLUMN_WIDTH, 800);
+            MainPanel.add(chart);
+        }
+
         MainPanel.setVisible(true);
 
         /*JFrame Mainframe = new JFrame();
@@ -186,7 +211,7 @@ public class Showing {
         Graphics2D g2 = image.createGraphics();
         //c.paint(image.getGraphics());
         MainPanel.print(g2);
-        ImageIO.write(image, "png", new java.io.File(title + "InfoPic.jpg"));
+        ImageIO.write(image, "png", new java.io.File(title + "TestInfoPic.jpg"));
     }
 
     private static void SettleInformation() {
@@ -232,6 +257,7 @@ public class Showing {
                 }
             } else {
                 MinorGCcount++;
+                YoungGCRecord.add((YoungGC)Judge);
                 MinorGCtimeSum += Judge.timeCost;
                 MinorTotalProcess += Judge.processSize.valueForm;
                 MinorTotalClean += Judge.cleanSize.valueForm;

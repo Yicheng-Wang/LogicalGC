@@ -124,9 +124,9 @@ class Optimizer:
         arguments = [
             ('SurvivorRatio', (4, 16, 4)), # default: 8
             ('TargetSurvivorRatio', (25, 100, 25)), # default: 50
-            ('OldPLABSize', (1024, 5120, 1024)), # default: 1024
-            ('YoungPLABSize', (1024, 5120, 1024)), # default: 4096
-            ('PLABWeight', (70, 85, 5)), # default: 75
+            #('OldPLABSize', (1024, 5120, 1024)), # default: 1024
+            #('YoungPLABSize', (1024, 5120, 1024)), # default: 4096
+            #('PLABWeight', (70, 85, 5)), # default: 75
         ]
         index = [0]*len(arguments)
         for i in range(0, len(index)):

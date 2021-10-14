@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class ShowHeap {
 
-    public static XYChart createHeapXYChart() {
+    public static XYChart createHeapXYChart(int count) {
 
         ArrayList<XYDataSeries> al = new ArrayList<XYDataSeries>();
 
@@ -59,30 +59,31 @@ public class ShowHeap {
         }
 
         String[] TimeStamps = new String[LogReader.HeapRecord.size()];
-        TimeStamps[0] = "0.000";
 
-        for(int i=1;i<LogReader.HeapRecord.size();i++){
-            TimeStamps[i] = Showing.df.format(LogReader.timeLine.get(i-1));
-            if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.OldGC)
+        TimeStamps[0] = (count==0)?"0":Showing.df2.format(LogReader.timeLine.get(count * 200-1));
+        int number = Math.min(LogReader.HeapRecord.size(), (count+1) * 200);
+        for(int i = count*200 + 1;i<number;i++){
+            TimeStamps[i - count*200] = Showing.df2.format(LogReader.timeLine.get(i-1));
+            /*if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.OldGC)
                 TimeStamps[i] += "F";
             if (LogReader.HeapRecord.get(i).phase.type == TimePeriod.usageType.YoungGC)
-                TimeStamps[i] += "M";
+                TimeStamps[i] += "M";*/
         }
 
         double min = 0;
         double max = 0;
 
-        for(int i=0;i<LogReader.HeapRecord.size();i++){
+        for(int i= count*200;i<number;i++){
             double used;
-            al.get(0).dataPoints.add(new DataPoint(TimeStamps[i], used = LogReader.HeapRecord.get(i).HeapPartition[0].usedSize.ValueFormM));
-            al.get(1).dataPoints.add(new DataPoint(TimeStamps[i], LogReader.HeapRecord.get(i).HeapPartition[0].totalSize.ValueFormM - used));
-            al.get(2).dataPoints.add(new DataPoint(TimeStamps[i], used = LogReader.HeapRecord.get(i).HeapPartition[1].usedSize.ValueFormM));
-            al.get(3).dataPoints.add(new DataPoint(TimeStamps[i], LogReader.HeapRecord.get(i).HeapPartition[1].totalSize.ValueFormM - used));
-            al.get(4).dataPoints.add(new DataPoint(TimeStamps[i], LogReader.HeapRecord.get(i).HeapPartition[2].totalSize.ValueFormM));
-            al.get(5).dataPoints.add(new DataPoint(TimeStamps[i], used = LogReader.HeapRecord.get(i).HeapPartition[3].usedSize.ValueFormM));
-            al.get(6).dataPoints.add(new DataPoint(TimeStamps[i], LogReader.HeapRecord.get(i).HeapPartition[3].totalSize.ValueFormM - used));
-            al.get(7).dataPoints.add(new DataPoint(TimeStamps[i], used = LogReader.HeapRecord.get(i).HeapPartition[4].usedSize.ValueFormM));
-            al.get(8).dataPoints.add(new DataPoint(TimeStamps[i], LogReader.HeapRecord.get(i).HeapPartition[4].totalSize.ValueFormM - used));
+            al.get(0).dataPoints.add(new DataPoint(TimeStamps[i - count*200], used = LogReader.HeapRecord.get(i).HeapPartition[0].usedSize.ValueFormM));
+            al.get(1).dataPoints.add(new DataPoint(TimeStamps[i - count*200], LogReader.HeapRecord.get(i).HeapPartition[0].totalSize.ValueFormM - used));
+            al.get(2).dataPoints.add(new DataPoint(TimeStamps[i - count*200], used = LogReader.HeapRecord.get(i).HeapPartition[1].usedSize.ValueFormM));
+            al.get(3).dataPoints.add(new DataPoint(TimeStamps[i - count*200], LogReader.HeapRecord.get(i).HeapPartition[1].totalSize.ValueFormM - used));
+            al.get(4).dataPoints.add(new DataPoint(TimeStamps[i - count*200], LogReader.HeapRecord.get(i).HeapPartition[2].totalSize.ValueFormM));
+            al.get(5).dataPoints.add(new DataPoint(TimeStamps[i - count*200], used = LogReader.HeapRecord.get(i).HeapPartition[3].usedSize.ValueFormM));
+            al.get(6).dataPoints.add(new DataPoint(TimeStamps[i - count*200], LogReader.HeapRecord.get(i).HeapPartition[3].totalSize.ValueFormM - used));
+            al.get(7).dataPoints.add(new DataPoint(TimeStamps[i - count*200], used = LogReader.HeapRecord.get(i).HeapPartition[4].usedSize.ValueFormM));
+            al.get(8).dataPoints.add(new DataPoint(TimeStamps[i - count*200], LogReader.HeapRecord.get(i).HeapPartition[4].totalSize.ValueFormM - used));
             if(LogReader.HeapRecord.get(i).totalSize.ValueFormM < min)
                 min = LogReader.HeapRecord.get(i).totalSize.ValueFormM;
             if(LogReader.HeapRecord.get(i).totalSize.ValueFormM > max)
@@ -94,6 +95,7 @@ public class ShowHeap {
         chart.title.titleColor = Color.BLACK;
         chart.title.titleFont =new Font("Purisa", 1, 33);
 
+        max = (max<100)?100:max;
         DataRange drY = ChartUtils.getDataRange(max, min, 10);
         double initialIntervalY = ChartUtils.getInterval(drY);
 
@@ -112,17 +114,20 @@ public class ShowHeap {
         return chart;
     }
 
-    public static void YoungGenStats(JPanel mainPanel, int x, int y, int width, int depth) {
+    public static void YoungGenStats(JPanel mainPanel, int x, int y, int width, int depth,int count) {
         ArrayList<XYDataSeries> temperatureSeriesList = new ArrayList<XYDataSeries>();
         ArrayList<DataPointBar> DisiredSize = new ArrayList<DataPointBar>();
         ArrayList<DataPoint> Threshold = new ArrayList<DataPoint>();
         ArrayList<DataPoint> LiveRate = new ArrayList<DataPoint>();
-        for(int i=0;i<LogReader.GCRecord.size();i++) {
-            GC Judge = LogReader.GCRecord.get(i);
+
+        int number = Math.min(Showing.YoungGCRecord.size(), (count+1) * 100);
+
+        for(int i= 100*count;i<number;i++) {
+            GC Judge = Showing.YoungGCRecord.get(i);
             if (Judge instanceof YoungGC){
                 Threshold.add(new DataPoint("I", ((YoungGC)Judge).newThreshold));
                 LiveRate.add(new DataPoint("I", (1-Judge.cleanSize.valueFormK/Judge.processSize.valueFormK)*100));
-                DisiredSize.add(new DataPointBar("I",((YoungGC)Judge).desiredSize.ValueFormM));
+                DisiredSize.add(new DataPointBar(String.valueOf(i+1),((YoungGC)Judge).desiredSize.ValueFormM));
             }
         }
 
@@ -144,7 +149,7 @@ public class ShowHeap {
         XYBarDataSeries rainfallSeries = new XYBarDataSeries(DisiredSize,
                 bdo, null, "Survivor Size");
 
-        bdo.setGradiantRule(new GradiantRule(40, 100, new Color(230, 242, 255), Color.BLUE));
+        bdo.setGradiantRule(new GradiantRule(100, 100, Color.BLUE, Color.BLUE));
 
         rainfallSeries.setUpBarDisplayOptions(bdo);
 

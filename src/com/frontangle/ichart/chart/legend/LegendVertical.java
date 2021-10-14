@@ -52,17 +52,19 @@ public class LegendVertical extends AbstractLegend implements Serializable{
     
 	public void drawLegend(Graphics2D g, Chart chart, ArrayList<Category> categories) {
 
+        if(categories.size() == 0)
+            return;
         int legendX = (chart.getWidth() - chart.rightOffset) - 5;
         int legendY = chart.topOffset + 15; // + paddingBetweenChartAndLegend;
 
         int legendHeight = (categories.size() * squareWidth); // - (2 * paddingBetweenChartAndLegend);
-        int legendWidth = chart.rightOffset - (paddingLegendLeft) + 10;
+        int legendWidth = chart.rightOffset - (paddingLegendLeft) + 10 ;
 
         FontMetrics fmT = chart.getFontMetrics(legendFont);
         if(chart instanceof XYChart)
             if (((XYChart)chart).isYAxis2){
-                legendX += 50;
-                legendWidth += 50;
+                legendX += 60;
+                legendWidth -= 61;
             }
         //draw outside rectangle
         g.setColor(legendBackgroundColor);
